@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="43dp"
+        android:background="@drawable/btn_long_bg"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/logo" >
+        </ImageView>
+
+        <Button
+            android:id="@+id/regbutton"
+            style="@style/Button"
+            android:layout_width="68dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="180dp"
+            android:onClick="showLoginPage"
+            android:text="@string/vod_register" />
+    </LinearLayout>
+
+    <ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <com.stv.supervod.widget_extended.PosterGallery
+                android:id="@+id/gallery"
+                android:layout_width="fill_parent"
+                android:layout_height="171dp" >
+            </com.stv.supervod.widget_extended.PosterGallery>
+
+            <Button
+                android:id="@+id/today"
+                style="@style/Button"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:drawableRight="@drawable/homepage_group_button_shrink"
+                android:onClick="showtype"
+                android:text="今日热播" />
+
+            <ListView
+                android:id="@+id/today_hit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
+
+            <Button
+                style="@style/Button"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:drawableRight="@drawable/homepage_group_button_shrink"
+                android:onClick="showtype"
+                android:text="内地剧场" />
+
+            <Button
+                style="@style/Button"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:drawableRight="@drawable/homepage_group_button_shrink"
+                android:onClick="showtype"
+                android:text="港台剧场" />
+
+            <Button
+                style="@style/Button"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:drawableRight="@drawable/homepage_group_button_shrink"
+                android:onClick="showtype"
+                android:text="高清剧院" />
+
+            <Button
+                style="@style/Button"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:drawableRight="@drawable/homepage_group_button_shrink"
+                android:onClick="showtype"
+                android:text="日韩剧场" />
+
+            <Button
+                style="@style/Button"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:drawableRight="@drawable/homepage_group_button_shrink"
+                android:onClick="showtype"
+                android:text="动漫卡通" />
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

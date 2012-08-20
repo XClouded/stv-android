@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="tvback_text_week">
+    	<item>星期日</item>
+    	<item>星期一</item>
+    	<item>星期二</item>
+    	<item>星期三</item>
+    	<item>星期四</item>
+    	<item>星期五</item>
+    	<item>星期六</item>
+    	<item>今天</item>
+    </string-array>
+    
+    <string-array name="dlg_tvback_dlg_option">
+    	<item>播放</item>
+    	<item>加入我的收藏</item>
+    	<item>加入我的频道</item>
+    </string-array>
+    
+    <string-array name="category_type">
+        <item>电影</item>
+    	<item>电视剧</item>
+    	<item>MTV</item>
+    	<item>电视回看</item>
+    	<item>高清</item>
+    </string-array>
+    
+    <string-array name="category_order">
+        <item>默认</item>
+    	<item>最新</item>
+    	<item>热门</item>
+    	<item>评分</item>
+    	<item>字母</item>
+    </string-array>
+    
+    <string-array name="category_sequence">
+        <item>升序</item>
+    	<item>降序</item>
+    </string-array>
+</resources>

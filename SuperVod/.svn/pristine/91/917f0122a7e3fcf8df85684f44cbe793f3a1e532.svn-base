@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/posterlayout"
+    android:layout_width="268dp"
+    android:layout_height="171dp"
+    android:gravity="center_horizontal|bottom"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="fill_parent"
+        android:layout_height="29dp"
+        android:background="@drawable/btn_bg_select"
+        android:gravity="center_horizontal|bottom"
+        android:textColor="#ffffffff" >
+    </TextView>
+</LinearLayout>

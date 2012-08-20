@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="81dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="37dp"
+        android:background="@drawable/btn_long_bg"
+        android:orientation="vertical" >
+
+        <Button
+            android:id="@+id/item1"
+            style="@style/Button"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingLeft="0dp"
+            android:text="电影" >
+        </Button>
+
+        <Button
+            android:id="@+id/item2"
+            style="@style/Button"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:paddingLeft="0dp"
+            android:text="电视剧" >
+        </Button>
+        
+        <Button
+            android:id="@+id/item3"
+            style="@style/Button"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:paddingLeft="0dp"
+            android:text="MTV" >
+        </Button>
+    </LinearLayout>
+
+</LinearLayout>

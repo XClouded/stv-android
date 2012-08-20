@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/listitem" 
+    style="@style/item_list_edit_2_layout" >
+
+    <ImageView android:id="@+id/item_img" 
+        style="@style/item_list_edit_2_image"/>
+    
+    <LinearLayout style="@style/item_list_edit_2_layout1">
+		<TextView android:id="@+id/item_name"
+		    style="@style/item_list_edit_2_name" 
+		    android:text="asdad" 
+		    android:layout_marginBottom="10dp"/>
+		
+		<LinearLayout style="@style/item_list_edit_2_layout2" >
+			<TextView android:id="@+id/widget11"
+			    style="@style/item_list_edit_2_text" />
+			<TextView android:id="@+id/item_type"
+			    style="@style/item_list_edit_2_type" />
+		</LinearLayout>
+		
+	</LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/item_ll_state"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="2dp"
+            android:layout_height="fill_parent" android:background="#00ffff"/>
+
+        <LinearLayout
+            android:id="@+id/frameLayout1"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" android:gravity="center">
+
+            <ImageView
+                android:id="@+id/item_iv_state"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="fitXY" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

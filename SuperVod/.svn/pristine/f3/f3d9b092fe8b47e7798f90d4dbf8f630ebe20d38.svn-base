@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/listitem" 
+    style="@style/item_list_edit_2_layout" >
+
+    <ImageView android:id="@+id/item_img" 
+        style="@style/item_list_edit_2_image"
+        android:src="@drawable/bmark_cover_default"/>
+    
+    <LinearLayout style="@style/item_list_edit_2_layout1">
+		<TextView android:id="@+id/item_name"
+		    style="@style/item_list_edit_2_name" android:text="asdad" 
+		    android:layout_marginBottom="5dp"/>
+		
+		<LinearLayout style="@style/item_list_edit_2_layout2" >
+			<TextView android:id="@+id/widget11"
+			    style="@style/item_list_edit_2_text" />
+			<TextView android:id="@+id/item_type"
+			    style="@style/item_list_edit_2_type" />
+
+		</LinearLayout>
+
+		<TextView android:id="@+id/item_time"
+		    style="@style/item_list_edit_2_time" />
+		
+	</LinearLayout>
+
+</LinearLayout>

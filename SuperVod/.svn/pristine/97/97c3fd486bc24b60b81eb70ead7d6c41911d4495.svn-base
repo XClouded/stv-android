@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/welcome_image"
+    android:gravity="bottom"
+    android:orientation="vertical" >
+
+    <Button
+        android:id="@+id/qingzhou"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="goHomePage"
+        android:text="@string/welcome_city_qingzhou"
+        android:background="@drawable/welcome_city_bg"
+        
+        android:textSize="20sp" />
+
+    <Button
+        android:id="@+id/zhangzhou"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="goHomePage"
+        android:text="@string/welcome_city_zhangzhou"
+        android:background="@drawable/welcome_city_bg"
+        android:textSize="20sp" />
+
+</LinearLayout>

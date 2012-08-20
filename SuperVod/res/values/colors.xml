@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="gray">#262626</color>
+    <color name="red">#ff0000</color>
+    <color name="light_gray">#494949</color>
+    <color name="transparent">#10000000</color>
+    <color name="category_bg">#f3eff0</color>
+    <color name="category_bottom">#dbd7d6</color>
+    <color name="week_focus">#e2a90e</color>
+    <drawable name="white">#ffffff</drawable>
+	<drawable name="black">#000000</drawable>
+	<color name="translucent">#80000000</color>
+</resources>

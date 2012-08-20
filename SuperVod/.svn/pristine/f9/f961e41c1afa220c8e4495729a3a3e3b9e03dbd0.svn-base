@@ -1,0 +1,265 @@
+package com.stv.supervod.activity;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.zip.Inflater;
+
+import com.stv.supervod.adapter.ListItemSimpleAdapter;
+import com.stv.supervod.service.HttpDownloadImpl;
+import com.stv.supervod.service.ImageDownloader;
+import com.stv.supervod.service.HttpDownloadImpl.KeyEnum;
+import com.stv.supervod.utils.AlertUtils;
+import com.stv.supervod.utils.Constant;
+import com.stv.supervod.utils.ErrorCode;
+import com.stv.supervod.utils.ValidateUtil;
+
+import android.R.layout;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.GradientDrawable.Orientation;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
+import android.widget.TextView;
+import android.widget.AdapterView.OnItemClickListener;
+
+/**
+ * @author      Administrator
+ * @description 电视回看，上一级菜单：更多
+ * @authority   激活用户
+ * @function    1、显示从今天开始往前的一周列表
+ *              2、用户点击具体日期，向服务器请求具体日期的所有回看频道，以列表形式展现
+ *              3、用户点击某个频道，向服务器请求该频道的回看数据，以列表形式展现
+ *              4、用户点击加入我的频道按钮，判断我的频道节目数量是否达到上限，是则提示用户，否则加入
+ *              5、用户点击具体的回看节目，进入播放页面：Play
+ */
+public class TvBack extends BaseActivity{
+	private final String TAG = "TvBack";
+	
+	private final int MsgTvBackDataOk = 1;
+	
+	// 由于回看频道较少，所以一次就全部获取完毕
+	private final int mNumPerPage  =  10; // 500
+	private final int mPageIndex  =  1;
+	
+	private GridView mGridView;
+	private List<Map<String, Object>> mListItem =  new ArrayList<Map<String, Object>>();
+	private Button mBtnBack;
+	private ProgressDialog mProgressDlg;
+	private TvBackChannelAdapter tvbackAdapter = null;
+	
+	@Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.tvback);
+       
+        initGui();
+        
+        getDataFromServer();
+        
+        bindAction();
+    }
+	
+	private void getDataFromServer()
+	{
+		mProgressDlg.show();
+		
+		new Thread() {
+			@SuppressWarnings("unchecked")
+			public void run() {
+				try {
+					//just for test
+					getTestData();
+					sleep(1500);
+					
+//					HttpDownloadImpl httpDownload = HttpDownloadImpl.getHttpDownloader();
+//					mListItem = (List<Map<String, Object>>) httpDownload.
+//							downloadChannelList(mNumPerPage, mPageIndex).get("list");	
+				} catch (Exception e) {
+					e.printStackTrace();
+					mListItem = null;
+					AlertUtils.displayToast(TvBack.this,e.getMessage() );
+				}
+				mHandler.sendEmptyMessage( MsgTvBackDataOk );
+			}
+		}.start();
+	}
+	
+	
+	/**
+	 * 关闭滚动条
+	 */
+	private Handler mHandler = new Handler() {
+		@Override
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
+			case MsgTvBackDataOk:
+				showList();
+				mProgressDlg.dismiss();
+				break;
+
+			default:
+				break;
+			}
+		}
+	};
+	
+	private void bindAction()
+	{
+        // listview click
+        mGridView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int position,
+					long arg3) {
+				// TODO Auto-generated method stub
+				String name = mListItem.get(position).get(KeyEnum.name.toString()).toString();
+				String cid = mListItem.get(position).get(KeyEnum.channelId.toString()).toString();
+				
+				Bundle extras = new Bundle();
+				extras.putString(KeyEnum.name.toString(), name);
+				extras.putString(KeyEnum.channelId.toString(), cid);
+				// start tvbackepg intent
+				Intent intent = new Intent();
+				intent.setClass(TvBack.this, TvBackEpg.class);
+				intent.putExtras(extras);
+				Framework.switchActivity("TvBackEpg", intent);
+			}
+		});
+		
+		
+        // btn back
+        mBtnBack.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Framework.switchActivityBack();
+			}
+		});
+   
+	}
+	
+	private void showList()
+	{		
+		if( tvbackAdapter == null ){
+			tvbackAdapter = new TvBackChannelAdapter(this);
+			mGridView.setAdapter(tvbackAdapter);
+		} else {
+			tvbackAdapter.notifyDataSetChanged();
+		}
+	}
+		
+	private void initGui()
+	{
+		mGridView = (GridView) findViewById(R.id.tvback_list);
+		mGridView.setSelector(new ColorDrawable(Color.TRANSPARENT));
+		mGridView.setGravity(Gravity.CENTER);
+		mGridView.setVerticalSpacing( 20 );// 垂直间隔
+		
+        mBtnBack = (Button) findViewById(R.id.tvback_btn_back);
+        
+        mProgressDlg = (ProgressDialog) AlertUtils.createDialog(AlertUtils.NO_TITLE, this);
+	}
+	
+	private void getTestData()
+	{
+		for(int i=0;i<10;i++)  
+        {  
+			Map<String, Object> map = new HashMap<String, Object>();  
+          	map.put(KeyEnum.name.toString(), String.format("CCTV%d", i));
+			map.put(KeyEnum.poster.toString(), "http://image1.webscache.com/baike/haibao/ipad/2008-08/202573033-321-2008-08-29%2015-19-47.jpg");
+			map.put(KeyEnum.categories.toString(), "tvback");
+			map.put(KeyEnum.recommendRank.toString(), 8.5f);
+			map.put(KeyEnum.channelId.toString(), 100015500);
+			mListItem.add(map);
+        }
+	}
+	
+	private class TvBackChannelAdapter extends BaseAdapter{
+		private Context mCon;
+		private ImageDownloader downloader =ImageDownloader.getImageDownloader();
+		
+		private class ViewHolder{
+			ImageView iv;
+			TextView  tv;
+		}
+		
+		public TvBackChannelAdapter( Context c ) {
+			mCon = c;
+		}
+		
+		@Override
+		public int getCount() {
+			// TODO Auto-generated method stub
+			return mListItem.size();
+		}
+
+		@Override
+		public Object getItem(int arg0) {
+			// TODO Auto-generated method stub
+			return arg0;
+		}
+
+		@Override
+		public long getItemId(int arg0) {
+			// TODO Auto-generated method stub
+			return arg0;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			// TODO Auto-generated method stub
+			ViewHolder holder;
+			if( convertView == null ){
+				LayoutInflater mInflater = (LayoutInflater) mCon.getSystemService(
+						Context.LAYOUT_INFLATER_SERVICE);
+				
+				convertView = mInflater.inflate(R.layout.tvback_item, parent, false);
+				
+				holder = new ViewHolder();
+				holder.iv = (ImageView) convertView.findViewById(R.id.tvback_item_image);
+				holder.tv = (TextView) convertView.findViewById(R.id.tvback_item_name);
+				convertView.setTag(holder);				
+			} else {
+				holder = (ViewHolder) convertView.getTag();
+			}
+			
+			String poster = mListItem.get(position).get(KeyEnum.poster.toString()).toString();
+			if (!ValidateUtil.isBlank(poster) && holder.iv != null) {
+				downloader.download(poster, holder.iv);
+			}
+			
+			String name = mListItem.get(position).get(KeyEnum.name.toString()).toString();
+			if( !ValidateUtil.isBlank(name) ){
+				holder.tv.setText(name);
+			} else {
+				holder.tv.setText("");
+			}
+			
+			return convertView;
+		}
+		
+	}
+	
+}

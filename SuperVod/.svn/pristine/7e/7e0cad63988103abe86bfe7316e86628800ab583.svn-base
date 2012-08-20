@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/background">
+
+
+    <LinearLayout
+        android:id="@+id/myepg_ll_title"
+        android:layout_width="fill_parent"
+        android:layout_height="43dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/homepage_top"
+        android:gravity="center_vertical|center_horizontal" >
+
+        <Button
+            android:id="@+id/myepg_btn_back"
+            android:layout_width="68dp"
+            android:layout_height="wrap_content"
+            android:text="@string/detail_btn_back" 
+            style="@style/Button_Return" 
+			android:layout_marginLeft="5dp"/>
+
+        <TextView
+            android:id="@+id/myepg_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/myvod_title"
+            android:textAppearance="?android:attr/textAppearanceLarge" android:layout_marginLeft="30dp"/>
+
+
+        <Button
+            android:id="@+id/myepg_btn_edit"
+            style="@style/further_title_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp" android:text="@string/further_btn_edit"/>
+
+
+        <Button
+            android:id="@+id/myepg_btn_submit_clear"
+            style="@style/further_title_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="9dp"
+            android:text="@string/further_btn_submit" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/myepg_tv_info"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/myepg_ll_title"
+        android:background="@drawable/btn_title"
+        android:paddingLeft="10dp"
+        android:text="@string/myepg_txt_myepginfo"
+        android:textSize="18sp"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <com.stv.supervod.widget_extended.ExListViewMyepg 
+        android:id="@+id/myepg_list" 
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/myepg_tv_info"
+        android:drawSelectorOnTop="false" 
+        android:fastScrollEnabled="false" />
+
+</RelativeLayout>

@@ -1,0 +1,161 @@
+package com.stv.supervod.activity;
+
+import com.stv.supervod.activity.R.string;
+import com.stv.supervod.doc.DB;
+import com.stv.supervod.exception.ErrorCodeException;
+import com.stv.supervod.service.HttpDownloadImpl.KeyEnum;
+import com.stv.supervod.service.HttpDownloadImpl.TypeEnum;
+import com.stv.supervod.service.MyVodServiceImpl;
+import com.stv.supervod.service.MyVodServiceImpl.MyVodAddResult;
+import com.stv.supervod.utils.Constant.PlayerType;
+import com.stv.supervod.utils.ErrorCode;
+import com.stv.supervod.utils.ValidateUtil;
+
+import android.app.Activity;
+import android.content.ContentValues;
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.KeyEvent;
+
+public class BaseActivity extends Activity {
+	private final static String TAG = "BaseActivity";
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		
+		if(keyCode == KeyEvent.KEYCODE_BACK){
+			Framework.switchActivityBack();
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
+	}
+	
+	/**
+	 * Description: 显示详细信息(电影、电视剧)
+	 * @Version1.0 2012-1-10 上午10:26:56 zhaojunfeng created
+	 * @param c
+	 * @param type: 显示类型，只能是电影、电视剧
+	 * @param assetid：
+	 * @return: 
+	 * 			true: 	success
+	 * 			false:	failed
+	 */
+	public boolean showDetail( String type, String assetid) {
+		try {
+			if( ValidateUtil.isBlank(type) ){
+				throw new Exception("showDetail null type!");
+			}
+			if( !ValidateUtil.isNumber(assetid) ){
+				throw new Exception("showDetail assetid invalidate!");
+			}
+			
+			Intent intent = new Intent();
+			Bundle extras = new Bundle();
+			extras.putString(KeyEnum.assetId.toString(), assetid);
+			if( type.equals(TypeEnum.MOVIE.toString())){
+				intent.setClass(BaseActivity.this, CommDetail.class);
+				intent.putExtras(extras);
+				Framework.switchActivity("CommDetail", intent);	
+			} else if(type.equals(TypeEnum.TV.toString())){
+				intent.setClass(BaseActivity.this, EpisodeDetail.class);
+				intent.putExtras(extras);
+				Framework.switchActivity("EpisodeDetail", intent);	
+			} else {
+				throw new Exception("showDetail error type");
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			//AlertUtils.displayToast(this, e.getMessage());
+			Log.e(TAG, e.getMessage());
+			return false;
+		}
+		
+		return true;
+	}
+	
+	/**
+	 * Description: 添加到我的收藏中，对于MTV和TSTV，名字需要各个应用单独处理
+	 * 				比如MTV中，歌手添加到title的后面
+	 * @Version1.0 2012-1-16 下午5:21:49 zhaojunfeng created
+	 * @param title
+	 * @param type
+	 * @param category
+	 * @param poster
+	 * @param assetid
+	 * @return
+	 */
+	public boolean addMyfav( String title, String type , 
+			String category, String poster, String assetid ) {
+		try {
+			ContentValues values = new ContentValues();
+			values.put(KeyEnum.title.toString(),title);
+			values.put(KeyEnum.type.toString(),type);
+			values.put(KeyEnum.categories.toString(),category);
+			values.put(KeyEnum.poster.toString(),poster);
+			values.put(KeyEnum.assetId.toString(),assetid);
+			return DB.getDBInstance(this).addMyFav(values);
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	/**
+	 * Description: 加入我的频道
+	 * @Version1.0 2012-3-7 下午4:30:46 zhaojunfeng created
+	 * @param channelId
+	 * @param assetId
+	 * @param type
+	 * @return
+	 * @throws ErrorCodeException
+	 */
+	public MyVodAddResult addMyVod( String channelId, String assetId, String type ) 
+			throws ErrorCodeException {
+		MyVodAddResult ret = MyVodAddResult.success;
+		try {
+			MyVodServiceImpl myVodSer = new MyVodServiceImpl();
+			ret = myVodSer.add(channelId, assetId, type);			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			throw new ErrorCodeException( ErrorCode.getErrorInfo(e) );
+		}
+		return ret;
+	}
+	
+	/**
+	 * Description: 启动普通播放器
+	 * @Version1.0 2012-3-8 下午5:10:20 zhaojunfeng created
+	 * @param offingId
+	 * @param name
+	 * @param isBookmark
+	 * @return
+	 */
+	public Boolean showPlayer( String offingId, String name, Boolean isBookmark ) {
+		try {
+			if( !ValidateUtil.isNumber(offingId) ){
+				throw new Exception("showPlayer offingId invalidate!");
+			}
+			
+			Bundle extras = new Bundle();
+			extras.putString(KeyEnum.type.toString(), PlayerType.common.toString());
+			extras.putString(KeyEnum.offeringId.toString(), offingId);
+			extras.putString(KeyEnum.name.toString(), name);
+			extras.putBoolean(KeyEnum.bookmark.toString(), isBookmark);
+			Intent intent = new Intent();
+			//intent.setClass(c, Detail.class);
+			intent.setClass(BaseActivity.this, Play.class);
+			intent.putExtras(extras);
+			startActivity(intent);
+		} catch (Exception e) {
+			// TODO: handle exception
+			//AlertUtils.displayToast(this, e.getMessage());
+			Log.e(TAG, e.getMessage());
+			return false;
+		}
+		
+		return true;
+	}
+}

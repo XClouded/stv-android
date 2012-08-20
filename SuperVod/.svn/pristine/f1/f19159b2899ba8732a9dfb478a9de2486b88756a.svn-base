@@ -1,0 +1,171 @@
+package com.stv.supervod.service;
+
+import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Handler;
+import android.os.IBinder;
+
+public class VideoService extends Service{
+		
+	public static final int SUCCESS_PLAY = 80;  //申请服务成功：VOD播放状态
+	public static final int SUCCESS_PAUSE = 81; //申请服务成功：vod暂停状态
+	public static final int FAIL_NOT_EXIST_RESOURCE = 82;   //申请服务失败：资源不存在
+	public static final int FAIL_NOT_EXIST_USER = 83;   //申请服务失败：无此用户
+	public static final int FAIL_SYSTEM_ERROR = 84;//申请服务失败：VOD系统错误
+	public static final int FAIL_RESOURCE_NOT_ENOUGH = 85;//申请服务失败：vod资源不足
+	public static final int FAIL_CA_SWITHCHFREP = 86; //申请服务失败：CA系统切换频点失败
+	public static final int FAIL_MULTI_ACTIVE_USER=87;//申请服务失败：多个活跃用户
+	public static final int FAIL_SYSTEM_MAINTAINING=88;//申请服务失败，系统维护中
+	public static final int FAIL_PASSWORD_ERROR=89;//点播失败：密码错误
+	public static final int SUCCESS_FINISHED_PLAY=90;//点播节目已播放完成
+	public static final int FAIL_SESSION_NOT_EXIST=91;//会话已经不存在
+	public static final int FAIL_ILLEGAL_DATA = 92;//非法数据，解析数据有问题时返回
+	public static final int SUCCESS_ALL_FINISHED_PLAY=93;//全部播放完成
+	
+	
+	private static final int VIDEO_PLAY = 1;
+	private static final int VIDEO_PAUSE = 2;
+	private static final int VIDEO_STOP = 3;
+	private static final int PROGRESS_CHANGE = 4;
+	private static final int VIDEO_REWIND = 5;
+	private static final int VIDEO_FORWARD = 6;
+	
+	private Handler rHandler = null;
+	private Handler fHandler = null;
+	private int currentTime;
+	private int duration;
+	@Override
+	public IBinder onBind(Intent intent) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void onCreate() {
+		// TODO Auto-generated method stub
+		rHandler = new Handler();
+		fHandler = new Handler();
+		rHandler.removeCallbacks(rewind);
+		fHandler.removeCallbacks(forward);
+		
+	}
+
+	@Override
+	public void onStart(Intent intent, int startId) {
+		// TODO Auto-generated method stub
+		super.onStart(intent, startId);
+		int op = intent.getIntExtra("op", -1);
+		if (op!=-1){
+			switch (op) {
+			case VIDEO_PLAY:
+//				if(!mp.isPlaying()){
+//					play();
+//				}
+				break;
+			case VIDEO_PAUSE:
+//				if (mp.isPlaying()){
+//					pause();
+//				}
+				break;
+			case VIDEO_STOP://停止
+				stopSelf();
+				break;
+			case PROGRESS_CHANGE:
+			    currentTime = intent.getExtras().getInt("progress");
+//			    mp.seekTo(currentTime);
+			    
+				break;
+			case VIDEO_REWIND:
+				rewind();
+				break;
+			case VIDEO_FORWARD:
+				forward();
+				break;
+			} 
+		}
+	}
+
+	private void play() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void pause() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void rewind() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void forward() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+	}
+	
+    Runnable rewind = new Runnable() {
+		
+		@Override
+		public void run() {
+			if (currentTime>=0){
+				currentTime = currentTime - 5000;
+//				mp.seekTo(currentTime);
+				rHandler.postDelayed(rewind, 500);
+			}
+			
+		}
+	};
+	
+	Runnable forward = new Runnable() {
+		
+		@Override
+		public void run() {
+			if (currentTime<=duration){
+				currentTime = currentTime + 5000;
+//				mp.seekTo(currentTime);
+				fHandler.postDelayed(forward, 500);
+			}
+		}
+	};
+	
+   protected BroadcastReceiver appWidgetReceiver = new BroadcastReceiver() {
+		
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			if (intent.getAction().equals("com.alex.playmusic")){
+//				if (mp.isPlaying()){
+////					pause();
+//					Intent pauseIntent = new Intent("com.alex.pause");
+//					sendBroadcast(pauseIntent);
+//				} else {
+////					play();
+//					Intent playIntent = new Intent("com.alex.play");
+//					sendBroadcast(playIntent);
+//				}
+			} else if (intent.getAction().equals("com.alex.nextone")){
+//				nextOne();
+				Intent playIntent = new Intent("com.alex.play");
+				sendBroadcast(playIntent);
+			} else if (intent.getAction().equals("com.alex.lastone")){
+//				lastOne();
+				Intent playIntent = new Intent("com.alex.play");
+				sendBroadcast(playIntent);
+			} else if (intent.getAction().equals("com.alex.startapp")){
+				Intent intent1 = new Intent("com.alex.musictitle");
+//				intent1.putExtra("title", _title);
+				sendBroadcast(intent1);
+			}
+		}
+	};
+
+}

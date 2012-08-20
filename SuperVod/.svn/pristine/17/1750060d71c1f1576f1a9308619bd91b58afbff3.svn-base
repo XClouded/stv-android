@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="fill_parent"
+        android:layout_height="43dp"
+        android:orientation="vertical" 
+        android:background="@drawable/homepage_top" 
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/myvod_textView_title"
+            style="@style/Title"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/myvod_title"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    </LinearLayout>
+
+    <FrameLayout 
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent" 
+        android:paddingTop="60dp">
+
+	    <GridView
+	        android:id="@+id/myvod_gridview"
+			android:layout_height="fill_parent"
+	        android:layout_width="wrap_content"
+	        android:numColumns="2" 
+	        android:stackFromBottom="false" 
+	        android:gravity="center"
+			android:verticalSpacing="15dp"
+			android:listSelector="@drawable/channel_main_press" />
+
+    </FrameLayout>
+	
+</RelativeLayout>

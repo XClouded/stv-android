@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.stv.supervod.activity"
+    android:versionCode="1"
+    android:versionName="1.0 Beta" >
+
+    <uses-sdk android:minSdkVersion="4" />
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <supports-screens
+        android:anyDensity="true"
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:smallScreens="true" />
+
+    <application
+        android:icon="@drawable/icon"
+        android:label="@string/app_name"
+        android:theme="@android:style/Theme.NoTitleBar" >
+        <activity
+            android:label="@string/app_name"
+            android:name=".Welcome" >
+            <intent-filter >
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".Framework" >
+        </activity>
+        <activity android:name=".Bookmark" >
+        </activity>
+        <activity android:name=".Category" >
+        </activity>
+        <activity android:name=".CategoryItem" >
+        </activity>
+        <activity android:name=".Detail" >
+        </activity>
+        <activity android:name=".Further" >
+        </activity>
+        <activity android:name=".Homepage" >
+        </activity>
+        <activity android:name=".Interest" >
+        </activity>
+        <activity android:name=".LiveChannels" >
+        </activity>
+        <activity android:name=".Login" />
+        <activity android:name=".LoginSuccess" />
+        <activity android:name=".MyEPG" >
+        </activity>
+        <activity android:name=".Play" >
+        </activity>
+        <activity android:name=".Register" >
+        </activity>
+        <activity
+            android:name=".Search"
+            android:windowSoftInputMode="stateUnchanged|adjustPan" >
+        </activity>
+        <activity android:name=".TvBack" >
+        </activity>
+        <activity android:name=".TvBackEpg" >
+        </activity>
+    </application>
+
+</manifest>

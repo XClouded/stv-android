@@ -1,0 +1,9 @@
+<<<<<<< .mine
+#Tue Jan 04 16:20:01 CST 2011
+=======
+#Mon Jan 31 13:19:43 CST 2011
+>>>>>>> .r4082
+org.eclipse.jdt.core.compiler.codegen.targetPlatform=1.6
+eclipse.preferences.version=1
+org.eclipse.jdt.core.compiler.source=1.6
+org.eclipse.jdt.core.compiler.compliance=1.6

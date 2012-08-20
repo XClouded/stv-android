@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="43dp"
+        android:background="@drawable/about_btn_bg_normal"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/logo" >
+        </ImageView>
+
+        <Button
+            android:layout_width="68dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="180dp"
+            style="@style/Button"
+            android:drawableLeft="@drawable/viplogo_logout"
+            android:onClick="showLoginPage"
+            android:text="@string/vod_register" />
+
+    </LinearLayout>
+
+    <ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <Gallery
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/gallery"
+                android:layout_width="fill_parent"
+                android:layout_height="171dp" >
+            </Gallery>
+
+            <ImageView
+                android:id="@+id/today"
+                android:layout_width="fill_parent"
+                android:layout_height="27dp"
+                android:onClick="showtype"
+                android:src="@drawable/today_hit_right" />
+            <ListView
+                android:id="@+id/today_hit"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
+
+            <ImageView
+                android:layout_width="fill_parent"
+                android:layout_height="27dp"
+                android:src="@drawable/today_hit_right" />
+            <ImageView
+                android:layout_width="fill_parent"
+                android:layout_height="27dp"
+                android:src="@drawable/today_hit_right" />
+           
+            <ImageView
+                android:layout_width="fill_parent"
+                android:layout_height="27dp"
+                android:src="@drawable/today_hit_right" />
+           
+            <ImageView
+                android:layout_width="fill_parent"
+                android:layout_height="27dp"
+                android:src="@drawable/today_hit_right" />
+           
+            <ImageView
+                android:layout_width="fill_parent"
+                android:layout_height="27dp"
+                android:src="@drawable/today_hit_right" />
+           
+            
+           
+           
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

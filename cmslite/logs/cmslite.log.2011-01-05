@@ -1,0 +1,181 @@
+2011-01-05 09:36:45,437 [main] WARN  [org.springframework.beans.factory.config.PropertyPlaceholderConfigurer] - Could not load properties from URL [file:/var/cmslite/application.server.properties]: \var\cmslite\application.server.properties (系统找不到指定的路径。)
+2011-01-05 09:37:44,046 [14978629@qtp-15655788-3] DEBUG [cn.com.supertv.cmslite.dao.cms.TvDao] - save entity: cn.com.supertv.cmslite.entity.cms.Tv@1d5176d[version=0,title=TV_32,releaseYear=<null>,description=<null>,runTime=<null>,suggestedPrice=1,ftpId=,posterFtpPath=,previewFtpPath=,actors=actors,directors=directors,genreTreeIndex=002,regionTreeIndex=002,volumn=<null>,recommended=<null>,previewRunTime=100,createBy=<null>,createTime=Wed Jan 05 09:37:43 CST 2011,lastModifyBy=<null>,lastModifyTime=<null>,providerId=002,beginNum=32,num=1,episodes=[cn.com.supertv.cmslite.entity.cms.Episode@19432e0[version=0,tv=cn.com.supertv.cmslite.entity.cms.Tv@1d5176d,videoFtpPath=,episodeId=1,state=<null>,ftpId=,suggestedPrice=1,createTime=Wed Jan 05 09:37:43 CST 2011,createBy=<null>,lastModifyTime=<null>,lastModifyBy=<null>,oplogs=<null>,id=784], cn.com.supertv.cmslite.entity.cms.Episode@3bed68[version=0,tv=cn.com.supertv.cmslite.entity.cms.Tv@1d5176d,videoFtpPath=,episodeId=2,state=<null>,ftpId=,suggestedPrice=1,createTime=Wed Jan 05 09:37:43 CST 2011,createBy=<null>,lastModifyTime=<null>,lastModifyBy=<null>,oplogs=<null>,id=785]],id=33]
+2011-01-05 09:37:44,328 [14978629@qtp-15655788-3] WARN  [org.apache.cxf.phase.PhaseInterceptorChain] - Interceptor for {http://cms.supertv.com.cn}CMSWebServiceService#{http://cms.supertv.com.cn}createTv has thrown exception, unwinding now
+org.apache.cxf.interceptor.Fault: Could not send Message.
+	at org.apache.cxf.interceptor.MessageSenderInterceptor$MessageSenderEndingInterceptor.handleMessage(MessageSenderInterceptor.java:64)
+	at org.apache.cxf.phase.PhaseInterceptorChain.doIntercept(PhaseInterceptorChain.java:244)
+	at org.apache.cxf.endpoint.ClientImpl.invoke(ClientImpl.java:516)
+	at org.apache.cxf.endpoint.ClientImpl.invoke(ClientImpl.java:313)
+	at org.apache.cxf.endpoint.ClientImpl.invoke(ClientImpl.java:265)
+	at org.apache.cxf.frontend.ClientProxy.invokeSync(ClientProxy.java:73)
+	at org.apache.cxf.jaxws.JaxWsClientProxy.invoke(JaxWsClientProxy.java:124)
+	at $Proxy82.createTv(Unknown Source)
+	at cn.com.supertv.cmslite.service.cms.TvManager.saveTvs(TvManager.java:105)
+	at cn.com.supertv.cmslite.service.cms.TvManager$$FastClassByCGLIB$$e9969435.invoke(<generated>)
+	at net.sf.cglib.proxy.MethodProxy.invoke(MethodProxy.java:191)
+	at org.springframework.aop.framework.Cglib2AopProxy$CglibMethodInvocation.invokeJoinpoint(Cglib2AopProxy.java:688)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:150)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:110)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:172)
+	at org.springframework.aop.framework.Cglib2AopProxy$DynamicAdvisedInterceptor.intercept(Cglib2AopProxy.java:621)
+	at cn.com.supertv.cmslite.service.cms.TvManager$$EnhancerByCGLIB$$d7c830e4.saveTvs(<generated>)
+	at cn.com.supertv.cmslite.web.cms.TvAction.save(TvAction.java:57)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+	at java.lang.reflect.Method.invoke(Method.java:597)
+	at com.opensymphony.xwork2.DefaultActionInvocation.invokeAction(DefaultActionInvocation.java:452)
+	at com.opensymphony.xwork2.DefaultActionInvocation.invokeActionOnly(DefaultActionInvocation.java:291)
+	at com.opensymphony.xwork2.DefaultActionInvocation.invoke(DefaultActionInvocation.java:254)
+	at com.opensymphony.xwork2.interceptor.DefaultWorkflowInterceptor.doIntercept(DefaultWorkflowInterceptor.java:176)
+	at com.opensymphony.xwork2.interceptor.MethodFilterInterceptor.intercept(MethodFilterInterceptor.java:98)
+	at com.opensymphony.xwork2.DefaultActionInvocation.invoke(DefaultActionInvocation.java:248)
+	at com.opensymphony.xwork2.validator.ValidationInterceptor.doIntercept(ValidationInterceptor.java:263)
+	at org.apache.struts2.interceptor.validation.AnnotationValidationInterceptor.doIntercept(AnnotationValidationInterceptor.java:68)
+	at com.opensymphony.xwork2.interceptor.MethodFilterInterceptor.intercept(MethodFilterInterceptor.java:98)
+	at com.opensymphony.xwork2.DefaultActionInvocation.invoke(DefaultActionInvocation.java:248)
+	at com.opensymphony.xwork2.interceptor.ConversionErrorInterceptor.intercept(ConversionErrorInterceptor.java:133)
+	at com.opensymphony.xwork2.DefaultActionInvocation.invoke(DefaultActionInvocation.java:248)
+	at com.opensymphony.xwork2.interceptor.ParametersInterceptor.doIntercept(ParametersInterceptor.java:207)
+	at com.opensymphony.xwork2.interceptor.MethodFilterInterceptor.intercept(MethodFilterInterceptor.java:98)
+	at com.opensymphony.xwork2.DefaultActionInvocation.invoke(DefaultActionInvocation.java:248)
+	at com.opensymphony.xwork2.interceptor.ParametersInterceptor.doIntercept(ParametersInterceptor.java:207)
+	at com.opensymphony.xwork2.interceptor.MethodFilterInterceptor.intercept(MethodFilterInterceptor.java:98)
+	at com.opensymphony.xwork2.DefaultActionInvocation.invoke(DefaultActionInvocation.java:248)
+	at com.opensymphony.xwork2.interceptor.StaticParametersInterceptor.intercept(StaticParametersInterceptor.java:190)
+	at com.opensymphony.xwork2.DefaultActionInvocation.invoke(DefaultActionInvocation.java:248)
+	at org.apache.struts2.interceptor.FileUploadInterceptor.intercept(FileUploadInterceptor.java:243)
+	at com.opensymphony.xwork2.DefaultActionInvocation.invoke(DefaultActionInvocation.java:248)
+	at com.opensymphony.xwork2.interceptor.ModelDrivenInterceptor.intercept(ModelDrivenInterceptor.java:100)
+	at com.opensymphony.xwork2.DefaultActionInvocation.invoke(DefaultActionInvocation.java:248)
+	at com.opensymphony.xwork2.interceptor.ChainingInterceptor.intercept(ChainingInterceptor.java:142)
+	at com.opensymphony.xwork2.DefaultActionInvocation.invoke(DefaultActionInvocation.java:248)
+	at com.opensymphony.xwork2.interceptor.PrepareInterceptor.doIntercept(PrepareInterceptor.java:166)
+	at com.opensymphony.xwork2.interceptor.MethodFilterInterceptor.intercept(MethodFilterInterceptor.java:98)
+	at com.opensymphony.xwork2.DefaultActionInvocation.invoke(DefaultActionInvocation.java:248)
+	at org.apache.struts2.interceptor.ServletConfigInterceptor.intercept(ServletConfigInterceptor.java:164)
+	at com.opensymphony.xwork2.DefaultActionInvocation.invoke(DefaultActionInvocation.java:248)
+	at com.opensymphony.xwork2.interceptor.ParametersInterceptor.doIntercept(ParametersInterceptor.java:207)
+	at com.opensymphony.xwork2.interceptor.MethodFilterInterceptor.intercept(MethodFilterInterceptor.java:98)
+	at com.opensymphony.xwork2.DefaultActionInvocation.invoke(DefaultActionInvocation.java:248)
+	at org.apache.struts2.interceptor.MultiselectInterceptor.intercept(MultiselectInterceptor.java:75)
+	at com.opensymphony.xwork2.DefaultActionInvocation.invoke(DefaultActionInvocation.java:248)
+	at org.apache.struts2.interceptor.CheckboxInterceptor.intercept(CheckboxInterceptor.java:94)
+	at com.opensymphony.xwork2.DefaultActionInvocation.invoke(DefaultActionInvocation.java:248)
+	at com.opensymphony.xwork2.interceptor.I18nInterceptor.intercept(I18nInterceptor.java:176)
+	at com.opensymphony.xwork2.DefaultActionInvocation.invoke(DefaultActionInvocation.java:248)
+	at com.opensymphony.xwork2.interceptor.AliasInterceptor.intercept(AliasInterceptor.java:190)
+	at com.opensymphony.xwork2.DefaultActionInvocation.invoke(DefaultActionInvocation.java:248)
+	at com.opensymphony.xwork2.interceptor.ExceptionMappingInterceptor.intercept(ExceptionMappingInterceptor.java:187)
+	at com.opensymphony.xwork2.DefaultActionInvocation.invoke(DefaultActionInvocation.java:248)
+	at org.apache.struts2.interceptor.MessageStoreInterceptor.intercept(MessageStoreInterceptor.java:204)
+	at com.opensymphony.xwork2.DefaultActionInvocation.invoke(DefaultActionInvocation.java:248)
+	at org.apache.struts2.impl.StrutsActionProxy.execute(StrutsActionProxy.java:52)
+	at org.apache.struts2.dispatcher.Dispatcher.serviceAction(Dispatcher.java:485)
+	at org.apache.struts2.dispatcher.ng.ExecuteOperations.executeAction(ExecuteOperations.java:77)
+	at org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter.doFilter(StrutsPrepareAndExecuteFilter.java:91)
+	at org.mortbay.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1157)
+	at org.apache.struts2.dispatcher.ActionContextCleanUp.doFilter(ActionContextCleanUp.java:102)
+	at org.mortbay.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1157)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:343)
+	at org.springframework.security.web.access.intercept.FilterSecurityInterceptor.invoke(FilterSecurityInterceptor.java:109)
+	at org.springframework.security.web.access.intercept.FilterSecurityInterceptor.doFilter(FilterSecurityInterceptor.java:83)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:355)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:97)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:355)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:100)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:355)
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:78)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:355)
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:54)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:355)
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:35)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:355)
+	at org.springframework.security.web.authentication.www.BasicAuthenticationFilter.doFilter(BasicAuthenticationFilter.java:177)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:355)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:187)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:355)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:105)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:355)
+	at org.springframework.security.web.context.SecurityContextPersistenceFilter.doFilter(SecurityContextPersistenceFilter.java:79)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:355)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:149)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:237)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:167)
+	at org.mortbay.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1157)
+	at org.springframework.orm.hibernate3.support.OpenSessionInViewFilter.doFilterInternal(OpenSessionInViewFilter.java:198)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:76)
+	at org.mortbay.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1157)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:88)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:76)
+	at org.mortbay.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1157)
+	at org.mortbay.jetty.servlet.ServletHandler.handle(ServletHandler.java:388)
+	at org.mortbay.jetty.security.SecurityHandler.handle(SecurityHandler.java:216)
+	at org.mortbay.jetty.servlet.SessionHandler.handle(SessionHandler.java:182)
+	at org.mortbay.jetty.handler.ContextHandler.handle(ContextHandler.java:765)
+	at org.mortbay.jetty.webapp.WebAppContext.handle(WebAppContext.java:440)
+	at org.mortbay.jetty.handler.HandlerWrapper.handle(HandlerWrapper.java:152)
+	at org.mortbay.jetty.Server.handle(Server.java:326)
+	at org.mortbay.jetty.HttpConnection.handleRequest(HttpConnection.java:542)
+	at org.mortbay.jetty.HttpConnection$RequestHandler.content(HttpConnection.java:943)
+	at org.mortbay.jetty.HttpParser.parseNext(HttpParser.java:756)
+	at org.mortbay.jetty.HttpParser.parseAvailable(HttpParser.java:218)
+	at org.mortbay.jetty.HttpConnection.handle(HttpConnection.java:404)
+	at org.mortbay.jetty.bio.SocketConnector$Connection.run(SocketConnector.java:228)
+	at org.mortbay.thread.QueuedThreadPool$PoolThread.run(QueuedThreadPool.java:582)
+Caused by: java.io.IOException: IOException invoking http://192.168.15.190/bo/ws/cmsservice: HTTP response '404: Not Found'
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:39)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:27)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:513)
+	at org.apache.cxf.transport.http.HTTPConduit$WrappedOutputStream.mapException(HTTPConduit.java:2058)
+	at org.apache.cxf.transport.http.HTTPConduit$WrappedOutputStream.close(HTTPConduit.java:2043)
+	at org.apache.cxf.transport.AbstractConduit.close(AbstractConduit.java:66)
+	at org.apache.cxf.transport.http.HTTPConduit.close(HTTPConduit.java:639)
+	at org.apache.cxf.interceptor.MessageSenderInterceptor$MessageSenderEndingInterceptor.handleMessage(MessageSenderInterceptor.java:62)
+	... 120 more
+Caused by: java.io.IOException: HTTP response '404: Not Found'
+	at org.apache.cxf.transport.http.HTTPConduit$WrappedOutputStream.handleResponseInternal(HTTPConduit.java:2194)
+	at org.apache.cxf.transport.http.HTTPConduit$WrappedOutputStream.handleResponse(HTTPConduit.java:2134)
+	at org.apache.cxf.transport.http.HTTPConduit$WrappedOutputStream.close(HTTPConduit.java:1988)
+	... 123 more
+2011-01-05 09:40:43,859 [main] WARN  [org.springframework.beans.factory.config.PropertyPlaceholderConfigurer] - Could not load properties from URL [file:/var/cmslite/application.server.properties]: \var\cmslite\application.server.properties (系统找不到指定的路径。)
+2011-01-05 09:42:20,203 [3098834@qtp-22808536-0] DEBUG [cn.com.supertv.cmslite.dao.cms.MovieDao] - save entity: cn.com.supertv.cmslite.entity.cms.Movie@1a4d139[version=0,title=Movie_21,releaseYear=<null>,description=<null>,actors=actors,directors=directors,runTime=<null>,suggestedPrice=1,recommended=<null>,ftpId=,previewFtpPath=,videoFtpPath=,posterFtpPath=,genreTreeIndex=谍战,regionTreeIndex=欧美,state=<null>,previewRunTime=<null>,createBy=createBy,createTime=Wed Jan 05 09:42:20 CST 2011,lastModifyBy=<null>,lastModifyTime=<null>,providerId=华谊兄弟,beginNum=21,num=1,oplogs=[],id=22]
+2011-01-05 15:12:51,156 [main] WARN  [org.springframework.beans.factory.config.PropertyPlaceholderConfigurer] - Could not load properties from URL [file:/var/cmslite/application.server.properties]: \var\cmslite\application.server.properties (系统找不到指定的路径。)
+2011-01-05 15:34:10,859 [main] WARN  [org.springframework.beans.factory.config.PropertyPlaceholderConfigurer] - Could not load properties from URL [file:/var/cmslite/application.server.properties]: \var\cmslite\application.server.properties (系统找不到指定的路径。)
+2011-01-05 15:49:48,546 [main] WARN  [org.springframework.beans.factory.config.PropertyPlaceholderConfigurer] - Could not load properties from URL [file:/var/cmslite/application.server.properties]: \var\cmslite\application.server.properties (系统找不到指定的路径。)
+2011-01-05 16:05:35,015 [main] WARN  [org.springframework.beans.factory.config.PropertyPlaceholderConfigurer] - Could not load properties from URL [file:/var/cmslite/application.server.properties]: \var\cmslite\application.server.properties (系统找不到指定的路径。)
+2011-01-05 16:07:13,968 [2105581@qtp-16437003-3] DEBUG [cn.com.supertv.cmslite.dao.cms.MovieDao] - save entity: cn.com.supertv.cmslite.entity.cms.Movie@1cba664[version=0,title=Movie_22,releaseYear=<null>,description=<null>,actors=actors,directors=directors,runTime=100,suggestedPrice=1,recommended=<null>,ftpId=,previewFtpPath=,videoFtpPath=,posterFtpPath=,genreTreeIndex=,regionTreeIndex=,state=EDITABLE,previewRunTime=100,createBy=createBy,createTime=Wed Jan 05 16:07:13 CST 2011,lastModifyBy=<null>,lastModifyTime=<null>,providerId=,beginNum=22,num=10,oplogs=[],id=23]
+2011-01-05 16:07:13,968 [2105581@qtp-16437003-3] DEBUG [cn.com.supertv.cmslite.dao.cms.MovieDao] - save entity: cn.com.supertv.cmslite.entity.cms.Movie@1c69070[version=0,title=Movie_23,releaseYear=<null>,description=<null>,actors=actors,directors=directors,runTime=100,suggestedPrice=1,recommended=<null>,ftpId=,previewFtpPath=,videoFtpPath=,posterFtpPath=,genreTreeIndex=,regionTreeIndex=,state=EDITABLE,previewRunTime=100,createBy=createBy,createTime=Wed Jan 05 16:07:13 CST 2011,lastModifyBy=<null>,lastModifyTime=<null>,providerId=,beginNum=22,num=10,oplogs=[],id=24]
+2011-01-05 16:07:13,968 [2105581@qtp-16437003-3] DEBUG [cn.com.supertv.cmslite.dao.cms.MovieDao] - save entity: cn.com.supertv.cmslite.entity.cms.Movie@d7e661[version=0,title=Movie_24,releaseYear=<null>,description=<null>,actors=actors,directors=directors,runTime=100,suggestedPrice=1,recommended=<null>,ftpId=,previewFtpPath=,videoFtpPath=,posterFtpPath=,genreTreeIndex=,regionTreeIndex=,state=EDITABLE,previewRunTime=100,createBy=createBy,createTime=Wed Jan 05 16:07:13 CST 2011,lastModifyBy=<null>,lastModifyTime=<null>,providerId=,beginNum=22,num=10,oplogs=[],id=25]
+2011-01-05 16:07:13,968 [2105581@qtp-16437003-3] DEBUG [cn.com.supertv.cmslite.dao.cms.MovieDao] - save entity: cn.com.supertv.cmslite.entity.cms.Movie@1c514a7[version=0,title=Movie_25,releaseYear=<null>,description=<null>,actors=actors,directors=directors,runTime=100,suggestedPrice=1,recommended=<null>,ftpId=,previewFtpPath=,videoFtpPath=,posterFtpPath=,genreTreeIndex=,regionTreeIndex=,state=EDITABLE,previewRunTime=100,createBy=createBy,createTime=Wed Jan 05 16:07:13 CST 2011,lastModifyBy=<null>,lastModifyTime=<null>,providerId=,beginNum=22,num=10,oplogs=[],id=26]
+2011-01-05 16:07:13,984 [2105581@qtp-16437003-3] DEBUG [cn.com.supertv.cmslite.dao.cms.MovieDao] - save entity: cn.com.supertv.cmslite.entity.cms.Movie@bddbc2[version=0,title=Movie_26,releaseYear=<null>,description=<null>,actors=actors,directors=directors,runTime=100,suggestedPrice=1,recommended=<null>,ftpId=,previewFtpPath=,videoFtpPath=,posterFtpPath=,genreTreeIndex=,regionTreeIndex=,state=EDITABLE,previewRunTime=100,createBy=createBy,createTime=Wed Jan 05 16:07:13 CST 2011,lastModifyBy=<null>,lastModifyTime=<null>,providerId=,beginNum=22,num=10,oplogs=[],id=27]
+2011-01-05 16:07:13,984 [2105581@qtp-16437003-3] DEBUG [cn.com.supertv.cmslite.dao.cms.MovieDao] - save entity: cn.com.supertv.cmslite.entity.cms.Movie@1b031ad[version=0,title=Movie_27,releaseYear=<null>,description=<null>,actors=actors,directors=directors,runTime=100,suggestedPrice=1,recommended=<null>,ftpId=,previewFtpPath=,videoFtpPath=,posterFtpPath=,genreTreeIndex=,regionTreeIndex=,state=EDITABLE,previewRunTime=100,createBy=createBy,createTime=Wed Jan 05 16:07:13 CST 2011,lastModifyBy=<null>,lastModifyTime=<null>,providerId=,beginNum=22,num=10,oplogs=[],id=28]
+2011-01-05 16:07:14,000 [2105581@qtp-16437003-3] DEBUG [cn.com.supertv.cmslite.dao.cms.MovieDao] - save entity: cn.com.supertv.cmslite.entity.cms.Movie@3542dc[version=0,title=Movie_28,releaseYear=<null>,description=<null>,actors=actors,directors=directors,runTime=100,suggestedPrice=1,recommended=<null>,ftpId=,previewFtpPath=,videoFtpPath=,posterFtpPath=,genreTreeIndex=,regionTreeIndex=,state=EDITABLE,previewRunTime=100,createBy=createBy,createTime=Wed Jan 05 16:07:13 CST 2011,lastModifyBy=<null>,lastModifyTime=<null>,providerId=,beginNum=22,num=10,oplogs=[],id=29]
+2011-01-05 16:07:14,000 [2105581@qtp-16437003-3] DEBUG [cn.com.supertv.cmslite.dao.cms.MovieDao] - save entity: cn.com.supertv.cmslite.entity.cms.Movie@149ee25[version=0,title=Movie_29,releaseYear=<null>,description=<null>,actors=actors,directors=directors,runTime=100,suggestedPrice=1,recommended=<null>,ftpId=,previewFtpPath=,videoFtpPath=,posterFtpPath=,genreTreeIndex=,regionTreeIndex=,state=EDITABLE,previewRunTime=100,createBy=createBy,createTime=Wed Jan 05 16:07:14 CST 2011,lastModifyBy=<null>,lastModifyTime=<null>,providerId=,beginNum=22,num=10,oplogs=[],id=30]
+2011-01-05 16:07:14,000 [2105581@qtp-16437003-3] DEBUG [cn.com.supertv.cmslite.dao.cms.MovieDao] - save entity: cn.com.supertv.cmslite.entity.cms.Movie@1fbcbad[version=0,title=Movie_30,releaseYear=<null>,description=<null>,actors=actors,directors=directors,runTime=100,suggestedPrice=1,recommended=<null>,ftpId=,previewFtpPath=,videoFtpPath=,posterFtpPath=,genreTreeIndex=,regionTreeIndex=,state=EDITABLE,previewRunTime=100,createBy=createBy,createTime=Wed Jan 05 16:07:14 CST 2011,lastModifyBy=<null>,lastModifyTime=<null>,providerId=,beginNum=22,num=10,oplogs=[],id=31]
+2011-01-05 16:07:14,000 [2105581@qtp-16437003-3] DEBUG [cn.com.supertv.cmslite.dao.cms.MovieDao] - save entity: cn.com.supertv.cmslite.entity.cms.Movie@eef9db[version=0,title=Movie_31,releaseYear=<null>,description=<null>,actors=actors,directors=directors,runTime=100,suggestedPrice=1,recommended=<null>,ftpId=,previewFtpPath=,videoFtpPath=,posterFtpPath=,genreTreeIndex=,regionTreeIndex=,state=EDITABLE,previewRunTime=100,createBy=createBy,createTime=Wed Jan 05 16:07:14 CST 2011,lastModifyBy=<null>,lastModifyTime=<null>,providerId=,beginNum=22,num=10,oplogs=[],id=32]
+2011-01-05 16:23:43,796 [main] WARN  [org.springframework.beans.factory.config.PropertyPlaceholderConfigurer] - Could not load properties from URL [file:/var/cmslite/application.server.properties]: \var\cmslite\application.server.properties (系统找不到指定的路径。)
+2011-01-05 16:25:45,796 [main] WARN  [org.springframework.beans.factory.config.PropertyPlaceholderConfigurer] - Could not load properties from URL [file:/var/cmslite/application.server.properties]: \var\cmslite\application.server.properties (系统找不到指定的路径。)
+2011-01-05 16:26:27,109 [8202719@qtp-25934938-5] DEBUG [cn.com.supertv.cmslite.dao.cms.MovieDao] - save entity: cn.com.supertv.cmslite.entity.cms.Movie@e827e1[version=0,title=movie_beginnum:1_num:10,releaseYear=<null>,description=<null>,actors=actors,directors=directors,runTime=100,suggestedPrice=1,recommended=<null>,ftpId=,previewFtpPath=,videoFtpPath=,posterFtpPath=,genreTreeIndex=,regionTreeIndex=,state=EDITABLE,previewRunTime=100,createBy=createBy,createTime=Wed Jan 05 16:26:27 CST 2011,lastModifyBy=<null>,lastModifyTime=<null>,providerId=,beginNum=1,num=10,oplogs=[],id=33]
+2011-01-05 16:28:00,656 [3554666@qtp-25934938-3] DEBUG [cn.com.supertv.cmslite.dao.cms.MovieDao] - delete entity: cn.com.supertv.cmslite.entity.cms.Movie@6e685a[version=0,title=movie_beginnum:1_num:10,releaseYear=<null>,description=<null>,actors=actors,directors=directors,runTime=100,suggestedPrice=1,recommended=<null>,ftpId=,previewFtpPath=,videoFtpPath=,posterFtpPath=,genreTreeIndex=,regionTreeIndex=,state=EDITABLE,previewRunTime=100,createBy=createBy,createTime=2011-01-05 16:26:27.0,lastModifyBy=<null>,lastModifyTime=<null>,providerId=,beginNum=1,num=10,oplogs=[],id=33]
+2011-01-05 16:28:00,656 [3554666@qtp-25934938-3] DEBUG [cn.com.supertv.cmslite.dao.cms.MovieDao] - delete entity Movie,id is 33
+2011-01-05 16:28:24,406 [20736546@qtp-25934938-0] DEBUG [cn.com.supertv.cmslite.dao.cms.MovieDao] - save entity: cn.com.supertv.cmslite.entity.cms.Movie@cff041[version=0,title=movie_beginnum:1_num:10,releaseYear=<null>,description=<null>,actors=actors,directors=directors,runTime=100,suggestedPrice=1,recommended=<null>,ftpId=,previewFtpPath=,videoFtpPath=,posterFtpPath=,genreTreeIndex=,regionTreeIndex=,state=EDITABLE,previewRunTime=100,createBy=createBy,createTime=Wed Jan 05 16:28:24 CST 2011,lastModifyBy=<null>,lastModifyTime=<null>,providerId=,beginNum=1,num=10,oplogs=[],id=34]
+2011-01-05 16:28:28,968 [26259516@qtp-25934938-2] DEBUG [cn.com.supertv.cmslite.dao.cms.MovieDao] - delete entity: cn.com.supertv.cmslite.entity.cms.Movie@102bd60[version=0,title=movie_beginnum:1_num:10,releaseYear=<null>,description=<null>,actors=actors,directors=directors,runTime=100,suggestedPrice=1,recommended=<null>,ftpId=,previewFtpPath=,videoFtpPath=,posterFtpPath=,genreTreeIndex=,regionTreeIndex=,state=EDITABLE,previewRunTime=100,createBy=createBy,createTime=2011-01-05 16:28:24.0,lastModifyBy=<null>,lastModifyTime=<null>,providerId=,beginNum=1,num=10,oplogs=[],id=34]
+2011-01-05 16:28:28,968 [26259516@qtp-25934938-2] DEBUG [cn.com.supertv.cmslite.dao.cms.MovieDao] - delete entity Movie,id is 34
+2011-01-05 16:29:39,125 [26259516@qtp-25934938-2] DEBUG [cn.com.supertv.cmslite.dao.cms.MovieDao] - save entity: cn.com.supertv.cmslite.entity.cms.Movie@595006[version=0,title=movie_beginnum:1_num:10,releaseYear=<null>,description=<null>,actors=actors,directors=directors,runTime=100,suggestedPrice=1,recommended=<null>,ftpId=aaa,previewFtpPath=aaa,videoFtpPath=aaa,posterFtpPath=aaa,genreTreeIndex=aaa,regionTreeIndex=aaa,state=EDITABLE,previewRunTime=100,createBy=createBy,createTime=Wed Jan 05 16:29:39 CST 2011,lastModifyBy=<null>,lastModifyTime=<null>,providerId=aaa,beginNum=1,num=10,oplogs=[],id=35]
+2011-01-05 16:30:25,390 [26259516@qtp-25934938-2] DEBUG [cn.com.supertv.cmslite.dao.cms.MovieDao] - save entity: cn.com.supertv.cmslite.entity.cms.Movie@73269b[version=0,title=movie_beginnum:11_num:10,releaseYear=<null>,description=<null>,actors=actors,directors=directors,runTime=100,suggestedPrice=1,recommended=<null>,ftpId=aaa,previewFtpPath=aa,videoFtpPath=aaa,posterFtpPath=aaa,genreTreeIndex=aaa,regionTreeIndex=aaa,state=EDITABLE,previewRunTime=100,createBy=createBy,createTime=Wed Jan 05 16:30:25 CST 2011,lastModifyBy=<null>,lastModifyTime=<null>,providerId=aaa,beginNum=11,num=10,oplogs=[],id=36]
+2011-01-05 17:00:45,421 [main] WARN  [org.springframework.beans.factory.config.PropertyPlaceholderConfigurer] - Could not load properties from URL [file:/var/cmslite/application.server.properties]: \var\cmslite\application.server.properties (系统找不到指定的路径。)
+2011-01-05 17:57:05,390 [main] WARN  [org.springframework.beans.factory.config.PropertyPlaceholderConfigurer] - Could not load properties from URL [file:/var/cmslite/application.server.properties]: \var\cmslite\application.server.properties (系统找不到指定的路径。)
+2011-01-05 17:57:50,859 [3938856@qtp-3083761-3] DEBUG [cn.com.supertv.cmslite.dao.cms.MovieDao] - save entity: cn.com.supertv.cmslite.entity.cms.Movie@213b07[version=0,title=movie_beginnum:11_num:10,releaseYear=<null>,description=<null>,actors=actors,directors=directors,runTime=100,suggestedPrice=1,recommended=<null>,ftpId=aaa,previewFtpPath=aa,videoFtpPath=aaa,posterFtpPath=aaa,genreTreeIndex=aaa,regionTreeIndex=aaa,state=CENSORING,previewRunTime=100,createBy=createBy,createTime=2011-01-05 16:30:25.0,lastModifyBy=<null>,lastModifyTime=<null>,providerId=aaa,beginNum=11,num=10,oplogs=[],id=36]
+2011-01-05 17:57:56,953 [7315637@qtp-3083761-4] DEBUG [cn.com.supertv.cmslite.dao.cms.MovieDao] - save entity: cn.com.supertv.cmslite.entity.cms.Movie@7d46b8[version=1,title=movie_beginnum:11_num:10,releaseYear=<null>,description=<null>,actors=actors,directors=directors,runTime=100,suggestedPrice=1,recommended=<null>,ftpId=aaa,previewFtpPath=aa,videoFtpPath=aaa,posterFtpPath=aaa,genreTreeIndex=aaa,regionTreeIndex=aaa,state=INGESTABLE,previewRunTime=100,createBy=createBy,createTime=2011-01-05 16:30:25.0,lastModifyBy=<null>,lastModifyTime=<null>,providerId=aaa,beginNum=11,num=10,oplogs=[],id=36]
+2011-01-05 17:57:59,421 [3098834@qtp-3083761-1] DEBUG [cn.com.supertv.cmslite.dao.cms.MovieDao] - save entity: cn.com.supertv.cmslite.entity.cms.Movie@b95a06[version=2,title=movie_beginnum:11_num:10,releaseYear=<null>,description=<null>,actors=actors,directors=directors,runTime=100,suggestedPrice=1,recommended=<null>,ftpId=aaa,previewFtpPath=aa,videoFtpPath=aaa,posterFtpPath=aaa,genreTreeIndex=aaa,regionTreeIndex=aaa,state=INGESTED,previewRunTime=100,createBy=createBy,createTime=2011-01-05 16:30:25.0,lastModifyBy=<null>,lastModifyTime=<null>,providerId=aaa,beginNum=11,num=10,oplogs=[],id=36]
+2011-01-05 17:58:01,968 [16562392@qtp-3083761-2] DEBUG [cn.com.supertv.cmslite.dao.cms.MovieDao] - save entity: cn.com.supertv.cmslite.entity.cms.Movie@81a6f6[version=3,title=movie_beginnum:11_num:10,releaseYear=<null>,description=<null>,actors=actors,directors=directors,runTime=100,suggestedPrice=1,recommended=<null>,ftpId=aaa,previewFtpPath=aa,videoFtpPath=aaa,posterFtpPath=aaa,genreTreeIndex=aaa,regionTreeIndex=aaa,state=ZOMBIE,previewRunTime=100,createBy=createBy,createTime=2011-01-05 16:30:25.0,lastModifyBy=<null>,lastModifyTime=<null>,providerId=aaa,beginNum=11,num=10,oplogs=[],id=36]
+2011-01-05 18:01:58,734 [16562392@qtp-3083761-2] DEBUG [cn.com.supertv.cmslite.dao.cms.KtvDao] - save entity: cn.com.supertv.cmslite.entity.cms.Ktv@129be53[version=0,title=ktv:1_num:10,releaseYear=<null>,description=<null>,ftpId=001,videoFtpPath=001,posterFtpPath=001,genreTreeIndex=001,actors=actors,runTime=100,suggestedPrice=1,state=EDITABLE,recommended=<null>,compose=<null>,authors=authors,arranged=arranged,producer=producer,album=album,createTime=Wed Jan 05 18:01:58 CST 2011,createBy=<null>,lastModifyBy=<null>,lastModifyTime=<null>,providerId=001,beginNum=1,num=10,oplogs=[],id=153]
+2011-01-05 18:03:40,828 [7315637@qtp-3083761-4] DEBUG [cn.com.supertv.cmslite.dao.cms.KtvDao] - save entity: cn.com.supertv.cmslite.entity.cms.Ktv@4ea476[version=0,title=ktv:11_num:10,releaseYear=<null>,description=<null>,ftpId=002,videoFtpPath=002,posterFtpPath=002,genreTreeIndex=002,actors=actors,runTime=100,suggestedPrice=1,state=EDITABLE,recommended=<null>,compose=<null>,authors=authors,arranged=arranged,producer=producer,album=album,createTime=Wed Jan 05 18:03:40 CST 2011,createBy=<null>,lastModifyBy=<null>,lastModifyTime=<null>,providerId=002,beginNum=11,num=10,oplogs=[],id=154]
+2011-01-05 18:04:08,687 [main] WARN  [org.springframework.beans.factory.config.PropertyPlaceholderConfigurer] - Could not load properties from URL [file:/var/cmslite/application.server.properties]: \var\cmslite\application.server.properties (系统找不到指定的路径。)
+2011-01-05 18:04:45,218 [11343334@qtp-25934938-3] DEBUG [cn.com.supertv.cmslite.dao.cms.KtvDao] - save entity: cn.com.supertv.cmslite.entity.cms.Ktv@1ed4a8c[version=0,title=ktv_beginnum:21_num:10,releaseYear=<null>,description=<null>,ftpId=002,videoFtpPath=002,posterFtpPath=002,genreTreeIndex=002,actors=actors,runTime=100,suggestedPrice=1,state=EDITABLE,recommended=<null>,compose=<null>,authors=authors,arranged=arranged,producer=producer,album=album,createTime=Wed Jan 05 18:04:45 CST 2011,createBy=<null>,lastModifyBy=<null>,lastModifyTime=<null>,providerId=002,beginNum=21,num=10,oplogs=[],id=155]
+2011-01-05 18:05:53,218 [27390203@qtp-25934938-4] DEBUG [cn.com.supertv.cmslite.dao.cms.KtvDao] - save entity: cn.com.supertv.cmslite.entity.cms.Ktv@b1ab20[version=0,title=ktv_beginnum:21_num:10,releaseYear=<null>,description=<null>,ftpId=002,videoFtpPath=002,posterFtpPath=002,genreTreeIndex=002,actors=actors,runTime=100,suggestedPrice=1,state=CENSORING,recommended=<null>,compose=<null>,authors=authors,arranged=arranged,producer=producer,album=album,createTime=2011-01-05 18:04:45.0,createBy=<null>,lastModifyBy=<null>,lastModifyTime=<null>,providerId=002,beginNum=21,num=10,oplogs=[],id=155]
+2011-01-05 18:05:55,828 [20492537@qtp-25934938-5] DEBUG [cn.com.supertv.cmslite.dao.cms.KtvDao] - save entity: cn.com.supertv.cmslite.entity.cms.Ktv@1acdd78[version=1,title=ktv_beginnum:21_num:10,releaseYear=<null>,description=<null>,ftpId=002,videoFtpPath=002,posterFtpPath=002,genreTreeIndex=002,actors=actors,runTime=100,suggestedPrice=1,state=INGESTABLE,recommended=<null>,compose=<null>,authors=authors,arranged=arranged,producer=producer,album=album,createTime=2011-01-05 18:04:45.0,createBy=<null>,lastModifyBy=<null>,lastModifyTime=<null>,providerId=002,beginNum=21,num=10,oplogs=[],id=155]
+2011-01-05 18:05:57,640 [20492537@qtp-25934938-5] DEBUG [cn.com.supertv.cmslite.dao.cms.KtvDao] - save entity: cn.com.supertv.cmslite.entity.cms.Ktv@a20f51[version=2,title=ktv_beginnum:21_num:10,releaseYear=<null>,description=<null>,ftpId=002,videoFtpPath=002,posterFtpPath=002,genreTreeIndex=002,actors=actors,runTime=100,suggestedPrice=1,state=INJECTION,recommended=<null>,compose=<null>,authors=authors,arranged=arranged,producer=producer,album=album,createTime=2011-01-05 18:04:45.0,createBy=<null>,lastModifyBy=<null>,lastModifyTime=<null>,providerId=002,beginNum=21,num=10,oplogs=[],id=155]
+2011-01-05 18:05:59,906 [20736546@qtp-25934938-0] DEBUG [cn.com.supertv.cmslite.dao.cms.KtvDao] - save entity: cn.com.supertv.cmslite.entity.cms.Ktv@ac3714[version=3,title=ktv_beginnum:21_num:10,releaseYear=<null>,description=<null>,ftpId=002,videoFtpPath=002,posterFtpPath=002,genreTreeIndex=002,actors=actors,runTime=100,suggestedPrice=1,state=INJECTION,recommended=<null>,compose=<null>,authors=authors,arranged=arranged,producer=producer,album=album,createTime=2011-01-05 18:04:45.0,createBy=<null>,lastModifyBy=<null>,lastModifyTime=<null>,providerId=002,beginNum=21,num=10,oplogs=[],id=155]

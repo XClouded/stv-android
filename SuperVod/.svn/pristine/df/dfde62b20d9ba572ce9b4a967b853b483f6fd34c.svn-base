@@ -1,0 +1,119 @@
+package com.stv.supervod.activity;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.EditText;
+
+import com.stv.supervod.service.RegisterService;
+import com.stv.supervod.utils.ToastUtil;
+
+/**
+ * @author Administrator
+ * @description 登录
+ * @authority 所有用户
+ * @function 1、用户填写正确的用户名、密码，提交服务器验证，如果验证不通过，提示用户注册 2、用户点击注册按钮，进入注册页面：Register
+ *           3、用户选择自动登录，则下次启动程序自动登录
+ */
+public class Login extends BaseActivity {
+
+	private EditText username;
+	private EditText password;
+	private CheckBox remember_password;
+	private CheckBox auto_login;
+	private boolean auto_login_flag = false;
+	private boolean remember_password_flag = false;
+	String vusername = "";
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.login);
+		username = (EditText) this.findViewById(R.id.username);
+		Bundle bd = this.getIntent().getExtras();
+		if (bd != null) {
+			vusername = bd.getString("username");
+			username.setText(vusername);
+		}
+		auto_login = (CheckBox) this.findViewById(R.id.auto_login);
+		auto_login
+				.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener() {
+					@Override
+					public void onCheckedChanged(CompoundButton buttonView,
+							boolean isChecked) {
+						if (isChecked) {
+							remember_password.setChecked(true);
+							auto_login_flag = true;
+							remember_password_flag = true;
+						} else {
+							auto_login_flag = false;
+						}
+					}
+
+				});
+		remember_password = (CheckBox) this
+				.findViewById(R.id.remember_password);
+		remember_password
+				.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener() {
+					@Override
+					public void onCheckedChanged(CompoundButton buttonView,
+							boolean isChecked) {
+						if (isChecked) {
+							remember_password_flag = true;
+						} else {
+							remember_password_flag = false;
+							if(auto_login_flag==true){
+								auto_login_flag = false;
+								auto_login.setChecked(false);
+							}
+						}
+					}
+
+				});
+
+	}
+
+	/**
+	 * Description: 处理登录的业务逻辑
+	 * 
+	 * @Version1.0 2011-12-5 下午06:20:26 mustang created
+	 * @param view
+	 */
+	public void login(View view) {
+		username = (EditText) this.findViewById(R.id.username);
+		password = (EditText) this.findViewById(R.id.password);
+		String vusername = username.getText().toString();
+		String vpassword = password.getText().toString();
+		// TODO 验证用户名密码后，保存数据即可。这里需要用滚动条
+		boolean userflag = RegisterService.validateUserInfo(vusername,
+				vpassword);
+		if (userflag) {
+			RegisterService.saveUserInfo(this, vusername, vpassword,
+					auto_login_flag, remember_password_flag);
+			Intent intent = new Intent();
+			intent.setClass(this, LoginSuccess.class);
+			Bundle bd = new Bundle();
+			bd.putString("username", vusername);
+			intent.putExtras(bd);
+			
+			Framework.switchActivity("login2loginsucess", intent);
+		}else{
+			ToastUtil.displayToast(this,"您输入的用户名或密码不正确");
+		}
+	}
+
+	/**
+	 * Description: 显示注册页面
+	 * @Version1.0 2011-12-6 下午01:26:34 mustang created
+	 * @param view
+	 */
+	public void showRegPage(View view){
+		Intent intent = new Intent();
+		intent.setClass(this, Register.class);
+		Framework.switchActivity("login2Register", intent);
+	}
+	
+	
+}

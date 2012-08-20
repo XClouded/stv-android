@@ -1,0 +1,343 @@
+package com.stv.supervod.activity;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import com.stv.supervod.adapter.EditListItemAdapter;
+import com.stv.supervod.service.HttpDownloadImpl.KeyEnum;
+import com.stv.supervod.service.HttpDownloadImpl.TypeEnum;
+import com.stv.supervod.utils.AlertUtils;
+import com.stv.supervod.utils.Constant;
+import com.stv.supervod.utils.Constant.MyVodRepeatTypeEnum;
+import com.stv.supervod.utils.Constant.MyVodStateEnum;
+import com.stv.supervod.widget_extended.ExListViewMyepg;
+import com.stv.supervod.widget_extended.ExListViewMyepg.DeleteListener;
+
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
+import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
+
+public class MyMtv extends BaseActivity{	
+	private final String TAG = "MyMtv";
+	private final int MsgMyMtvDataOk = 1;	
+	
+	private ExListViewMyepg mListView;
+	private ArrayList<HashMap<String, Object>> mListItem = new ArrayList<HashMap<String, Object>>();
+	private Button mBtnBack;
+	private Button mBtnEdit;
+	private Button mBtnEditOk;
+	private Button mBtnRepeat;
+	private LinearLayout mEditBar;
+	private LinearLayout mSettingBar;
+	private Spinner mSpinner;
+	private String[] mRepeatLists = { "1", "2", "3", "4", "5","6","7","8","9","10" };
+	
+	private ProgressDialog mProgressDlg;
+	
+	private boolean mIsEdit = false;
+	private EditListItemAdapter mItemListadapter = null;
+	private int mItemSelected = -1;
+	private int mRepeatSelected = 0;
+	private Constant.MyVodRepeatTypeEnum mRepeatType = Constant.MyVodRepeatTypeEnum.in_order; 
+	
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.mymtv);
+		
+		initGui();
+
+        getDataFromServer();
+        
+        bindAction();
+	}
+	
+	private void initGui()
+	{
+		mListView = (ExListViewMyepg) findViewById(R.id.mymtv_list);
+        mBtnBack = (Button) findViewById(R.id.mymtv_btn_back);
+        mBtnEdit = (Button) findViewById(R.id.mymtv_btn_edit);
+        mBtnEditOk = (Button) findViewById(R.id.mymtv_btn_editok);
+        mBtnRepeat = (Button) findViewById(R.id.mymtv_btn_repeat);
+        
+        mEditBar = (LinearLayout) findViewById(R.id.mymtv_ll_edit_bar);
+        mSettingBar = (LinearLayout) findViewById(R.id.mymtv_ll_setting_bar);
+        
+        mProgressDlg = (ProgressDialog) AlertUtils.createDialog(AlertUtils.NO_TITLE, this);
+        
+        mSpinner = (Spinner) findViewById(R.id.mymtv_spinner_repeat_count);
+        mSpinner.setPromptId(R.string.mymtv_title);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, 
+        		android.R.layout.simple_spinner_item, mRepeatLists);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);   
+        mSpinner.setAdapter(adapter);
+        mSpinner.setSelection( mRepeatSelected,true);
+	}
+	
+	private void getDataFromServer()
+	{
+		mProgressDlg.show();
+		
+		new Thread() {
+			public void run() {
+				try {
+					// TODO 1、准备显示数据的					
+					sleep(1000);
+					getTestProgramData();
+					
+//					String date = mListWeek.get(mListWeekSelect).get(WEEKLIST_KEY_NET).toString();
+//					HttpDownloadImpl httpDownload = HttpDownloadImpl.getHttpDownloader();
+//					mListItem = ((ArrayList<HashMap<String, Object>>) httpDownload.
+//							downloadProgramList( mNumPerPage, mPageIndex, date, mAssetId ).get("list"));
+//					
+					mHandler.sendEmptyMessage( MsgMyMtvDataOk );
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}.start();		
+	}
+	
+	private void bindAction()
+	{
+        // listview click
+        mListView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int position,
+					long arg3) {
+				// TODO Auto-generated method stub
+				mItemSelected = position;
+				if( mIsEdit ){
+					//doDeleteFunc(position);
+					showDialog();
+				} else {
+					submitDataToServer();			
+				}
+			}
+		});
+		
+        // btn back
+        mBtnBack.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Framework.switchActivityBack();
+			}
+		});
+        
+        // btn edit
+        mBtnEdit.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				if( mListItem.isEmpty() ){
+					return;
+				}
+				
+				mIsEdit = true;
+				mItemListadapter.enableEdit();
+				mSettingBar.setVisibility(View.VISIBLE);
+				mEditBar.setVisibility(View.INVISIBLE);
+				
+				showList();
+			}
+		});
+        
+        // edit ok
+        mBtnEditOk.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				mIsEdit = false;
+				mItemListadapter.disableEdit();
+				mSettingBar.setVisibility(View.INVISIBLE);
+				mEditBar.setVisibility(View.VISIBLE);
+				
+				showList();				
+			}
+		});
+        
+        // repeat type
+        mBtnRepeat.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				if( mListItem.isEmpty() && !mIsEdit ){
+					return;
+				}
+				
+				if( mRepeatType == MyVodRepeatTypeEnum.in_order ){
+					mRepeatType = MyVodRepeatTypeEnum.random;
+				} else if( mRepeatType == MyVodRepeatTypeEnum.random ){
+					mRepeatType = MyVodRepeatTypeEnum.in_order;
+				}
+				AlertUtils.displayToast(MyMtv.this, "repeattype="+mRepeatType.toString());
+			}
+		});
+        
+        // repeat count
+        mSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> arg0, View arg1,
+					int position, long arg3) {
+				// TODO Auto-generated method stub
+				mRepeatSelected = position;
+				AlertUtils.displayToast(MyMtv.this, "repeat count="+mRepeatLists[mRepeatSelected]);
+				mSpinner.setSelection(position);
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+	}
+	
+	
+	private void showList()
+	{
+		if( mItemListadapter == null ){
+			mItemListadapter = new EditListItemAdapter(this, mListItem);
+			mListView.setAdapter(mItemListadapter);
+		} else {
+			//mItemListadapter.notifyDataSetChanged();
+			
+			if( mIsEdit ){
+				mListView.setDropListener(mDropListener);
+				mListView.setDeleteListener(mDeleteListener);
+			} else {
+				mListView.setDropListener(null);
+				mListView.setDeleteListener(null);
+			}
+		}		
+	}	
+	
+	private ExListViewMyepg.DeleteListener mDeleteListener = 
+			new DeleteListener() {
+				
+				@Override
+				public void delete(int which) {
+					// TODO Auto-generated method stub
+					mItemSelected = which;
+					showDialog();
+				}
+			};
+	
+	private ExListViewMyepg.DropListener mDropListener =  
+	        new ExListViewMyepg.DropListener() {  
+	        public void drop(int from, int to) {  
+	        	HashMap<String, Object> item = mListItem.get(from);  
+	        	mListItem.remove(item);//.remove(from);  
+	        	mListItem.add(to, item);  
+	        	mItemListadapter.notifyDataSetChanged();
+	        }  
+	    }; 
+	
+	private void submitDataToServer()
+	{
+		Toast.makeText(this, "Submit", Toast.LENGTH_SHORT).show();
+	}
+	
+	private void showDialog()
+	{
+		AlertDialog.Builder bd = new AlertDialog.Builder(MyMtv.this);
+		bd.setTitle(R.string.further_dlg_title);
+		
+		bd.setMessage(R.string.further_dlg_delete_content);
+		bd.setPositiveButton( getString(R.string.framework_dlg_btn_ok)
+				, new OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface arg0, int arg1) {
+				// TODO Auto-generated method stub
+				doDeleteFunc();	
+			}
+		});
+		
+		bd.setNegativeButton(getString(R.string.framework_dlg_btn_cancel)
+				, new OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		
+		bd.setCancelable(false);
+		bd.show();
+	}
+	
+	private void doDeleteFunc()
+	{
+		if( mItemSelected == -1 ){
+			mListItem.clear();
+		} else {
+			mListItem.remove(mItemSelected);
+		}
+		mItemListadapter.notifyDataSetChanged();
+	}    
+	    
+	private Handler mHandler = new Handler() {
+		@Override
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
+			case MsgMyMtvDataOk:
+				showList();
+				mProgressDlg.dismiss();
+				break;
+
+			default:
+				break;
+			}
+		}
+	};
+	
+	private void getTestProgramData()
+	{
+		for (int i = 0; i < 22; i++) {
+			HashMap<String, Object> map = new HashMap<String, Object>(); 
+
+			map.put(KeyEnum.title.toString(), String.format("音乐--%d", i));
+			map.put(KeyEnum.actor.toString(), "刘德华");
+			map.put(KeyEnum.poster.toString(), "http://image1.webscache.com/baike/haibao/ipad/2008-08/202573033-321-2008-08-29%2015-19-47.jpg");
+			map.put(KeyEnum.assetId.toString(), i);
+			map.put(KeyEnum.offeringId.toString(), i);
+			map.put(KeyEnum.categories.toString(), "流行");
+			map.put(KeyEnum.bandwidth.toString(), "SD");
+			map.put(KeyEnum.runTime.toString(), "7200");
+			
+			map.put(KeyEnum.type.toString(), TypeEnum.KTV);
+			
+			if( i == 2 ){
+				map.put(KeyEnum.state.toString(), MyVodStateEnum.play.toString());
+				map.put(KeyEnum.title.toString(), String.format("东方时空asdas啥打算sas"));
+			}
+			
+			mListItem.add(map);  
+		}
+	}	
+	
+	
+}

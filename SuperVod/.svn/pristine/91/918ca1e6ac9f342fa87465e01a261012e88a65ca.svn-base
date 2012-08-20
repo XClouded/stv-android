@@ -1,0 +1,21 @@
+package com.stv.supervod.activity;
+
+import android.app.Activity;
+import android.os.Bundle;
+
+/**
+ * @author      Administrator
+ * @description 登录
+ * @authority   所有用户
+ * @function    1、用户填写正确的用户名、密码，提交服务器验证，如果验证不通过，提示用户注册
+ *              2、用户点击注册按钮，进入注册页面：Register
+ *              3、用户选择自动登录，则下次启动程序自动登录
+ */
+public class Login extends Activity{
+
+	@Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.login);
+    }
+}

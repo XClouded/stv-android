@@ -1,0 +1,448 @@
+package com.stv.supervod.service;
+
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.nio.channels.SelectionKey;
+import java.nio.channels.Selector;
+import java.nio.channels.SocketChannel;
+import java.util.HashMap;
+
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.Service;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.Message;
+import android.util.Log;
+
+import com.stv.supervod.activity.Play;
+import com.stv.supervod.activity.R;
+import com.stv.supervod.exception.ErrorCodeException;
+import com.stv.supervod.service.HttpDownloadImpl.KeyEnum;
+import com.stv.supervod.service.RegisterServiceImpl.LoginInfoEnum;
+import com.stv.supervod.utils.Constant.MyVodPlayModeEnum;
+import com.stv.supervod.utils.Constant.MyVodStateEnum;
+import com.stv.supervod.utils.Constant.PlayerType;
+import com.stv.supervod.utils.RCServeMsgCode;
+import com.stv.supervod.utils.VideoConstant;
+
+
+public class VideoService extends Service{
+	private static final String TAG = "VideoService";	
+	private final int timeover = 10000;        //10s登陆超时
+	private int currentTime;
+	private  TCPClient client;
+	private boolean isApply=false;
+
+	private Handler timer;
+    private VideoServiceImpl service;
+
+	private Bundle bundle;
+	private NotificationManager notificationMrg;
+	
+	public VideoService(){
+		
+	}
+	
+	@Override
+	public IBinder onBind(Intent intent) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void onCreate() {	
+		Log.d(TAG, "enter into oncreate method.");
+		super.onCreate();
+		timer=new Handler();
+		client=new TCPClient(handler);
+	    service=VideoServiceImpl.getInstance(); 
+	    service.setClient(client);
+        notificationMrg=(NotificationManager) this.getSystemService(NOTIFICATION_SERVICE);
+		Thread thr=new Thread(null,new ServiceWorker(),"SuperVodService");
+		thr.start();
+	}
+	
+	private void displayNotificationMessage(String message) {		
+		Notification notification=new Notification(R.drawable.icon,message,System.currentTimeMillis());
+		Intent intent=new Intent(this,Play.class);
+		intent.setAction(Intent.ACTION_MAIN);
+//		intent.addCategory(Intent.CATEGORY_HOME);
+//		intent.setFlags(Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED|Intent.FLAG_ACTIVITY_NEW_TASK);
+		PendingIntent contentIntent=PendingIntent.getActivity(this, 0, intent, 0);
+		notification.setLatestEventInfo(this, "SuperVod", message, contentIntent);
+		notificationMrg.notify(R.id.app_notification_id,notification);
+	}
+	
+	
+	@Override
+	public void onStart(Intent intent, int startId) {
+		Log.d(TAG, "enter into onstart method."+startId);		
+		super.onStart(intent, startId);
+		
+		int op = intent.getIntExtra("op", -1);
+		if (op!=-1){
+			switch (op) {
+			case VideoConstant.VIDEO_PLAY:
+                try {
+					play(0);
+				} catch (ErrorCodeException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				}
+				break;
+			case VideoConstant.VIDEO_PAUSE:
+                try {
+					pause();
+				} catch (ErrorCodeException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				break;
+			case VideoConstant.VIDEO_STOP://停止
+				try {
+					stop();
+				} catch (ErrorCodeException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				break;
+			case VideoConstant.PROGRESS_CHANGE:
+			    currentTime = intent.getExtras().getInt("progress");
+			    try {
+					play(currentTime);
+				} catch (ErrorCodeException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				break;
+			case VideoConstant.VIDEO_REWIND:
+				try {
+					rewind();
+				} catch (ErrorCodeException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				break;
+			case VideoConstant.VIDEO_FORWARD:
+				try {
+					forward();
+				} catch (ErrorCodeException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				break;
+			case VideoConstant.VIDEO_APPLY_SERVICE:
+				try {
+					if(!isApply){
+						applyService();
+					}else{
+						Intent intent1 =new Intent("com.supervod.applyService");
+						sendBroadcast(intent1);
+					}
+				} catch (ErrorCodeException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				break;
+			
+			case VideoConstant.PLAY:
+				Bundle bd=intent.getBundleExtra("info");
+				try {
+					playVedio(bd);
+				} catch (ErrorCodeException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				break;
+			case VideoConstant.QUERY_STATUS: //for 
+				try {
+					service.myvodState();
+				} catch (ErrorCodeException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				break;
+			case VideoConstant.BACK:
+				displayNotificationMessage("service is running");
+				break;
+			} 
+		}
+	}
+	
+	
+	private void playVedio(Bundle bd) throws ErrorCodeException{
+		// TODO Auto-generated method stub	
+		
+		String type=bd.getString(KeyEnum.type.toString());
+		
+		
+		if(type.equals(PlayerType.common.toString())){
+			
+			boolean isBookmark=bd.getBoolean(KeyEnum.bookmark.toString());
+			byte bm;
+			if(isBookmark){
+				bm=1;
+			}else{
+				bm=0;
+			}
+			String offeringId=bd.getString(KeyEnum.offeringId.toString());
+			service.setOfferingId(offeringId);
+			service.commPlay(offeringId, bm);
+		}
+		else if(type.equals(PlayerType.my_mtv.toString())){
+			String offeringId=bd.getString(KeyEnum.offeringId.toString());
+			String channelId=bd.getString(KeyEnum.channelId.toString());
+			String playMode=bd.getString(KeyEnum.play_mode.toString());
+			byte mode=0;
+			if(MyVodPlayModeEnum.re_order.equals(playMode)){
+				mode=1;
+			}
+			if(MyVodPlayModeEnum.random.equals(playMode)){
+				mode=2;
+			}
+			int playCount=bd.getInt(KeyEnum.play_count.toString());
+			service.setOfferingId(offeringId);
+			service.myvodMtvPlay(mode, playCount, channelId, offeringId);			
+		}
+		else if(type.equals(PlayerType.my_movie.toString())){
+			String channelId=bd.getString(KeyEnum.channelId.toString());
+			String offeringId=bd.getString(KeyEnum.offeringId.toString());			
+			boolean isBookmark=bd.getBoolean(KeyEnum.bookmark.toString());
+			byte bm;
+			if(isBookmark){
+				bm=1;
+			}else{
+				bm=0;
+			}
+			service.setOfferingId(offeringId);
+			service.myvodMoviePlay(channelId, offeringId, bm);
+		}
+		else{
+			//什么都不做
+		}		
+	}
+
+	//登陆vod服务器申请服务
+	private void applyService() throws ErrorCodeException{
+		// TODO Auto-generated method stub
+		SharedPreferences sp=getSharedPreferences("registerinfo", MODE_PRIVATE);
+		String username=sp.getString(LoginInfoEnum.user.toString(), "");
+		String password=sp.getString(LoginInfoEnum.psd_md5.toString(), "");
+		String isPassword=sp.getString(LoginInfoEnum.ispsd.toString(), "");
+		service.appService(username, password, isPassword);
+	}
+
+	private void stop() throws ErrorCodeException{
+		// TODO Auto-generated method stub
+//		notificationMrg.cancel(R.id.app_notification_id);
+		service.stopPlay();
+		
+	}
+
+	private void play(int startTime) throws ErrorCodeException{
+		service.PlayControl((byte)VideoConstant.VIDEO_PLAY,startTime);
+		
+	}
+
+	private void pause() throws ErrorCodeException{
+		service.PlayControl((byte)VideoConstant.VIDEO_PAUSE,-1);
+	}
+
+	private void rewind() throws ErrorCodeException{
+		// TODO Auto-generated method stub
+		service.PlayControl((byte)VideoConstant.VIDEO_REWIND,-1);
+		
+	}
+
+	private void forward() throws ErrorCodeException{
+		service.PlayControl((byte)VideoConstant.VIDEO_FORWARD,-1);
+	}
+
+	@Override
+	public void onDestroy() {		
+		super.onDestroy();
+		notificationMrg.cancel(R.id.app_notification_id);
+	}
+	
+	private Runnable loginTimeover = new Runnable() {
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub					
+			timer.removeCallbacks(loginTimeover);
+		}
+	};
+
+	 
+   
+    
+	protected void dialogSysinfo(String string) {
+		// TODO Auto-generated method stub
+		
+	}
+	public void cancleLoginDialog() {
+//		loginDialog.cancel();
+	}
+	/**
+	 * Handle message from RCServer
+	 */
+    private Handler handler = new Handler() {
+		@Override
+		public void handleMessage(Message msg){   		
+    	
+    		String info="";
+    		int errorCode=msg.arg1;
+    		if(errorCode==1001){//网络连接失败
+    			info="网络连接失败";
+    			Intent in=new Intent("com.supervod.play");
+    			sendBroadcast(in);
+    		}else{
+    			bundle=msg.getData();
+    			byte type=bundle.getByte("type");
+        		byte operationCode=bundle.getByte("operationCode");
+        		RCServeMsgCode code=new RCServeMsgCode();
+        		HashMap<Integer,String> map=code.getMap();
+        		info=map.get(new Integer(operationCode));        	    
+        		switch(type){
+        		case VideoConstant.APPLY_SERVICE: //申请服务
+        			Intent intent=new Intent();
+        			if(operationCode==VideoConstant.SUCCESS_ALL_FINISHED_PLAY||operationCode==VideoConstant.SUCCESS_PLAY
+        			||operationCode==VideoConstant.SUCCESS_PAUSE){
+        				isApply=true;
+        				int beginStation=bundle.getShort("nptBegin");
+        				int duration=bundle.getShort("nptTotal");
+        				intent.setAction("com.supervod.applyService");
+        				intent.putExtra("nptBegin", beginStation);
+        				intent.putExtra("nptTotal", duration);        				
+        				service.startSendHeardBeat();//申请服务成功开始发送心跳
+        			}else{
+        				isApply=false;
+        				setErrorInfo(intent, info);     				
+        			}
+        			sendBroadcast(intent);    								
+    				break;
+    				       		       			
+        		case VideoConstant.SINGLE_PLAY:
+        		case VideoConstant.MTV_BATCH_PLAY://mtv play       			
+        		case VideoConstant.VIDEO_BATCH_PLAY: 
+        			Intent playIntent=new Intent();
+        			if(operationCode==VideoConstant.SUCCESS_PLAY ){        				
+        				service.setStatus(true); //设置该视频已播放
+        				
+        				int beginStation=bundle.getShort("nptBegin");
+        				int duration=bundle.getShort("nptTotal");
+        				playIntent.setAction(VideoConstant.PLAY_SUCCESS);
+        				playIntent.putExtra("nptBegin", beginStation);
+        				playIntent.putExtra("nptTotal", duration);
+        				playIntent.putExtra("info", info);
+        				
+        				Log.v("play--------------------", "beginStation="+beginStation+",duration="+duration);
+        			}else if(operationCode==VideoConstant.SUCCESS_ALL_FINISHED_PLAY){
+        				playIntent.setAction(VideoConstant.PLAY_FINISHED);
+        			}
+        			else{
+        				service.setStatus(false);
+        				setErrorInfo(playIntent, info);
+
+        			}        			       			    
+        			sendBroadcast(playIntent);
+        			break;
+        		case VideoConstant.PLAY_CONTROL:
+        			Intent conIntent=new Intent();
+        			conIntent.putExtra("isplaycontrol", "1");//播放控制标志位
+        			if(operationCode==VideoConstant.SUCCESS_PLAY){
+        				conIntent.setAction(VideoConstant.PLAY_SUCCESS);
+        				int beginStation=bundle.getShort("nptBegin"); 
+        				byte scale=bundle.getByte("scale");
+        				conIntent.putExtra("nptBegin", beginStation); 
+        				conIntent.putExtra("scale", scale);
+        				conIntent.putExtra("info", info);       				
+        			}else if(operationCode==VideoConstant.SUCCESS_PAUSE){
+        				conIntent.setAction(VideoConstant.PAUSE); 
+        				conIntent.putExtra("info", info); 
+        			}
+        			else{        				
+        				setErrorInfo(conIntent, info);           	    	
+        			}
+        			sendBroadcast(conIntent);
+        			break;
+        		case VideoConstant.HEART_BEAT:       		
+        			if(operationCode!=VideoConstant.SUCCESS_PLAY){
+        				Intent hIntent=new Intent();
+        				setErrorInfo(hIntent, info);
+        			}
+        			break;  
+        		case VideoConstant.SYS_MSG:
+        			Intent sysIntent=new Intent();
+        			if(operationCode==VideoConstant.SUCCESS_FINISHED_PLAY){
+        				sysIntent.setAction(VideoConstant.SYSMSG);        				
+        				
+        			}else if(operationCode==VideoConstant.SUCCESS_PLAY){
+        				int total=bundle.getShort("nptTotal");
+        				sysIntent.putExtra("TotalTime", total);
+        				sysIntent.setAction(VideoConstant.NEXT);
+        			}else if(operationCode==VideoConstant.SUCCESS_ALL_FINISHED_PLAY){
+        				sysIntent.setAction(VideoConstant.PLAY_FINISHED);
+        			}
+        			else{
+        				setErrorInfo(sysIntent, info);
+        			}
+        			sendBroadcast(sysIntent);
+        			break;
+        		case VideoConstant.QUERY_STATUS:
+        			Intent qureyIntent=new Intent();
+        			if(operationCode==VideoConstant.FAIL_SYSTEM_ERROR){
+        				bundle.putString(KeyEnum.state.toString(), "error");
+        				setErrorInfo(qureyIntent, info);
+        			}else{
+        				if(operationCode==VideoConstant.SUCCESS_PLAY){
+        					bundle.putString(KeyEnum.state.toString(), MyVodStateEnum.play.toString());
+        				}else if(operationCode==VideoConstant.SUCCESS_PAUSE){
+        					bundle.putString(KeyEnum.state.toString(), MyVodStateEnum.pause.toString());
+        				}else{
+        					bundle.putString(KeyEnum.state.toString(), MyVodStateEnum.normal.toString());
+        				}
+        				qureyIntent.putExtras(bundle);
+        				qureyIntent.setAction(VideoConstant.QUERY_MSG);
+        			}
+        			sendBroadcast(qureyIntent);
+        			break;
+        			
+    			default:
+    				break;
+        		}
+    		}   		
+    		
+
+    	}		
+	};
+	
+	//设置广播错误信息
+	private void setErrorInfo(Intent intent,String info){
+		intent.setAction(VideoConstant.ERROR);
+		intent.putExtra("error", info);
+	}
+	
+    class ServiceWorker implements Runnable{
+		
+		public void run(){
+			while (true) {
+				if (Connect2RCServer.getInstance().getConnectionStatus()) {
+					try {
+						applyService();
+						isApply=true;
+					} catch (ErrorCodeException e) {
+						// TODO Auto-generated catch block
+						isApply=false;
+						e.printStackTrace();
+					}
+					break;
+				}
+			}
+		}
+	}
+}

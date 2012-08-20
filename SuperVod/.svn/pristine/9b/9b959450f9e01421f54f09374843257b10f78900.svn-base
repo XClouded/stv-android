@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <LinearLayout
+        android:id="@+id/category_title"
+        android:layout_width="fill_parent"
+        android:layout_height="43dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/homepage_top" >
+
+        <Button
+            android:id="@+id/category_btn_back"
+            style="@style/Button_Return"
+            android:layout_width="68dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:text="@string/detail_btn_back" />
+
+        <TextView
+            android:id="@+id/category_name"
+            style="@style/Title"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginLeft="15dp"
+            android:text="" />
+        
+        <TextView
+            android:id="@+id/category_mtv"
+            android:textSize="23sp"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_marginLeft="62dp"
+            android:text="歌手" 
+            android:visibility="gone"/>
+
+        <Button
+            android:id="@+id/btn_category"
+            style="@style/Button"
+            android:layout_width="68dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:drawableLeft="@drawable/channel_second_sort_image"
+            android:text="分类" />
+
+        <Button
+            android:id="@+id/btn_sort"
+            style="@style/Button"
+            android:layout_width="68dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="0"
+            android:drawableLeft="@drawable/channel_second_sort_image1"
+            android:text="排序" 
+            android:visibility="visible" />
+    </LinearLayout>
+    
+	<LinearLayout 
+	    android:id="@+id/default_item" 
+	    style="@style/List_Layout" 
+	    android:visibility="gone"
+	    android:layout_below="@+id/category_title"
+	    android:background="@drawable/list_bg" >
+
+	    <ProgressBar
+		    android:id="@+id/loadingBar"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content" 
+		    android:layout_centerHorizontal="true"
+		    android:layout_gravity="center" 
+		    android:layout_marginLeft="10dp"/>
+    
+		<TextView 
+		    android:id="@+id/loadingText"
+		    android:text="正在载入数据..."
+		    android:textSize="18sp"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_gravity="center" 
+		    android:layout_marginLeft="20dp">
+		</TextView>
+
+	</LinearLayout>
+	
+	<!--android:id="@+id/android:list"-->
+	<ListView 
+			android:id="@+id/category_list"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_below="@+id/default_item" 
+	        android:cacheColorHint="#00000000"
+	        android:listSelector="@drawable/btn_bg_select" />
+
+</RelativeLayout>

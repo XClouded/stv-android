@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="ChooseWorkspaceDialogSettings">
+		<item value="253" key="DIALOG_Y_ORIGIN"/>
+		<item value="428" key="DIALOG_X_ORIGIN"/>
+	</section>
+	<section name="org.eclipse.ui.dialogs.FilteredResourcesSelectionDialog">
+		<item value="false" key="ShowDerived"/>
+		<item value="true" key="ShowStatusLine"/>
+		<item value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#x0D;&#x0A;&lt;workingSet workingSetName=&quot;&quot;/&gt;" key="WorkingSet"/>
+		<item value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#x0D;&#x0A;&lt;History&gt;&#x0D;&#x0A;&lt;historyRootNode&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/SuperVod/src/com/stv/supervod/activity/Homepage.java&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/SuperVod/res/layout/login.xml&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/SuperVod/src/com/stv/supervod/activity/Login.java&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/SuperVod/src/com/stv/supervod/activity/Welcome.java&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/SuperVod/res/values/strings.xml&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/ApiDemos/res/layout/log_text_box_1.xml&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/SuperVod/src/com/stv/supervod/activity/LoginSuccess.java&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/SuperVod/res/layout/register.xml&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/SuperVod/src/com/stv/supervod/activity/Register.java&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/SuperVod/res/layout/login_success.xml&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/ApiDemos/res/layout/dialog_activity.xml&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/ApiDemos/res/values/strings.xml&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/SuperVod/res/layout/category.xml&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/SuperVod/AndroidManifest.xml&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/SuperVod/res/values/styles.xml&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/SuperVod/src/com/stv/supervod/adapter/ListItemSimpleAdapter.java&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/SuperVod/src/com/stv/supervod/utils/ValidateUtil.java&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/SuperVod/src/com/stv/supervod/service/ImageServiceImpl.java&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/SuperVod/src/com/stv/supervod/service/RegisterServiceImpl.java&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/SuperVod/src/com/stv/supervod/utils/Constant.java&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/SuperVod/src/com/stv/supervod/service/HttpRequestServiceImpl.java&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/SuperVod/src/com/stv/supervod/service/HttpDownloadImpl.java&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/testjava/src/com/test/Test.java&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/SuperVod/res/layout/framework.xml&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/SuperVod/res/layout/bookmark.xml&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/SuperVod/src/com/stv/supervod/activity/Bookmark.java&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/SuperVod/src/com/stv/supervod/utils/AlertUtils.java&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/ApiDemos/res/layout/radio_group_1.xml&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/SuperVod/src/com/stv/supervod/adapter/PosterSimpleAdapter.java&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/SuperVod/src/com/stv/supervod/activity/Framework.java&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/SuperVod/src/com/stv/supervod/service/ImageDownloader.java&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/ExListView/res/layout/main.xml&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/ExListView/res/layout/member_listview.xml&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/SuperVod/res/layout/homepage_listview_group.xml&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/SuperVod/res/layout/homepage_listview_item.xml&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/SuperVod/res/layout/interest_item_list_edit.xml&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/SuperVod/src/com/stv/supervod/utils/ListUtil.java&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/SuperVod/res/layout/homepage.xml&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/SuperVod/res/layout/homepage_postergallery.xml&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/SuperVod/src/com/stv/supervod/adapter/HomePageListAdapter.java&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/SuperVod/res/layout/homepage_poster_item.xml&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/SuperVod/src/com/stv/supervod/activity/BaseActivity.java&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/SuperVod/res/layout/testtemp.xml&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/SuperVod/res/layout/welcome.xml&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/testjava/src/com/test/Test3.java&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/testjava/src/com/test/Test2.java&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/SuperVod/src/com/stv/supervod/utils/ErrorCode.java&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/testjava/src/com/test/Test5.java&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/MfeOnlineDemo/assets/config.xml&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/MfeOnlineDemo/res/layout/config.xml&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/MfeOnlineDemo/src/cn/thinkit/libtmfe/test/PostThread.java&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/MfeOnlineDemo/src/cn/thinkit/libtmfe/test/JNI.java&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/SuperVod/res/layout/further.xml&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/SuperVod/res/layout/interest.xml&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/SuperVod/res/layout/comm_detail.xml&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/SuperVod/src/com/stv/supervod/activity/CategoryItem.java&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/testjava/src/com/test/Test7.java&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;/historyRootNode&gt;&#x0D;&#x0A;&lt;/History&gt;" key="History"/>
+		<section name="DialogBoundsSettings">
+			<item value="600" key="DIALOG_WIDTH"/>
+			<item value="82" key="DIALOG_Y_ORIGIN"/>
+			<item value="424" key="DIALOG_X_ORIGIN"/>
+			<item value="500" key="DIALOG_HEIGHT"/>
+			<item value="1|Tahoma|8.25|0|WINDOWS|1|-11|0|0|0|400|0|0|0|1|0|0|0|0|Tahoma" key="DIALOG_FONT_NAME"/>
+		</section>
+	</section>
+	<section name="BasicNewProjectResourceWizard">
+	</section>
+	<section name="WORKBENCH_SETTINGS">
+		<list key="ENABLED_TRANSFERS">
+		</list>
+	</section>
+	<section name="ExternalProjectImportWizard">
+		<item value="false" key="WizardProjectsImportPage.STORE_ARCHIVE_SELECTED"/>
+		<item value="false" key="WizardProjectsImportPage.STORE_COPY_PROJECT_ID"/>
+	</section>
+	<section name="ResourceNavigator">
+		<item value="" key="ResourceWorkingSetFilter.STORE_WORKING_SET"/>
+		<item value="1" key="ResourceViewer.STORE_SORT_TYPE"/>
+	</section>
+	<section name="NewWizardAction">
+		<item value="com.android.ide.eclipse.adt.project.NewProjectWizard" key="NewWizardSelectionPage.STORE_SELECTED_ID"/>
+		<list key="NewWizardSelectionPage.STORE_EXPANDED_CATEGORIES_ID">
+			<item value="org.eclipse.ui.Basic"/>
+			<item value="com.android.ide.eclipse.wizards.category"/>
+			<item value="org.eclipse.jdt.ui.java"/>
+			<item value="org.tigris.subversion.subclipse.ui.svn"/>
+			<item value="org.eclipse.ui.Examples"/>
+		</list>
+	</section>
+	<section name="CleanDialogSettings">
+		<item value="411" key="DIALOG_WIDTH"/>
+		<item value="true" key="BUILD_NOW"/>
+		<item value="203" key="DIALOG_Y_ORIGIN"/>
+		<item value="true" key="BUILD_ALL"/>
+		<item value="439" key="DIALOG_X_ORIGIN"/>
+		<item value="416" key="DIALOG_HEIGHT"/>
+		<item value="true" key="TOGGLE_SELECTED"/>
+	</section>
+</section>

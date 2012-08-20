@@ -1,0 +1,22 @@
+package com.stv.supervod.activity;
+
+import android.app.Activity;
+import android.os.Bundle;
+
+/**
+ * @author      Administrator
+ * @description 收藏，上一级菜单：更多
+ * @authority   激活用户
+ * @function    1、向服务器请求收藏的影片（20），并展示
+ *              2、用户点击编辑按钮，允许用户删除影片，并给予确认提示
+ *              3、用户点击某一部影片，向服务器请求该影片数据，进入影片详细页：Detail
+ *              4、收藏和书签共用一套页面
+ */
+public class Interest extends Activity{
+
+	@Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.bookmark);
+    }
+}

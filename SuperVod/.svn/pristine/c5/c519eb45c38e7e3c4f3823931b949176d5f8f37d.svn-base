@@ -1,0 +1,103 @@
+package com.stv.supervod.service;
+
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.nio.channels.SelectionKey;
+import java.nio.channels.Selector;
+import java.nio.channels.SocketChannel;
+
+import android.util.Log;
+
+
+public class Connect2RCServer extends Thread implements Runnable {
+	private final String RcServerIp = "192.168.14.61";
+	private final String RcServerPort = "5002";
+
+	private final int timeout = 100; //100ms延时处理
+	private boolean flag = false;
+	
+	public static Selector selector;
+	public static SocketChannel channel;
+	
+    private static Connect2RCServer c2r = null;
+    
+	private Connect2RCServer(){		
+	}
+	
+	public static Connect2RCServer getInstance() {	
+		if (c2r == null) {
+			c2r = new Connect2RCServer();
+		}
+		
+		return c2r;
+	}
+	
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		try {
+			//定义一个记录套接字通道事件的对象
+			selector = Selector.open();
+			//定义异步客户端
+			channel = SocketChannel.open(); 
+			//将客户端设定为异步
+			channel.configureBlocking (false);  
+			//建立连接，此方法是异步
+			long connetCastTime = System.currentTimeMillis();
+			channel.connect(new InetSocketAddress(
+					RcServerIp, Integer.parseInt(RcServerPort)));
+			int date = (int) ((System.currentTimeMillis() - connetCastTime )/1000);
+			Log.d("-----afdsafdsf------", String.valueOf(date));
+			Log.d("-----afdsafdsf------", String.valueOf(channel.finishConnect()));
+			//在轮讯对象中注册此客户端的连接事件
+			channel.register(selector, SelectionKey.OP_CONNECT | SelectionKey.OP_READ);
+			flag = channel.finishConnect() ? true : false;											
+		} catch (IOException e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			try{
+				throw new IOException("Connection Failure");
+			}catch(Exception ee){
+				ee.printStackTrace();
+			}
+		}	
+	}	
+	
+	public boolean getConnectionStatus(){
+		return flag;
+	}
+	
+	public static void gcCache() {
+		try {
+			if (channel != null) {
+				channel.socket().close();
+				channel.close();
+				channel = null;
+			}
+			if (selector != null) {
+				selector.close();
+				selector = null;
+			}
+			if (c2r != null) {
+				c2r = null;
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	//close socket
+	public  void closeSocket(){
+		if(channel!=null){
+			if(channel.isConnected()){
+				try {
+					channel.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}		
+	}	
+}

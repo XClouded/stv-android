@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes' ?>
+<MfeOnlineDemo>
+	<HttpPost>
+		<IP>124.16.130.176</IP>
+		<USERNAME>jjwang</USERNAME>
+		<ONCEPOST_LEN>4096</ONCEPOST_LEN>
+		<CONNECT_TIMEOUT>100000</CONNECT_TIMEOUT>
+	</HttpPost>
+	<Debug>
+		<SYSDATA_KEEP>true</SYSDATA_KEEP>
+		<PROCESS_TRACE>true</PROCESS_TRACE>
+	</Debug>
+</MfeOnlineDemo>
+

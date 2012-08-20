@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >"
+    
+    <LinearLayout
+        android:id="@+id/sort_title"
+        android:layout_width="fill_parent"
+        android:layout_height="43dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/homepage_top" >
+
+        <Button 
+            android:id="@+id/btn_cancle"
+            android:text="取消"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            style="@style/Button" />
+        
+        <TextView
+            android:id="@+id/text_"
+            style="@style/Title"
+            android:layout_width="82dp"
+            android:layout_height="wrap_content" 
+            android:text="分类"
+            android:layout_marginLeft="80dp" />
+
+        <Button 
+            android:id="@+id/btn_ok"
+            android:text="确定"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            style="@style/Button" />
+    </LinearLayout>
+    
+	<LinearLayout
+	    android:id="@+id/sort_content"
+	    android:layout_width="fill_parent"
+	    android:layout_height="437dp" 
+	    android:orientation="vertical"
+	    android:background="@color/blue" >
+	</LinearLayout>
+</LinearLayout>

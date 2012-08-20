@@ -1,0 +1,19 @@
+package com.stv.supervod.activity;
+
+import android.app.Activity;
+import android.os.Bundle;
+
+/**
+ * @author      Administrator
+ * @description 播放控制页面
+ * @authority   激活用户
+ * @function    用户点击播放、暂停、快进、快退、上一个，下一个、进度条、停止播放进行相应功能操作
+ */
+public class Play extends Activity{
+
+	@Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.play);
+    }
+}

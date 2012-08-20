@@ -1,0 +1,145 @@
+package com.stv.supervod.service;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import com.stv.supervod.utils.ValidateUtil;
+
+import android.app.Activity;
+import android.content.SharedPreferences;
+
+public class RegisterServiceImpl{
+
+	/**
+	 * Description: 验证通过后保存用户名密码，以及是否自动登录等信息
+	 * 注意：需要指定为数据的共享模式，系统默认只能一个activity使用数据
+	 * @Version1.0 2011-12-6 上午10:14:10 mustang created
+	 * @param act
+	 * @param username
+	 * @param password
+	 * @param auto_login
+	 * @param remember_password
+	 */
+	public static boolean saveUserLoginInfo(Activity act, String username,
+			String password, boolean auto_login, boolean remember_password) {
+		boolean flag = loginService(username,password);
+		if(flag){
+			SharedPreferences sp = act.getSharedPreferences("registerinfo", Activity.MODE_PRIVATE);
+			SharedPreferences.Editor se = sp.edit();
+			se.putString("username", username);
+			se.putString("password", password);
+			se.putBoolean("auto_login", auto_login);
+			se.putBoolean("remember_password", remember_password);
+			//因为有注销这个功能，所以要加这个标识
+			se.putBoolean("online", true);
+			se.commit();
+		}
+		return flag;
+		
+	}
+	/**
+	 * Description: 获取用户信息
+	 * @Version1.0 2011-12-7 下午03:54:49 mustang created
+	 * @param act
+	 * @return
+	 */
+	public static Map<String,Object> getUserinfo(Activity act){
+		Map<String,Object> map = new HashMap<String,Object>();
+		SharedPreferences sp = act.getSharedPreferences("registerinfo",Activity.MODE_PRIVATE);
+		map.put("username",  sp.getString("username", ""));
+		map.put("password",  sp.getString("password", ""));
+		map.put("online",  sp.getBoolean("online", false));
+		return map;
+	}
+
+	/**
+	 * Description: 执行自动登录功能
+	 * 
+	 * @Version1.0 2011-12-6 上午10:21:30 mustang created
+	 * @param act
+	 * @return
+	 */
+	public static boolean loginAuto(Activity act) {
+		SharedPreferences sp = act.getSharedPreferences("registerinfo", Activity.MODE_PRIVATE);
+		boolean auto_login = sp.getBoolean("auto_login", false);
+		boolean loginResulg = false;
+		//自动登录
+		if(auto_login){
+			String username = sp.getString("username", "");
+			String password = sp.getString("password", "");
+			 loginResulg = loginService(username,password);
+			//如果登录成功要显示用户在线
+			if(loginResulg){
+				sp.edit().putBoolean("online", true).commit();
+			}
+		}
+		//这种情况说明用户客户端保留的密码与服务器不一致了，需要再次手动登录。
+		if(auto_login&&loginResulg==false){
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Description: 登录服务器
+	 * @Version1.0 2011-12-7 下午03:02:58 mustang created
+	 * @param username
+	 * @param password
+	 * @return
+	 */
+	public static boolean loginService(String username,String password){
+		return true;
+	}
+	/**
+	 * Description: 退出服务器
+	 * @Version1.0 2011-12-7 下午03:02:58 mustang created
+	 * @param username
+	 * @param password
+	 * @return
+	 */
+	public static boolean logoutService(Activity act){
+		Map<String,Object> map =  getUserinfo(act);
+		String username = (String) map.get("username");
+		String password = (String) map.get("username");
+		//注销的同时标识为下线
+		SharedPreferences sp = act.getSharedPreferences("registerinfo", Activity.MODE_PRIVATE);
+		if (sp != null) {
+			sp.edit().putBoolean("online", false).commit();
+		}
+		if(!ValidateUtil.isBlank(username)&&!ValidateUtil.isBlank(password)){
+			//TODO 实现服务器注销的逻辑
+		}
+		return true;
+	}
+	
+	/**
+	 * Description: 如果没记住密码，需要和服务器验证用户信息
+	 * 
+	 * @Version1.0 2011-12-6 上午10:32:58 mustang created
+	 * @param username
+	 * @param password
+	 * @return
+	 */
+	public static boolean validateUserInfo(String username, String password) {
+		return true;
+	}
+
+	/**
+	 * Description: 添加相关信息，去服务器端验证有效性
+	 * 
+	 * @Version1.0 2011-12-6 下午02:43:29 mustang created
+	 * @param username
+	 * @param password
+	 * @param email
+	 * @param phone
+	 * @param id_number
+	 * @param smartcard
+	 * @param service_password
+	 */
+	public static void saveRegisterInfo(String username, String password,
+			 String phone, String id_number, String smartcard,
+			String service_password) {
+
+	}
+
+}

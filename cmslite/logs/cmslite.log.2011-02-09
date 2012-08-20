@@ -1,0 +1,442 @@
+2011-02-09 13:21:20,620 [main] WARN  [org.springframework.beans.factory.config.PropertyPlaceholderConfigurer] - Could not load properties from URL [file:/var/cmslite/application.server.properties]: \var\cmslite\application.server.properties (系统找不到指定的路径。)
+2011-02-09 13:23:50,009 [6016552@qtp-16437003-3] DEBUG [cn.com.supertv.cmslite.dao.cms.MovieDao] - save entity: cn.com.supertv.cmslite.entity.cms.Movie@401c9f[version=0,title=movie_beginnum:15105_num:5,releaseYear=<null>,description=<null>,actors=actors,directors=directors,runTime=100,suggestedPrice=1,recommended=<null>,ftpId=001,previewFtpPath=001,videoFtpPath=001,posterFtpPath=001,genreTreeIndex=001,regionTreeIndex=001,state=EDITABLE,previewRunTime=100,createBy=createBy,createTime=Wed Feb 09 13:23:49 CST 2011,lastModifyBy=<null>,lastModifyTime=<null>,providerId=001,beginNum=15105,num=5,oplogs=[],id=8]
+2011-02-09 13:23:51,977 [6016552@qtp-16437003-3] DEBUG [cn.com.supertv.cmslite.service.cms.MovieManager] - 响应结果：0:null
+2011-02-09 13:36:24,921 [11122164@qtp-16437003-6] DEBUG [cn.com.supertv.cmslite.dao.cms.MovieDao] - save entity: cn.com.supertv.cmslite.entity.cms.Movie@16e6fa3[version=0,title=movie_beginnum:15110_num:10,releaseYear=<null>,description=<null>,actors=actors,directors=directors,runTime=100,suggestedPrice=1,recommended=<null>,ftpId=cms1,previewFtpPath=sheng.mpg,videoFtpPath=sheng.mpg,posterFtpPath=1.jpg,genreTreeIndex=0001-0001-0001-0001,regionTreeIndex=0001-0001-0002-0001,state=EDITABLE,previewRunTime=100,createBy=createBy,createTime=Wed Feb 09 13:36:24 CST 2011,lastModifyBy=<null>,lastModifyTime=<null>,providerId=测试,beginNum=15110,num=10,oplogs=[],id=9]
+2011-02-09 13:36:25,281 [11122164@qtp-16437003-6] DEBUG [cn.com.supertv.cmslite.service.cms.MovieManager] - 响应结果：0:null
+2011-02-09 14:04:51,442 [main] WARN  [org.springframework.beans.factory.config.PropertyPlaceholderConfigurer] - Could not load properties from URL [file:/var/cmslite/application.server.properties]: \var\cmslite\application.server.properties (系统找不到指定的路径。)
+2011-02-09 14:06:12,254 [main] WARN  [org.springframework.beans.factory.config.PropertyPlaceholderConfigurer] - Could not load properties from URL [file:/var/cmslite/application.server.properties]: \var\cmslite\application.server.properties (系统找不到指定的路径。)
+2011-02-09 14:07:13,316 [main] WARN  [org.springframework.beans.factory.config.PropertyPlaceholderConfigurer] - Could not load properties from URL [file:/var/cmslite/application.server.properties]: \var\cmslite\application.server.properties (系统找不到指定的路径。)
+2011-02-09 14:08:40,612 [main] WARN  [org.springframework.beans.factory.config.PropertyPlaceholderConfigurer] - Could not load properties from URL [file:/var/cmslite/application.server.properties]: \var\cmslite\application.server.properties (系统找不到指定的路径。)
+2011-02-09 14:09:00,550 [7345033@qtp-25934938-4] DEBUG [cn.com.supertv.cmslite.dao.cms.MovieDao] - save entity: cn.com.supertv.cmslite.entity.cms.Movie@168bc8d[version=0,title=movie_beginnum:15120_num:10,releaseYear=2000,description=description,actors=actors,directors=directors,runTime=100,suggestedPrice=1,recommended=<null>,ftpId=<null>,previewFtpPath=<null>,videoFtpPath=<null>,posterFtpPath=<null>,genreTreeIndex=<null>,regionTreeIndex=<null>,state=EDITABLE,previewRunTime=100,createBy=createBy,createTime=Wed Feb 09 14:09:00 CST 2011,lastModifyBy=<null>,lastModifyTime=<null>,providerId=<null>,beginNum=15120,num=10,oplogs=[],id=10]
+2011-02-09 14:09:01,065 [7345033@qtp-25934938-4] DEBUG [cn.com.supertv.cmslite.service.cms.MovieManager] - 响应结果：0:null
+2011-02-09 14:10:16,283 [20736546@qtp-25934938-0] DEBUG [cn.com.supertv.cmslite.dao.cms.MovieDao] - save entity: cn.com.supertv.cmslite.entity.cms.Movie@1232191[version=0,title=movie_beginnum:15130_num:5,releaseYear=2000,description=description,actors=actors,directors=directors,runTime=100,suggestedPrice=1,recommended=true,ftpId=cms1,previewFtpPath=sheng.mpg,videoFtpPath=sheng.mpg,posterFtpPath=1.jpg,genreTreeIndex=0001-0001-0001-0001,regionTreeIndex=0001-0001-0002-0001,state=EDITABLE,previewRunTime=100,createBy=createBy,createTime=Wed Feb 09 14:10:16 CST 2011,lastModifyBy=<null>,lastModifyTime=<null>,providerId=测试,beginNum=15130,num=5,oplogs=[],id=11]
+2011-02-09 14:10:16,471 [20736546@qtp-25934938-0] DEBUG [cn.com.supertv.cmslite.service.cms.MovieManager] - 响应结果：0:null
+2011-02-09 14:21:15,436 [main] WARN  [org.springframework.beans.factory.config.PropertyPlaceholderConfigurer] - Could not load properties from URL [file:/var/cmslite/application.server.properties]: \var\cmslite\application.server.properties (系统找不到指定的路径。)
+2011-02-09 14:23:06,044 [7421655@qtp-3083761-2] DEBUG [cn.com.supertv.cmslite.dao.cms.MovieDao] - save entity: cn.com.supertv.cmslite.entity.cms.Movie@1d3f679[version=0,title=movie_beginnum:15135_num:10,releaseYear=2000,description=description,actors=actors,directors=directors,runTime=100,suggestedPrice=1,recommended=true,ftpId=cms1,previewFtpPath=sheng.mpg,videoFtpPath=sheng.mpg,posterFtpPath=1.jpg,genreTreeIndex=0001-0001-0001-0001,regionTreeIndex=0001-0001-0002-0001,state=EDITABLE,previewRunTime=100,createBy=createBy,createTime=Wed Feb 09 14:23:06 CST 2011,lastModifyBy=<null>,lastModifyTime=<null>,providerId=测试,beginNum=15135,num=10,oplogs=[],id=12]
+2011-02-09 14:23:06,560 [7421655@qtp-3083761-2] DEBUG [cn.com.supertv.cmslite.service.cms.MovieManager] - 响应结果：0:null
+2011-02-09 14:25:28,231 [7421655@qtp-3083761-2] DEBUG [cn.com.supertv.cmslite.dao.cms.MovieDao] - save entity: cn.com.supertv.cmslite.entity.cms.Movie@147f8aa[version=0,title=movie_beginnum:15135_num:10,releaseYear=2000,description=description,actors=actors,directors=directors,runTime=100,suggestedPrice=1,recommended=true,ftpId=cms1,previewFtpPath=sheng.mpg,videoFtpPath=sheng.mpg,posterFtpPath=1.jpg,genreTreeIndex=0001-0001-0001-0001,regionTreeIndex=0001-0001-0002-0001,state=CENSORING,previewRunTime=100,createBy=createBy,createTime=2011-02-09 14:23:06.0,lastModifyBy=<null>,lastModifyTime=<null>,providerId=测试,beginNum=15135,num=10,oplogs=[],id=12]
+2011-02-09 14:25:29,996 [7421655@qtp-3083761-2] DEBUG [cn.com.supertv.cmslite.service.cms.MovieManager] - 响应结果：0:null
+2011-02-09 14:25:46,559 [17244592@qtp-3083761-0] DEBUG [cn.com.supertv.cmslite.dao.cms.MovieDao] - save entity: cn.com.supertv.cmslite.entity.cms.Movie@1580e1b[version=1,title=movie_beginnum:15135_num:10,releaseYear=2000,description=description,actors=actors,directors=directors,runTime=100,suggestedPrice=1,recommended=true,ftpId=cms1,previewFtpPath=sheng.mpg,videoFtpPath=sheng.mpg,posterFtpPath=1.jpg,genreTreeIndex=0001-0001-0001-0001,regionTreeIndex=0001-0001-0002-0001,state=INGESTABLE,previewRunTime=100,createBy=createBy,createTime=2011-02-09 14:23:06.0,lastModifyBy=<null>,lastModifyTime=<null>,providerId=测试,beginNum=15135,num=10,oplogs=[],id=12]
+2011-02-09 14:25:52,621 [17244592@qtp-3083761-0] DEBUG [cn.com.supertv.cmslite.service.cms.MovieManager] - 响应结果：0:null
+2011-02-09 14:26:04,809 [17244592@qtp-3083761-0] DEBUG [cn.com.supertv.cmslite.dao.cms.MovieDao] - save entity: cn.com.supertv.cmslite.entity.cms.Movie@94e2d2[version=2,title=movie_beginnum:15135_num:10,releaseYear=2000,description=description,actors=actors,directors=directors,runTime=100,suggestedPrice=1,recommended=true,ftpId=cms1,previewFtpPath=sheng.mpg,videoFtpPath=sheng.mpg,posterFtpPath=1.jpg,genreTreeIndex=0001-0001-0001-0001,regionTreeIndex=0001-0001-0002-0001,state=INGESTED,previewRunTime=100,createBy=createBy,createTime=2011-02-09 14:23:06.0,lastModifyBy=<null>,lastModifyTime=<null>,providerId=测试,beginNum=15135,num=10,oplogs=[],id=12]
+2011-02-09 14:26:04,809 [17244592@qtp-3083761-0] DEBUG [cn.com.supertv.cmslite.service.cms.MovieManager] - 响应结果：400:productId不能为空！
+2011-02-09 14:58:14,390 [main] WARN  [org.springframework.beans.factory.config.PropertyPlaceholderConfigurer] - Could not load properties from URL [file:/var/cmslite/application.server.properties]: \var\cmslite\application.server.properties (系统找不到指定的路径。)
+2011-02-09 14:58:33,984 [17244592@qtp-25934938-1] WARN  [org.hibernate.util.JDBCExceptionReporter] - SQL Error: 1054, SQLState: 42S22
+2011-02-09 14:58:33,984 [17244592@qtp-25934938-1] ERROR [org.hibernate.util.JDBCExceptionReporter] - Unknown column 'this_.product_id' in 'field list'
+2011-02-09 15:04:42,030 [8956142@qtp-25934938-7] DEBUG [cn.com.supertv.cmslite.dao.cms.MovieDao] - save entity: cn.com.supertv.cmslite.entity.cms.Movie@101f7c1[version=0,title=movie_beginnum:15145_num:10,releaseYear=2000,description=description,actors=actors,directors=directors,runTime=100,suggestedPrice=1,recommended=true,ftpId=cms1,previewFtpPath=sheng.mpg,videoFtpPath=sheng.mpg,posterFtpPath=1.jpg,genreTreeIndex=0001-0001-0001-0001,regionTreeIndex=0001-0001-0002-0001,state=EDITABLE,previewRunTime=100,createBy=createBy,createTime=Wed Feb 09 15:04:41 CST 2011,lastModifyBy=<null>,lastModifyTime=<null>,providerId=测试,beginNum=15145,num=10,productId=包月,oplogs=[],id=13]
+2011-02-09 15:04:42,702 [8956142@qtp-25934938-7] DEBUG [cn.com.supertv.cmslite.service.cms.MovieManager] - 响应结果：0:null
+2011-02-09 15:05:32,858 [8956142@qtp-25934938-7] DEBUG [cn.com.supertv.cmslite.dao.cms.MovieDao] - save entity: cn.com.supertv.cmslite.entity.cms.Movie@121ca44[version=0,title=movie_beginnum:15145_num:10,releaseYear=2000,description=description,actors=actors,directors=directors,runTime=100,suggestedPrice=1,recommended=true,ftpId=cms1,previewFtpPath=sheng.mpg,videoFtpPath=sheng.mpg,posterFtpPath=1.jpg,genreTreeIndex=0001-0001-0001-0001,regionTreeIndex=0001-0001-0002-0001,state=CENSORING,previewRunTime=100,createBy=createBy,createTime=2011-02-09 15:04:41.0,lastModifyBy=<null>,lastModifyTime=<null>,providerId=测试,beginNum=15145,num=10,productId=包月,oplogs=[],id=13]
+2011-02-09 15:05:36,280 [8956142@qtp-25934938-7] DEBUG [cn.com.supertv.cmslite.service.cms.MovieManager] - 响应结果：0:null
+2011-02-09 15:05:52,780 [8956142@qtp-25934938-7] DEBUG [cn.com.supertv.cmslite.dao.cms.MovieDao] - save entity: cn.com.supertv.cmslite.entity.cms.Movie@15b6139[version=1,title=movie_beginnum:15145_num:10,releaseYear=2000,description=description,actors=actors,directors=directors,runTime=100,suggestedPrice=1,recommended=true,ftpId=cms1,previewFtpPath=sheng.mpg,videoFtpPath=sheng.mpg,posterFtpPath=1.jpg,genreTreeIndex=0001-0001-0001-0001,regionTreeIndex=0001-0001-0002-0001,state=INGESTABLE,previewRunTime=100,createBy=createBy,createTime=2011-02-09 15:04:41.0,lastModifyBy=<null>,lastModifyTime=<null>,providerId=测试,beginNum=15145,num=10,productId=包月,oplogs=[],id=13]
+2011-02-09 15:05:58,530 [8956142@qtp-25934938-7] DEBUG [cn.com.supertv.cmslite.service.cms.MovieManager] - 响应结果：0:null
+2011-02-09 15:07:34,686 [2024547@qtp-25934938-5] DEBUG [cn.com.supertv.cmslite.dao.cms.MovieDao] - save entity: cn.com.supertv.cmslite.entity.cms.Movie@94d7b0[version=2,title=movie_beginnum:15145_num:10,releaseYear=2000,description=description,actors=actors,directors=directors,runTime=100,suggestedPrice=1,recommended=true,ftpId=cms1,previewFtpPath=sheng.mpg,videoFtpPath=sheng.mpg,posterFtpPath=1.jpg,genreTreeIndex=0001-0001-0001-0001,regionTreeIndex=0001-0001-0002-0001,state=INGESTED,previewRunTime=100,createBy=createBy,createTime=2011-02-09 15:04:41.0,lastModifyBy=<null>,lastModifyTime=<null>,providerId=测试,beginNum=15145,num=10,productId=包月,oplogs=[],id=13]
+2011-02-09 15:08:06,374 [2024547@qtp-25934938-5] DEBUG [cn.com.supertv.cmslite.service.cms.MovieManager] - 响应结果：500:未知错误
+2011-02-09 15:09:23,514 [9989390@qtp-25934938-9] DEBUG [cn.com.supertv.cmslite.dao.cms.MovieDao] - save entity: cn.com.supertv.cmslite.entity.cms.Movie@130b77a[version=3,title=movie_beginnum:15145_num:10,releaseYear=2000,description=description,actors=actors,directors=directors,runTime=100,suggestedPrice=1,recommended=true,ftpId=cms1,previewFtpPath=sheng.mpg,videoFtpPath=sheng.mpg,posterFtpPath=1.jpg,genreTreeIndex=0001-0001-0001-0001,regionTreeIndex=0001-0001-0002-0001,state=ZOMBIE,previewRunTime=100,createBy=createBy,createTime=2011-02-09 15:04:41.0,lastModifyBy=<null>,lastModifyTime=<null>,providerId=测试,beginNum=15145,num=10,productId=包月,oplogs=[],id=13]
+2011-02-09 15:09:23,530 [9989390@qtp-25934938-9] DEBUG [cn.com.supertv.cmslite.service.cms.MovieManager] - 响应结果：500:未知错误
+2011-02-09 15:11:51,092 [24445765@qtp-25934938-11] DEBUG [cn.com.supertv.cmslite.dao.cms.MovieDao] - delete entity: cn.com.supertv.cmslite.entity.cms.Movie@1569f83[version=4,title=movie_beginnum:15145_num:10,releaseYear=2000,description=description,actors=actors,directors=directors,runTime=100,suggestedPrice=1,recommended=true,ftpId=cms1,previewFtpPath=sheng.mpg,videoFtpPath=sheng.mpg,posterFtpPath=1.jpg,genreTreeIndex=0001-0001-0001-0001,regionTreeIndex=0001-0001-0002-0001,state=ZOMBIE,previewRunTime=100,createBy=createBy,createTime=2011-02-09 15:04:41.0,lastModifyBy=<null>,lastModifyTime=<null>,providerId=测试,beginNum=15145,num=10,productId=包月,oplogs=[],id=13]
+2011-02-09 15:11:51,092 [24445765@qtp-25934938-11] DEBUG [cn.com.supertv.cmslite.dao.cms.MovieDao] - delete entity Movie,id is 13
+2011-02-09 15:13:11,499 [25697126@qtp-25934938-10] DEBUG [cn.com.supertv.cmslite.dao.cms.MovieDao] - save entity: cn.com.supertv.cmslite.entity.cms.Movie@6b0b91[version=0,title=movie_beginnum:15150_num:1,releaseYear=2000,description=description,actors=actors,directors=directors,runTime=100,suggestedPrice=1,recommended=true,ftpId=cms1,previewFtpPath=sheng.mpg,videoFtpPath=sheng.mpg,posterFtpPath=1.jpg,genreTreeIndex=0001-0001-0001-0001,regionTreeIndex=0001-0001-0002-0001,state=EDITABLE,previewRunTime=100,createBy=createBy,createTime=Wed Feb 09 15:13:11 CST 2011,lastModifyBy=<null>,lastModifyTime=<null>,providerId=测试,beginNum=15150,num=1,productId=包月,oplogs=[],id=14]
+2011-02-09 15:13:11,608 [25697126@qtp-25934938-10] DEBUG [cn.com.supertv.cmslite.service.cms.MovieManager] - 响应结果：500:未知错误
+2011-02-09 15:14:57,171 [10755809@qtp-25934938-8] DEBUG [cn.com.supertv.cmslite.dao.cms.MovieDao] - save entity: cn.com.supertv.cmslite.entity.cms.Movie@15ac0e1[version=0,title=movie_beginnum:15170_num:1,releaseYear=2000,description=description,actors=actors,directors=directors,runTime=100,suggestedPrice=1,recommended=true,ftpId=cms1,previewFtpPath=sheng.mpg,videoFtpPath=sheng.mpg,posterFtpPath=1.jpg,genreTreeIndex=0001-0001-0001-0001,regionTreeIndex=0001-0001-0002-0001,state=EDITABLE,previewRunTime=100,createBy=createBy,createTime=Wed Feb 09 15:14:57 CST 2011,lastModifyBy=<null>,lastModifyTime=<null>,providerId=测试,beginNum=15170,num=1,productId=包月,oplogs=[],id=15]
+2011-02-09 15:14:57,327 [10755809@qtp-25934938-8] DEBUG [cn.com.supertv.cmslite.service.cms.MovieManager] - 响应结果：0:null
+2011-02-09 15:15:44,936 [10755809@qtp-25934938-8] DEBUG [cn.com.supertv.cmslite.dao.cms.MovieDao] - save entity: cn.com.supertv.cmslite.entity.cms.Movie@b04679[version=0,title=movie_beginnum:15170_num:1,releaseYear=2000,description=description,actors=actors,directors=directors,runTime=100,suggestedPrice=1,recommended=true,ftpId=cms1,previewFtpPath=sheng.mpg,videoFtpPath=sheng.mpg,posterFtpPath=1.jpg,genreTreeIndex=0001-0001-0001-0001,regionTreeIndex=0001-0001-0002-0001,state=CENSORING,previewRunTime=100,createBy=createBy,createTime=2011-02-09 15:14:57.0,lastModifyBy=<null>,lastModifyTime=<null>,providerId=测试,beginNum=15170,num=1,productId=包月,oplogs=[],id=15]
+2011-02-09 15:15:45,030 [10755809@qtp-25934938-8] DEBUG [cn.com.supertv.cmslite.service.cms.MovieManager] - 响应结果：0:null
+2011-02-09 15:15:56,889 [26981076@qtp-25934938-12] DEBUG [cn.com.supertv.cmslite.dao.cms.MovieDao] - save entity: cn.com.supertv.cmslite.entity.cms.Movie@3f0a0e[version=1,title=movie_beginnum:15170_num:1,releaseYear=2000,description=description,actors=actors,directors=directors,runTime=100,suggestedPrice=1,recommended=true,ftpId=cms1,previewFtpPath=sheng.mpg,videoFtpPath=sheng.mpg,posterFtpPath=1.jpg,genreTreeIndex=0001-0001-0001-0001,regionTreeIndex=0001-0001-0002-0001,state=INGESTABLE,previewRunTime=100,createBy=createBy,createTime=2011-02-09 15:14:57.0,lastModifyBy=<null>,lastModifyTime=<null>,providerId=测试,beginNum=15170,num=1,productId=包月,oplogs=[],id=15]
+2011-02-09 15:15:57,249 [26981076@qtp-25934938-12] DEBUG [cn.com.supertv.cmslite.service.cms.MovieManager] - 响应结果：0:null
+2011-02-09 15:16:26,155 [25697126@qtp-25934938-10] DEBUG [cn.com.supertv.cmslite.dao.cms.MovieDao] - save entity: cn.com.supertv.cmslite.entity.cms.Movie@1fcfa19[version=2,title=movie_beginnum:15170_num:1,releaseYear=2000,description=description,actors=actors,directors=directors,runTime=100,suggestedPrice=1,recommended=true,ftpId=cms1,previewFtpPath=sheng.mpg,videoFtpPath=sheng.mpg,posterFtpPath=1.jpg,genreTreeIndex=0001-0001-0001-0001,regionTreeIndex=0001-0001-0002-0001,state=INGESTED,previewRunTime=100,createBy=createBy,createTime=2011-02-09 15:14:57.0,lastModifyBy=<null>,lastModifyTime=<null>,providerId=测试,beginNum=15170,num=1,productId=包月,oplogs=[],id=15]
+2011-02-09 15:16:29,202 [25697126@qtp-25934938-10] DEBUG [cn.com.supertv.cmslite.service.cms.MovieManager] - 响应结果：0:null
+2011-02-09 15:17:56,499 [26981076@qtp-25934938-12] DEBUG [cn.com.supertv.cmslite.dao.cms.MovieDao] - save entity: cn.com.supertv.cmslite.entity.cms.Movie@9e3341[version=3,title=movie_beginnum:15170_num:1,releaseYear=2000,description=description,actors=actors,directors=directors,runTime=100,suggestedPrice=1,recommended=true,ftpId=cms1,previewFtpPath=sheng.mpg,videoFtpPath=sheng.mpg,posterFtpPath=1.jpg,genreTreeIndex=0001-0001-0001-0001,regionTreeIndex=0001-0001-0002-0001,state=ZOMBIE,previewRunTime=100,createBy=createBy,createTime=2011-02-09 15:14:57.0,lastModifyBy=<null>,lastModifyTime=<null>,providerId=测试,beginNum=15170,num=1,productId=包月,oplogs=[],id=15]
+2011-02-09 15:17:59,233 [26981076@qtp-25934938-12] DEBUG [cn.com.supertv.cmslite.service.cms.MovieManager] - 响应结果：0:null
+2011-02-09 15:19:30,358 [10755809@qtp-25934938-8] WARN  [org.hibernate.util.JDBCExceptionReporter] - SQL Error: 1062, SQLState: 23000
+2011-02-09 15:19:30,358 [10755809@qtp-25934938-8] ERROR [org.hibernate.util.JDBCExceptionReporter] - Duplicate entry 'movie_beginnum:15170_num:1' for key 2
+2011-02-09 15:21:01,546 [10755809@qtp-25934938-8] DEBUG [cn.com.supertv.cmslite.dao.cms.MovieDao] - save entity: cn.com.supertv.cmslite.entity.cms.Movie@12be098[version=0,title=movie_beginnum:15136_num:1,releaseYear=2000,description=description,actors=actors,directors=directors,runTime=100,suggestedPrice=1,recommended=true,ftpId=cms1,previewFtpPath=sheng.mpg,videoFtpPath=sheng.mpg,posterFtpPath=1.jpg,genreTreeIndex=0001-0001-0001-0001,regionTreeIndex=0001-0001-0002-0001,state=EDITABLE,previewRunTime=100,createBy=createBy,createTime=Wed Feb 09 15:21:01 CST 2011,lastModifyBy=<null>,lastModifyTime=<null>,providerId=测试,beginNum=15136,num=1,productId=包月,oplogs=[],id=16]
+2011-02-09 15:21:01,608 [10755809@qtp-25934938-8] DEBUG [cn.com.supertv.cmslite.service.cms.MovieManager] - 响应结果：500:未知错误
+2011-02-09 15:22:30,514 [6889952@qtp-25934938-16] DEBUG [cn.com.supertv.cmslite.dao.cms.MovieDao] - save entity: cn.com.supertv.cmslite.entity.cms.Movie@7cdd8[version=0,title=movie_beginnum:15171_num:10,releaseYear=2000,description=description,actors=actors,directors=directors,runTime=100,suggestedPrice=1,recommended=true,ftpId=cms1,previewFtpPath=sheng.mpg,videoFtpPath=sheng.mpg,posterFtpPath=1.jpg,genreTreeIndex=0001-0001-0001-0001,regionTreeIndex=0001-0001-0002-0001,state=EDITABLE,previewRunTime=100,createBy=createBy,createTime=Wed Feb 09 15:22:30 CST 2011,lastModifyBy=<null>,lastModifyTime=<null>,providerId=测试,beginNum=15171,num=10,productId=包月,oplogs=[],id=17]
+2011-02-09 15:22:30,764 [6889952@qtp-25934938-16] DEBUG [cn.com.supertv.cmslite.service.cms.MovieManager] - 响应结果：0:null
+2011-02-09 15:22:36,077 [33178013@qtp-25934938-13] DEBUG [cn.com.supertv.cmslite.dao.cms.MovieDao] - save entity: cn.com.supertv.cmslite.entity.cms.Movie@1152e3f[version=0,title=movie_beginnum:15171_num:10,releaseYear=2000,description=description,actors=actors,directors=directors,runTime=100,suggestedPrice=1,recommended=true,ftpId=cms1,previewFtpPath=sheng.mpg,videoFtpPath=sheng.mpg,posterFtpPath=1.jpg,genreTreeIndex=0001-0001-0001-0001,regionTreeIndex=0001-0001-0002-0001,state=CENSORING,previewRunTime=100,createBy=createBy,createTime=2011-02-09 15:22:30.0,lastModifyBy=<null>,lastModifyTime=<null>,providerId=测试,beginNum=15171,num=10,productId=包月,oplogs=[],id=17]
+2011-02-09 15:22:38,842 [33178013@qtp-25934938-13] DEBUG [cn.com.supertv.cmslite.service.cms.MovieManager] - 响应结果：0:null
+2011-02-09 15:22:55,061 [6889952@qtp-25934938-16] DEBUG [cn.com.supertv.cmslite.dao.cms.MovieDao] - save entity: cn.com.supertv.cmslite.entity.cms.Movie@49cc1[version=1,title=movie_beginnum:15171_num:10,releaseYear=2000,description=description,actors=actors,directors=directors,runTime=100,suggestedPrice=1,recommended=true,ftpId=cms1,previewFtpPath=sheng.mpg,videoFtpPath=sheng.mpg,posterFtpPath=1.jpg,genreTreeIndex=0001-0001-0001-0001,regionTreeIndex=0001-0001-0002-0001,state=INGESTABLE,previewRunTime=100,createBy=createBy,createTime=2011-02-09 15:22:30.0,lastModifyBy=<null>,lastModifyTime=<null>,providerId=测试,beginNum=15171,num=10,productId=包月,oplogs=[],id=17]
+2011-02-09 15:23:00,671 [6889952@qtp-25934938-16] DEBUG [cn.com.supertv.cmslite.service.cms.MovieManager] - 响应结果：0:null
+2011-02-09 15:23:11,952 [10755809@qtp-25934938-8] DEBUG [cn.com.supertv.cmslite.dao.cms.MovieDao] - save entity: cn.com.supertv.cmslite.entity.cms.Movie@891d67[version=2,title=movie_beginnum:15171_num:10,releaseYear=2000,description=description,actors=actors,directors=directors,runTime=100,suggestedPrice=1,recommended=true,ftpId=cms1,previewFtpPath=sheng.mpg,videoFtpPath=sheng.mpg,posterFtpPath=1.jpg,genreTreeIndex=0001-0001-0001-0001,regionTreeIndex=0001-0001-0002-0001,state=INGESTED,previewRunTime=100,createBy=createBy,createTime=2011-02-09 15:22:30.0,lastModifyBy=<null>,lastModifyTime=<null>,providerId=测试,beginNum=15171,num=10,productId=包月,oplogs=[],id=17]
+2011-02-09 15:23:42,999 [10755809@qtp-25934938-8] DEBUG [cn.com.supertv.cmslite.service.cms.MovieManager] - 响应结果：500:未知错误
+2011-02-09 15:30:31,327 [10755809@qtp-25934938-8] DEBUG [cn.com.supertv.cmslite.dao.cms.MovieDao] - save entity: cn.com.supertv.cmslite.entity.cms.Movie@b46689[version=0,title=movie_beginnum:15181_num:5,releaseYear=2000,description=description,actors=actors,directors=directors,runTime=100,suggestedPrice=1,recommended=true,ftpId=cms1,previewFtpPath=sheng.mpg,videoFtpPath=sheng.mpg,posterFtpPath=1.jpg,genreTreeIndex=0001-0001-0001-0001,regionTreeIndex=0001-0001-0002-0001,state=EDITABLE,previewRunTime=100,createBy=createBy,createTime=Wed Feb 09 15:30:31 CST 2011,lastModifyBy=<null>,lastModifyTime=<null>,providerId=测试,beginNum=15181,num=5,productId=包月,oplogs=[],id=18]
+2011-02-09 15:30:31,686 [10755809@qtp-25934938-8] DEBUG [cn.com.supertv.cmslite.service.cms.MovieManager] - 响应结果：0:null
+2011-02-09 15:30:34,483 [10755809@qtp-25934938-8] DEBUG [cn.com.supertv.cmslite.dao.cms.MovieDao] - save entity: cn.com.supertv.cmslite.entity.cms.Movie@1c7b6d7[version=0,title=movie_beginnum:15181_num:5,releaseYear=2000,description=description,actors=actors,directors=directors,runTime=100,suggestedPrice=1,recommended=true,ftpId=cms1,previewFtpPath=sheng.mpg,videoFtpPath=sheng.mpg,posterFtpPath=1.jpg,genreTreeIndex=0001-0001-0001-0001,regionTreeIndex=0001-0001-0002-0001,state=CENSORING,previewRunTime=100,createBy=createBy,createTime=2011-02-09 15:30:31.0,lastModifyBy=<null>,lastModifyTime=<null>,providerId=测试,beginNum=15181,num=5,productId=包月,oplogs=[],id=18]
+2011-02-09 15:30:35,733 [10755809@qtp-25934938-8] DEBUG [cn.com.supertv.cmslite.service.cms.MovieManager] - 响应结果：0:null
+2011-02-09 15:30:37,764 [25777316@qtp-25934938-18] DEBUG [cn.com.supertv.cmslite.dao.cms.MovieDao] - save entity: cn.com.supertv.cmslite.entity.cms.Movie@1135c3a[version=1,title=movie_beginnum:15181_num:5,releaseYear=2000,description=description,actors=actors,directors=directors,runTime=100,suggestedPrice=1,recommended=true,ftpId=cms1,previewFtpPath=sheng.mpg,videoFtpPath=sheng.mpg,posterFtpPath=1.jpg,genreTreeIndex=0001-0001-0001-0001,regionTreeIndex=0001-0001-0002-0001,state=INGESTABLE,previewRunTime=100,createBy=createBy,createTime=2011-02-09 15:30:31.0,lastModifyBy=<null>,lastModifyTime=<null>,providerId=测试,beginNum=15181,num=5,productId=包月,oplogs=[],id=18]
+2011-02-09 15:30:40,592 [25777316@qtp-25934938-18] DEBUG [cn.com.supertv.cmslite.service.cms.MovieManager] - 响应结果：0:null
+2011-02-09 15:30:48,936 [6889952@qtp-25934938-16] DEBUG [cn.com.supertv.cmslite.dao.cms.MovieDao] - save entity: cn.com.supertv.cmslite.entity.cms.Movie@1b4239f[version=2,title=movie_beginnum:15181_num:5,releaseYear=2000,description=description,actors=actors,directors=directors,runTime=100,suggestedPrice=1,recommended=true,ftpId=cms1,previewFtpPath=sheng.mpg,videoFtpPath=sheng.mpg,posterFtpPath=1.jpg,genreTreeIndex=0001-0001-0001-0001,regionTreeIndex=0001-0001-0002-0001,state=INGESTED,previewRunTime=100,createBy=createBy,createTime=2011-02-09 15:30:31.0,lastModifyBy=<null>,lastModifyTime=<null>,providerId=测试,beginNum=15181,num=5,productId=包月,oplogs=[],id=18]
+2011-02-09 15:31:09,171 [6889952@qtp-25934938-16] DEBUG [cn.com.supertv.cmslite.service.cms.MovieManager] - 响应结果：0:null
+2011-02-09 15:39:52,092 [304909@qtp-25934938-22] DEBUG [cn.com.supertv.cmslite.dao.cms.KtvDao] - save entity: cn.com.supertv.cmslite.entity.cms.Ktv@d388bc[version=0,title=ktv_beginnum:11_num:10,releaseYear=2000,description=description,ftpId=cms1,videoFtpPath=sheng.mpg,posterFtpPath=1.jpg,genreTreeIndex=0001-0003-0001-0001,actors=actors,runTime=100,suggestedPrice=1,state=EDITABLE,recommended=true,compose=<null>,authors=authors,arranged=arranged,producer=producer,album=album,createTime=Wed Feb 09 15:39:52 CST 2011,createBy=<null>,lastModifyBy=<null>,lastModifyTime=<null>,providerId=测试,beginNum=11,num=10,productId=包月,oplogs=[],id=158]
+2011-02-09 15:39:52,171 [304909@qtp-25934938-22] DEBUG [cn.com.supertv.cmslite.service.cms.KtvManager] - 响应结果：500:未知错误
+2011-02-09 15:40:49,327 [10755809@qtp-25934938-8] DEBUG [cn.com.supertv.cmslite.dao.cms.KtvDao] - save entity: cn.com.supertv.cmslite.entity.cms.Ktv@17ab58a[version=0,title=ktv_beginnum:50_num:10,releaseYear=2000,description=description,ftpId=cms1,videoFtpPath=sheng.mpg,posterFtpPath=1.,genreTreeIndex=0001-0003-0001-0001,actors=actors,runTime=100,suggestedPrice=1,state=EDITABLE,recommended=true,compose=<null>,authors=authors,arranged=arranged,producer=producer,album=album,createTime=Wed Feb 09 15:40:49 CST 2011,createBy=<null>,lastModifyBy=<null>,lastModifyTime=<null>,providerId=测试,beginNum=50,num=10,productId=包月,oplogs=[],id=159]
+2011-02-09 15:40:49,936 [10755809@qtp-25934938-8] DEBUG [cn.com.supertv.cmslite.service.cms.KtvManager] - 响应结果：0:null
+2011-02-09 15:41:09,358 [10755809@qtp-25934938-8] DEBUG [cn.com.supertv.cmslite.dao.cms.KtvDao] - save entity: cn.com.supertv.cmslite.entity.cms.Ktv@fff988[version=0,title=ktv_beginnum:50_num:10,releaseYear=2000,description=description,ftpId=cms1,videoFtpPath=sheng.mpg,posterFtpPath=1.,genreTreeIndex=0001-0003-0001-0001,actors=actors,runTime=100,suggestedPrice=1,state=CENSORING,recommended=true,compose=<null>,authors=authors,arranged=arranged,producer=producer,album=album,createTime=2011-02-09 15:40:49.0,createBy=<null>,lastModifyBy=<null>,lastModifyTime=<null>,providerId=测试,beginNum=50,num=10,productId=包月,oplogs=[],id=159]
+2011-02-09 15:41:09,436 [10755809@qtp-25934938-8] DEBUG [cn.com.supertv.cmslite.service.cms.KtvManager] - 响应结果：0:null
+2011-02-09 15:41:16,452 [304909@qtp-25934938-22] DEBUG [cn.com.supertv.cmslite.dao.cms.KtvDao] - save entity: cn.com.supertv.cmslite.entity.cms.Ktv@c973c9[version=1,title=ktv_beginnum:50_num:10,releaseYear=2000,description=description,ftpId=cms1,videoFtpPath=sheng.mpg,posterFtpPath=1.,genreTreeIndex=0001-0003-0001-0001,actors=actors,runTime=100,suggestedPrice=1,state=INGESTABLE,recommended=true,compose=<null>,authors=authors,arranged=arranged,producer=producer,album=album,createTime=2011-02-09 15:40:49.0,createBy=<null>,lastModifyBy=<null>,lastModifyTime=<null>,providerId=测试,beginNum=50,num=10,productId=包月,oplogs=[],id=159]
+2011-02-09 15:41:16,530 [304909@qtp-25934938-22] DEBUG [cn.com.supertv.cmslite.service.cms.KtvManager] - 响应结果：0:null
+2011-02-09 15:41:26,155 [10755809@qtp-25934938-8] DEBUG [cn.com.supertv.cmslite.dao.cms.KtvDao] - save entity: cn.com.supertv.cmslite.entity.cms.Ktv@1b0af03[version=2,title=ktv_beginnum:50_num:10,releaseYear=2000,description=description,ftpId=cms1,videoFtpPath=sheng.mpg,posterFtpPath=1.,genreTreeIndex=0001-0003-0001-0001,actors=actors,runTime=100,suggestedPrice=1,state=INGESTED,recommended=true,compose=<null>,authors=authors,arranged=arranged,producer=producer,album=album,createTime=2011-02-09 15:40:49.0,createBy=<null>,lastModifyBy=<null>,lastModifyTime=<null>,providerId=测试,beginNum=50,num=10,productId=包月,oplogs=[],id=159]
+2011-02-09 15:41:26,155 [10755809@qtp-25934938-8] DEBUG [cn.com.supertv.cmslite.service.cms.KtvManager] - 响应结果：500:未知错误
+2011-02-09 16:01:36,842 [main] WARN  [org.springframework.beans.factory.config.PropertyPlaceholderConfigurer] - Could not load properties from URL [file:/var/cmslite/application.server.properties]: \var\cmslite\application.server.properties (系统找不到指定的路径。)
+2011-02-09 16:03:07,046 [11362290@qtp-15623809-4] WARN  [org.hibernate.util.JDBCExceptionReporter] - SQL Error: 1265, SQLState: 01000
+2011-02-09 16:03:07,046 [11362290@qtp-15623809-4] ERROR [org.hibernate.util.JDBCExceptionReporter] - Data truncated for column 'region_tree_index' at row 1
+2011-02-09 16:07:49,827 [7000345@qtp-15623809-2] WARN  [org.hibernate.util.JDBCExceptionReporter] - SQL Error: 1265, SQLState: 01000
+2011-02-09 16:07:49,827 [7000345@qtp-15623809-2] ERROR [org.hibernate.util.JDBCExceptionReporter] - Data truncated for column 'region_tree_index' at row 1
+2011-02-09 16:08:43,249 [7000345@qtp-15623809-2] DEBUG [cn.com.supertv.cmslite.dao.cms.KtvDao] - save entity: cn.com.supertv.cmslite.entity.cms.Ktv@1303ec2[version=0,title=ktv_beginnum:60_num:10,releaseYear=2000,description=description,ftpId=cms1,videoFtpPath=sheng.mpg,posterFtpPath=1.jpg,genreTreeIndex=0001-0003-0001-0001,actors=actors,runTime=100,suggestedPrice=1,state=EDITABLE,recommended=true,compose=<null>,authors=authors,arranged=arranged,producer=producer,album=album,createTime=Wed Feb 09 16:08:43 CST 2011,createBy=<null>,lastModifyBy=<null>,lastModifyTime=<null>,providerId=测试,beginNum=60,num=10,productId=包月,regionTreeIndex=0001-0003-0002-0001,oplogs=[],id=160]
+2011-02-09 16:15:56,014 [7000345@qtp-15623809-2] DEBUG [cn.com.supertv.cmslite.dao.cms.KtvDao] - save entity: cn.com.supertv.cmslite.entity.cms.Ktv@1518ea7[version=0,title=ktv_beginnum:60_num:10,releaseYear=2000,description=description,ftpId=cms1,videoFtpPath=sheng.mpg,posterFtpPath=1.jpg,genreTreeIndex=0001-0003-0001-0001,actors=actors,runTime=100,suggestedPrice=1,state=EDITABLE,recommended=true,compose=<null>,authors=authors,arranged=arranged,producer=producer,album=album,createTime=Wed Feb 09 16:15:56 CST 2011,createBy=<null>,lastModifyBy=<null>,lastModifyTime=<null>,providerId=测试,beginNum=60,num=10,productId=包月,regionTreeIndex=0001-0003-0002-0001,oplogs=[],id=161]
+2011-02-09 16:16:41,499 [7000345@qtp-15623809-2] DEBUG [cn.com.supertv.cmslite.dao.cms.KtvDao] - save entity: cn.com.supertv.cmslite.entity.cms.Ktv@13cd86d[version=0,title=ktv_beginnum:60_num:10,releaseYear=2000,description=description,ftpId=cms1,videoFtpPath=sheng.mpg,posterFtpPath=1.jpg,genreTreeIndex=0001-0003-0001-0001,actors=actors,runTime=100,suggestedPrice=1,state=EDITABLE,recommended=true,compose=<null>,authors=authors,arranged=arranged,producer=producer,album=album,createTime=Wed Feb 09 16:16:41 CST 2011,createBy=<null>,lastModifyBy=<null>,lastModifyTime=<null>,providerId=测试,beginNum=60,num=10,productId=包月,regionTreeIndex=0001-0003-0002-0001,oplogs=[],id=162]
+2011-02-09 16:16:42,546 [7000345@qtp-15623809-2] DEBUG [cn.com.supertv.cmslite.service.cms.KtvManager] - 响应结果：0:null
+2011-02-09 16:18:03,092 [7000345@qtp-15623809-2] DEBUG [cn.com.supertv.cmslite.dao.cms.KtvDao] - save entity: cn.com.supertv.cmslite.entity.cms.Ktv@b8a16c[version=0,title=ktv_beginnum:60_num:10,releaseYear=2000,description=description,ftpId=cms1,videoFtpPath=sheng.mpg,posterFtpPath=1.jpg,genreTreeIndex=0001-0003-0001-0001,actors=actors,runTime=100,suggestedPrice=1,state=CENSORING,recommended=true,compose=<null>,authors=authors,arranged=arranged,producer=producer,album=album,createTime=2011-02-09 16:16:41.0,createBy=<null>,lastModifyBy=<null>,lastModifyTime=<null>,providerId=测试,beginNum=60,num=10,productId=包月,regionTreeIndex=0001-0003-0002-0001,oplogs=[],id=162]
+2011-02-09 16:18:03,233 [7000345@qtp-15623809-2] DEBUG [cn.com.supertv.cmslite.service.cms.KtvManager] - 响应结果：0:null
+2011-02-09 16:18:13,030 [7000345@qtp-15623809-2] DEBUG [cn.com.supertv.cmslite.dao.cms.KtvDao] - save entity: cn.com.supertv.cmslite.entity.cms.Ktv@103869a[version=1,title=ktv_beginnum:60_num:10,releaseYear=2000,description=description,ftpId=cms1,videoFtpPath=sheng.mpg,posterFtpPath=1.jpg,genreTreeIndex=0001-0003-0001-0001,actors=actors,runTime=100,suggestedPrice=1,state=INGESTABLE,recommended=true,compose=<null>,authors=authors,arranged=arranged,producer=producer,album=album,createTime=2011-02-09 16:16:41.0,createBy=<null>,lastModifyBy=<null>,lastModifyTime=<null>,providerId=测试,beginNum=60,num=10,productId=包月,regionTreeIndex=0001-0003-0002-0001,oplogs=[],id=162]
+2011-02-09 16:18:13,108 [7000345@qtp-15623809-2] DEBUG [cn.com.supertv.cmslite.service.cms.KtvManager] - 响应结果：0:null
+2011-02-09 16:18:24,749 [13344908@qtp-15623809-9] DEBUG [cn.com.supertv.cmslite.dao.cms.KtvDao] - save entity: cn.com.supertv.cmslite.entity.cms.Ktv@18fb5b3[version=2,title=ktv_beginnum:60_num:10,releaseYear=2000,description=description,ftpId=cms1,videoFtpPath=sheng.mpg,posterFtpPath=1.jpg,genreTreeIndex=0001-0003-0001-0001,actors=actors,runTime=100,suggestedPrice=1,state=INGESTED,recommended=true,compose=<null>,authors=authors,arranged=arranged,producer=producer,album=album,createTime=2011-02-09 16:16:41.0,createBy=<null>,lastModifyBy=<null>,lastModifyTime=<null>,providerId=测试,beginNum=60,num=10,productId=包月,regionTreeIndex=0001-0003-0002-0001,oplogs=[],id=162]
+2011-02-09 16:18:46,249 [13344908@qtp-15623809-9] DEBUG [cn.com.supertv.cmslite.service.cms.KtvManager] - 响应结果：0:null
+2011-02-09 16:23:00,249 [13344908@qtp-15623809-9] DEBUG [cn.com.supertv.cmslite.dao.cms.KtvDao] - save entity: cn.com.supertv.cmslite.entity.cms.Ktv@ae9919[version=3,title=ktv_beginnum:60_num:10,releaseYear=2000,description=description,ftpId=cms1,videoFtpPath=sheng.mpg,posterFtpPath=1.jpg,genreTreeIndex=0001-0003-0001-0001,actors=actors,runTime=100,suggestedPrice=1,state=ZOMBIE,recommended=true,compose=<null>,authors=authors,arranged=arranged,producer=producer,album=album,createTime=2011-02-09 16:16:41.0,createBy=<null>,lastModifyBy=<null>,lastModifyTime=<null>,providerId=测试,beginNum=60,num=10,productId=包月,regionTreeIndex=0001-0003-0002-0001,oplogs=[],id=162]
+2011-02-09 16:23:29,858 [13344908@qtp-15623809-9] DEBUG [cn.com.supertv.cmslite.service.cms.KtvManager] - 响应结果：0:null
+2011-02-09 16:28:21,733 [9852868@qtp-15623809-12] DEBUG [cn.com.supertv.cmslite.dao.cms.TvDao] - save entity: cn.com.supertv.cmslite.entity.cms.Tv@15ac84c[version=0,title=tv_beginnum:1_num:1,releaseYear=2000,description=<null>,runTime=100,suggestedPrice=1,ftpId=cms1,posterFtpPath=1.jpg,previewFtpPath=<null>,actors=actors,directors=directors,genreTreeIndex=0001-0002-0001-0002,regionTreeIndex=0001-0002-0002-0002,volumn=<null>,recommended=true,previewRunTime=100,createBy=<null>,createTime=Wed Feb 09 16:28:21 CST 2011,lastModifyBy=<null>,lastModifyTime=<null>,providerId=测试,beginNum=1,num=1,episodeNumber=20,state=EDITABLE,productId=包月,episodes=[],id=1]
+2011-02-09 16:28:21,889 [9852868@qtp-15623809-12] DEBUG [cn.com.supertv.cmslite.service.cms.KtvManager] - 响应结果：500:未知错误
+2011-02-09 16:29:54,264 [27991870@qtp-15623809-15] DEBUG [cn.com.supertv.cmslite.dao.cms.TvDao] - save entity: cn.com.supertv.cmslite.entity.cms.Tv@a96023[version=0,title=tv_beginnum:11_num:10,releaseYear=2000,description=<null>,runTime=100,suggestedPrice=10,ftpId=cms1,posterFtpPath=1.jpg,previewFtpPath=<null>,actors=actors,directors=directors,genreTreeIndex=0001-0002-0001-0002,regionTreeIndex=0001-0002-0002-0002,volumn=<null>,recommended=true,previewRunTime=100,createBy=<null>,createTime=Wed Feb 09 16:29:54 CST 2011,lastModifyBy=<null>,lastModifyTime=<null>,providerId=测试,beginNum=11,num=10,episodeNumber=10,state=EDITABLE,productId=包月,episodes=[],id=2]
+2011-02-09 16:29:54,374 [27991870@qtp-15623809-15] DEBUG [cn.com.supertv.cmslite.service.cms.KtvManager] - 响应结果：0:null
+2011-02-09 16:29:54,452 [27991870@qtp-15623809-15] DEBUG [cn.com.supertv.cmslite.service.cms.KtvManager] - 响应结果：0:null
+2011-02-09 16:29:54,577 [27991870@qtp-15623809-15] DEBUG [cn.com.supertv.cmslite.service.cms.KtvManager] - 响应结果：0:null
+2011-02-09 16:29:54,686 [27991870@qtp-15623809-15] DEBUG [cn.com.supertv.cmslite.service.cms.KtvManager] - 响应结果：0:null
+2011-02-09 16:29:54,764 [27991870@qtp-15623809-15] DEBUG [cn.com.supertv.cmslite.service.cms.KtvManager] - 响应结果：0:null
+2011-02-09 16:29:54,889 [27991870@qtp-15623809-15] DEBUG [cn.com.supertv.cmslite.service.cms.KtvManager] - 响应结果：0:null
+2011-02-09 16:29:54,999 [27991870@qtp-15623809-15] DEBUG [cn.com.supertv.cmslite.service.cms.KtvManager] - 响应结果：0:null
+2011-02-09 16:29:55,077 [27991870@qtp-15623809-15] DEBUG [cn.com.supertv.cmslite.service.cms.KtvManager] - 响应结果：0:null
+2011-02-09 16:29:55,202 [27991870@qtp-15623809-15] DEBUG [cn.com.supertv.cmslite.service.cms.KtvManager] - 响应结果：0:null
+2011-02-09 16:29:55,280 [27991870@qtp-15623809-15] DEBUG [cn.com.supertv.cmslite.service.cms.KtvManager] - 响应结果：0:null
+2011-02-09 16:30:07,014 [6221682@qtp-15623809-14] DEBUG [cn.com.supertv.cmslite.dao.cms.TvDao] - save entity: cn.com.supertv.cmslite.entity.cms.Tv@f6fd93[version=0,title=tv_beginnum:11_num:10,releaseYear=2000,description=<null>,runTime=100,suggestedPrice=10,ftpId=cms1,posterFtpPath=1.jpg,previewFtpPath=<null>,actors=actors,directors=directors,genreTreeIndex=0001-0002-0001-0002,regionTreeIndex=0001-0002-0002-0002,volumn=<null>,recommended=true,previewRunTime=100,createBy=<null>,createTime=2011-02-09 16:29:54.0,lastModifyBy=<null>,lastModifyTime=<null>,providerId=测试,beginNum=11,num=10,episodeNumber=10,state=CENSORING,productId=包月,episodes=[],id=2]
+2011-02-09 16:31:07,546 [6221682@qtp-15623809-14] WARN  [org.apache.cxf.phase.PhaseInterceptorChain] - Interceptor for {http://cms.supertv.com.cn}CMSWebServiceService#{http://cms.supertv.com.cn}updateToCensoring has thrown exception, unwinding now
+org.apache.cxf.interceptor.Fault: Could not send Message.
+	at org.apache.cxf.interceptor.MessageSenderInterceptor$MessageSenderEndingInterceptor.handleMessage(MessageSenderInterceptor.java:64)
+	at org.apache.cxf.phase.PhaseInterceptorChain.doIntercept(PhaseInterceptorChain.java:244)
+	at org.apache.cxf.endpoint.ClientImpl.invoke(ClientImpl.java:516)
+	at org.apache.cxf.endpoint.ClientImpl.invoke(ClientImpl.java:313)
+	at org.apache.cxf.endpoint.ClientImpl.invoke(ClientImpl.java:265)
+	at org.apache.cxf.frontend.ClientProxy.invokeSync(ClientProxy.java:73)
+	at org.apache.cxf.jaxws.JaxWsClientProxy.invoke(JaxWsClientProxy.java:124)
+	at $Proxy81.updateToCensoring(Unknown Source)
+	at cn.com.supertv.cmslite.service.cms.TvManager.updateToCensoring(TvManager.java:183)
+	at cn.com.supertv.cmslite.service.cms.TvManager$$FastClassByCGLIB$$e9969435.invoke(<generated>)
+	at net.sf.cglib.proxy.MethodProxy.invoke(MethodProxy.java:191)
+	at org.springframework.aop.framework.Cglib2AopProxy$CglibMethodInvocation.invokeJoinpoint(Cglib2AopProxy.java:688)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:150)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:110)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:172)
+	at org.springframework.aop.framework.Cglib2AopProxy$DynamicAdvisedInterceptor.intercept(Cglib2AopProxy.java:621)
+	at cn.com.supertv.cmslite.service.cms.TvManager$$EnhancerByCGLIB$$607be80e.updateToCensoring(<generated>)
+	at cn.com.supertv.cmslite.web.cms.TvAction.updateToCensoring(TvAction.java:88)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+	at java.lang.reflect.Method.invoke(Method.java:597)
+	at com.opensymphony.xwork2.DefaultActionInvocation.invokeAction(DefaultActionInvocation.java:452)
+	at com.opensymphony.xwork2.DefaultActionInvocation.invokeActionOnly(DefaultActionInvocation.java:291)
+	at com.opensymphony.xwork2.DefaultActionInvocation.invoke(DefaultActionInvocation.java:254)
+	at com.opensymphony.xwork2.interceptor.DefaultWorkflowInterceptor.doIntercept(DefaultWorkflowInterceptor.java:176)
+	at com.opensymphony.xwork2.interceptor.MethodFilterInterceptor.intercept(MethodFilterInterceptor.java:98)
+	at com.opensymphony.xwork2.DefaultActionInvocation.invoke(DefaultActionInvocation.java:248)
+	at com.opensymphony.xwork2.validator.ValidationInterceptor.doIntercept(ValidationInterceptor.java:263)
+	at org.apache.struts2.interceptor.validation.AnnotationValidationInterceptor.doIntercept(AnnotationValidationInterceptor.java:68)
+	at com.opensymphony.xwork2.interceptor.MethodFilterInterceptor.intercept(MethodFilterInterceptor.java:98)
+	at com.opensymphony.xwork2.DefaultActionInvocation.invoke(DefaultActionInvocation.java:248)
+	at com.opensymphony.xwork2.interceptor.ConversionErrorInterceptor.intercept(ConversionErrorInterceptor.java:133)
+	at com.opensymphony.xwork2.DefaultActionInvocation.invoke(DefaultActionInvocation.java:248)
+	at com.opensymphony.xwork2.interceptor.ParametersInterceptor.doIntercept(ParametersInterceptor.java:207)
+	at com.opensymphony.xwork2.interceptor.MethodFilterInterceptor.intercept(MethodFilterInterceptor.java:98)
+	at com.opensymphony.xwork2.DefaultActionInvocation.invoke(DefaultActionInvocation.java:248)
+	at com.opensymphony.xwork2.interceptor.ParametersInterceptor.doIntercept(ParametersInterceptor.java:207)
+	at com.opensymphony.xwork2.interceptor.MethodFilterInterceptor.intercept(MethodFilterInterceptor.java:98)
+	at com.opensymphony.xwork2.DefaultActionInvocation.invoke(DefaultActionInvocation.java:248)
+	at com.opensymphony.xwork2.interceptor.StaticParametersInterceptor.intercept(StaticParametersInterceptor.java:190)
+	at com.opensymphony.xwork2.DefaultActionInvocation.invoke(DefaultActionInvocation.java:248)
+	at org.apache.struts2.interceptor.FileUploadInterceptor.intercept(FileUploadInterceptor.java:243)
+	at com.opensymphony.xwork2.DefaultActionInvocation.invoke(DefaultActionInvocation.java:248)
+	at com.opensymphony.xwork2.interceptor.ModelDrivenInterceptor.intercept(ModelDrivenInterceptor.java:100)
+	at com.opensymphony.xwork2.DefaultActionInvocation.invoke(DefaultActionInvocation.java:248)
+	at com.opensymphony.xwork2.interceptor.ChainingInterceptor.intercept(ChainingInterceptor.java:142)
+	at com.opensymphony.xwork2.DefaultActionInvocation.invoke(DefaultActionInvocation.java:248)
+	at com.opensymphony.xwork2.interceptor.PrepareInterceptor.doIntercept(PrepareInterceptor.java:166)
+	at com.opensymphony.xwork2.interceptor.MethodFilterInterceptor.intercept(MethodFilterInterceptor.java:98)
+	at com.opensymphony.xwork2.DefaultActionInvocation.invoke(DefaultActionInvocation.java:248)
+	at org.apache.struts2.interceptor.ServletConfigInterceptor.intercept(ServletConfigInterceptor.java:164)
+	at com.opensymphony.xwork2.DefaultActionInvocation.invoke(DefaultActionInvocation.java:248)
+	at com.opensymphony.xwork2.interceptor.ParametersInterceptor.doIntercept(ParametersInterceptor.java:207)
+	at com.opensymphony.xwork2.interceptor.MethodFilterInterceptor.intercept(MethodFilterInterceptor.java:98)
+	at com.opensymphony.xwork2.DefaultActionInvocation.invoke(DefaultActionInvocation.java:248)
+	at org.apache.struts2.interceptor.MultiselectInterceptor.intercept(MultiselectInterceptor.java:75)
+	at com.opensymphony.xwork2.DefaultActionInvocation.invoke(DefaultActionInvocation.java:248)
+	at org.apache.struts2.interceptor.CheckboxInterceptor.intercept(CheckboxInterceptor.java:94)
+	at com.opensymphony.xwork2.DefaultActionInvocation.invoke(DefaultActionInvocation.java:248)
+	at com.opensymphony.xwork2.interceptor.I18nInterceptor.intercept(I18nInterceptor.java:176)
+	at com.opensymphony.xwork2.DefaultActionInvocation.invoke(DefaultActionInvocation.java:248)
+	at com.opensymphony.xwork2.interceptor.AliasInterceptor.intercept(AliasInterceptor.java:190)
+	at com.opensymphony.xwork2.DefaultActionInvocation.invoke(DefaultActionInvocation.java:248)
+	at com.opensymphony.xwork2.interceptor.ExceptionMappingInterceptor.intercept(ExceptionMappingInterceptor.java:187)
+	at com.opensymphony.xwork2.DefaultActionInvocation.invoke(DefaultActionInvocation.java:248)
+	at org.apache.struts2.interceptor.MessageStoreInterceptor.intercept(MessageStoreInterceptor.java:204)
+	at com.opensymphony.xwork2.DefaultActionInvocation.invoke(DefaultActionInvocation.java:248)
+	at org.apache.struts2.impl.StrutsActionProxy.execute(StrutsActionProxy.java:52)
+	at org.apache.struts2.dispatcher.Dispatcher.serviceAction(Dispatcher.java:485)
+	at org.apache.struts2.dispatcher.ng.ExecuteOperations.executeAction(ExecuteOperations.java:77)
+	at org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter.doFilter(StrutsPrepareAndExecuteFilter.java:91)
+	at org.mortbay.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1157)
+	at org.apache.struts2.dispatcher.ActionContextCleanUp.doFilter(ActionContextCleanUp.java:102)
+	at org.mortbay.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1157)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:343)
+	at org.springframework.security.web.access.intercept.FilterSecurityInterceptor.invoke(FilterSecurityInterceptor.java:109)
+	at org.springframework.security.web.access.intercept.FilterSecurityInterceptor.doFilter(FilterSecurityInterceptor.java:83)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:355)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:97)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:355)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:100)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:355)
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:78)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:355)
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:54)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:355)
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:35)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:355)
+	at org.springframework.security.web.authentication.www.BasicAuthenticationFilter.doFilter(BasicAuthenticationFilter.java:177)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:355)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:187)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:355)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:105)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:355)
+	at org.springframework.security.web.context.SecurityContextPersistenceFilter.doFilter(SecurityContextPersistenceFilter.java:79)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:355)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:149)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:237)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:167)
+	at org.mortbay.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1157)
+	at org.springframework.orm.hibernate3.support.OpenSessionInViewFilter.doFilterInternal(OpenSessionInViewFilter.java:198)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:76)
+	at org.mortbay.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1157)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:88)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:76)
+	at org.mortbay.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1157)
+	at org.mortbay.jetty.servlet.ServletHandler.handle(ServletHandler.java:388)
+	at org.mortbay.jetty.security.SecurityHandler.handle(SecurityHandler.java:216)
+	at org.mortbay.jetty.servlet.SessionHandler.handle(SessionHandler.java:182)
+	at org.mortbay.jetty.handler.ContextHandler.handle(ContextHandler.java:765)
+	at org.mortbay.jetty.webapp.WebAppContext.handle(WebAppContext.java:440)
+	at org.mortbay.jetty.handler.HandlerWrapper.handle(HandlerWrapper.java:152)
+	at org.mortbay.jetty.Server.handle(Server.java:326)
+	at org.mortbay.jetty.HttpConnection.handleRequest(HttpConnection.java:542)
+	at org.mortbay.jetty.HttpConnection$RequestHandler.headerComplete(HttpConnection.java:926)
+	at org.mortbay.jetty.HttpParser.parseNext(HttpParser.java:549)
+	at org.mortbay.jetty.HttpParser.parseAvailable(HttpParser.java:212)
+	at org.mortbay.jetty.HttpConnection.handle(HttpConnection.java:404)
+	at org.mortbay.jetty.bio.SocketConnector$Connection.run(SocketConnector.java:228)
+	at org.mortbay.thread.QueuedThreadPool$PoolThread.run(QueuedThreadPool.java:582)
+Caused by: java.net.SocketTimeoutException: SocketTimeoutException invoking http://192.168.7.85:8081/bo/ws/cmsservice: Read timed out
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:39)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:27)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:513)
+	at org.apache.cxf.transport.http.HTTPConduit$WrappedOutputStream.mapException(HTTPConduit.java:2058)
+	at org.apache.cxf.transport.http.HTTPConduit$WrappedOutputStream.close(HTTPConduit.java:2043)
+	at org.apache.cxf.transport.AbstractConduit.close(AbstractConduit.java:66)
+	at org.apache.cxf.transport.http.HTTPConduit.close(HTTPConduit.java:639)
+	at org.apache.cxf.interceptor.MessageSenderInterceptor$MessageSenderEndingInterceptor.handleMessage(MessageSenderInterceptor.java:62)
+	... 120 more
+Caused by: java.net.SocketTimeoutException: Read timed out
+	at java.net.SocketInputStream.socketRead0(Native Method)
+	at java.net.SocketInputStream.read(SocketInputStream.java:129)
+	at java.io.BufferedInputStream.fill(BufferedInputStream.java:218)
+	at java.io.BufferedInputStream.read1(BufferedInputStream.java:258)
+	at java.io.BufferedInputStream.read(BufferedInputStream.java:317)
+	at sun.net.www.http.HttpClient.parseHTTPHeader(HttpClient.java:687)
+	at sun.net.www.http.HttpClient.parseHTTP(HttpClient.java:632)
+	at sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1072)
+	at java.net.HttpURLConnection.getResponseCode(HttpURLConnection.java:373)
+	at org.apache.cxf.transport.http.HTTPConduit$WrappedOutputStream.handleResponseInternal(HTTPConduit.java:2165)
+	at org.apache.cxf.transport.http.HTTPConduit$WrappedOutputStream.handleResponse(HTTPConduit.java:2134)
+	at org.apache.cxf.transport.http.HTTPConduit$WrappedOutputStream.close(HTTPConduit.java:1988)
+	... 123 more
+2011-02-09 16:35:39,889 [31368589@qtp-15623809-18] DEBUG [cn.com.supertv.cmslite.dao.cms.TvDao] - save entity: cn.com.supertv.cmslite.entity.cms.Tv@11e5f[version=0,title=tv_beginnum:21_num:1,releaseYear=2000,description=<null>,runTime=100,suggestedPrice=1,ftpId=cms1,posterFtpPath=1.jpg,previewFtpPath=<null>,actors=actors,directors=directors,genreTreeIndex=0001-0002-0001-0002,regionTreeIndex=0001-0002-0002-0002,volumn=<null>,recommended=true,previewRunTime=100,createBy=<null>,createTime=Wed Feb 09 16:35:39 CST 2011,lastModifyBy=<null>,lastModifyTime=<null>,providerId=测试,beginNum=21,num=1,episodeNumber=2,state=EDITABLE,productId=包月,episodes=[],id=3]
+2011-02-09 16:35:40,030 [31368589@qtp-15623809-18] DEBUG [cn.com.supertv.cmslite.service.cms.KtvManager] - 响应结果：0:null
+2011-02-09 16:42:14,874 [main] WARN  [org.springframework.beans.factory.config.PropertyPlaceholderConfigurer] - Could not load properties from URL [file:/var/cmslite/application.server.properties]: \var\cmslite\application.server.properties (系统找不到指定的路径。)
+2011-02-09 16:43:20,374 [27046018@qtp-25934938-4] DEBUG [cn.com.supertv.cmslite.dao.cms.TvDao] - save entity: cn.com.supertv.cmslite.entity.cms.Tv@cdc728[version=0,title=tv_beginnum:22_num:1,releaseYear=2000,description=<null>,runTime=100,suggestedPrice=1,ftpId=cms1,posterFtpPath=1.jpg,previewFtpPath=<null>,actors=actors,directors=directors,genreTreeIndex=0001-0002-0001-0002,regionTreeIndex=0001-0002-0002-0002,volumn=<null>,recommended=true,previewRunTime=100,createBy=<null>,createTime=Wed Feb 09 16:43:20 CST 2011,lastModifyBy=<null>,lastModifyTime=<null>,providerId=测试,beginNum=22,num=1,episodeNumber=10,state=EDITABLE,productId=包月,episodes=[],id=4]
+2011-02-09 16:43:20,796 [27046018@qtp-25934938-4] DEBUG [cn.com.supertv.cmslite.service.cms.KtvManager] - 响应结果：0:null
+2011-02-09 16:46:42,249 [25000480@qtp-25934938-2] DEBUG [cn.com.supertv.cmslite.dao.cms.TvDao] - save entity: cn.com.supertv.cmslite.entity.cms.Tv@1698045[version=0,title=tv_beginnum:23_num:2,releaseYear=2000,description=<null>,runTime=100,suggestedPrice=2,ftpId=cms1,posterFtpPath=1.jpg,previewFtpPath=<null>,actors=actors,directors=directors,genreTreeIndex=0001-0002-0001-0002,regionTreeIndex=0001-0002-0002-0002,volumn=<null>,recommended=false,previewRunTime=100,createBy=<null>,createTime=Wed Feb 09 16:46:42 CST 2011,lastModifyBy=<null>,lastModifyTime=<null>,providerId=测试,beginNum=23,num=2,episodeNumber=10,state=EDITABLE,productId=包月,episodes=[],id=5]
+2011-02-09 16:46:42,358 [25000480@qtp-25934938-2] DEBUG [cn.com.supertv.cmslite.service.cms.KtvManager] - 响应结果：0:null
+2011-02-09 16:46:42,530 [25000480@qtp-25934938-2] DEBUG [cn.com.supertv.cmslite.service.cms.KtvManager] - 响应结果：0:null
+2011-02-09 16:51:28,389 [6165008@qtp-25934938-3] DEBUG [cn.com.supertv.cmslite.dao.cms.TvDao] - save entity: cn.com.supertv.cmslite.entity.cms.Tv@19bb90f[version=0,title=tv_beginnum:25_num:1,releaseYear=2000,description=<null>,runTime=100,suggestedPrice=1,ftpId=cms1,posterFtpPath=1.jpg,previewFtpPath=<null>,actors=actors,directors=directors,genreTreeIndex=0001-0002-0001-0002,regionTreeIndex=0001-0002-0002-0002,volumn=<null>,recommended=true,previewRunTime=100,createBy=<null>,createTime=Wed Feb 09 16:51:28 CST 2011,lastModifyBy=<null>,lastModifyTime=<null>,providerId=测试,beginNum=25,num=1,episodeNumber=10,state=EDITABLE,productId=包月,episodes=[],id=6]
+2011-02-09 16:51:28,483 [6165008@qtp-25934938-3] DEBUG [cn.com.supertv.cmslite.service.cms.KtvManager] - 响应结果：0:null
+2011-02-09 16:53:31,577 [27046018@qtp-25934938-4] DEBUG [cn.com.supertv.cmslite.dao.cms.TvDao] - save entity: cn.com.supertv.cmslite.entity.cms.Tv@10671ba[version=0,title=tv_beginnum:26_num:1,releaseYear=2000,description=<null>,runTime=100,suggestedPrice=1,ftpId=cms1,posterFtpPath=1.jpg,previewFtpPath=<null>,actors=actors,directors=directors,genreTreeIndex=0001-0002-0001-0002,regionTreeIndex=0001-0002-0002-0002,volumn=<null>,recommended=false,previewRunTime=100,createBy=<null>,createTime=Wed Feb 09 16:53:31 CST 2011,lastModifyBy=<null>,lastModifyTime=<null>,providerId=测试,beginNum=26,num=1,episodeNumber=10,state=EDITABLE,productId=包月,episodes=[],id=7]
+2011-02-09 16:53:45,171 [27046018@qtp-25934938-4] DEBUG [cn.com.supertv.cmslite.service.cms.KtvManager] - 响应结果：0:null
+2011-02-09 16:54:49,608 [main] WARN  [org.springframework.beans.factory.config.PropertyPlaceholderConfigurer] - Could not load properties from URL [file:/var/cmslite/application.server.properties]: \var\cmslite\application.server.properties (系统找不到指定的路径。)
+2011-02-09 16:55:43,108 [15392601@qtp-25934938-4] DEBUG [cn.com.supertv.cmslite.dao.cms.TvDao] - save entity: cn.com.supertv.cmslite.entity.cms.Tv@f653a6[version=0,title=tv_beginnum:27_num:1,releaseYear=2000,description=<null>,runTime=100,suggestedPrice=1,ftpId=cms1,posterFtpPath=1.jpg,previewFtpPath=<null>,actors=actors,directors=directors,genreTreeIndex=0001-0002-0001-0002,regionTreeIndex=0001-0002-0002-0002,volumn=<null>,recommended=true,previewRunTime=100,createBy=<null>,createTime=Wed Feb 09 16:55:43 CST 2011,lastModifyBy=<null>,lastModifyTime=<null>,providerId=测试,beginNum=27,num=1,episodeNumber=10,state=EDITABLE,productId=包月,episodes=[],id=8]
+2011-02-09 16:55:43,530 [15392601@qtp-25934938-4] DEBUG [cn.com.supertv.cmslite.service.cms.KtvManager] - 响应结果：0:null
+2011-02-09 16:56:11,374 [251542@qtp-25934938-5] DEBUG [cn.com.supertv.cmslite.dao.cms.TvDao] - save entity: cn.com.supertv.cmslite.entity.cms.Tv@1265f3d[version=0,title=tv_beginnum:27_num:1,releaseYear=2000,description=<null>,runTime=100,suggestedPrice=1,ftpId=cms1,posterFtpPath=1.jpg,previewFtpPath=<null>,actors=actors,directors=directors,genreTreeIndex=0001-0002-0001-0002,regionTreeIndex=0001-0002-0002-0002,volumn=<null>,recommended=true,previewRunTime=100,createBy=<null>,createTime=2011-02-09 16:55:43.0,lastModifyBy=<null>,lastModifyTime=<null>,providerId=测试,beginNum=27,num=1,episodeNumber=10,state=CENSORING,productId=包月,episodes=[],id=8]
+2011-02-09 16:56:22,796 [251542@qtp-25934938-5] DEBUG [cn.com.supertv.cmslite.service.cms.KtvManager] - 响应结果：0:null
+2011-02-09 16:57:16,780 [24396322@qtp-25934938-3] DEBUG [cn.com.supertv.cmslite.dao.cms.TvDao] - save entity: cn.com.supertv.cmslite.entity.cms.Tv@9b11d5[version=1,title=tv_beginnum:27_num:1,releaseYear=2000,description=<null>,runTime=100,suggestedPrice=1,ftpId=cms1,posterFtpPath=1.jpg,previewFtpPath=<null>,actors=actors,directors=directors,genreTreeIndex=0001-0002-0001-0002,regionTreeIndex=0001-0002-0002-0002,volumn=<null>,recommended=true,previewRunTime=100,createBy=<null>,createTime=2011-02-09 16:55:43.0,lastModifyBy=<null>,lastModifyTime=<null>,providerId=测试,beginNum=27,num=1,episodeNumber=10,state=INGESTABLE,productId=包月,episodes=[],id=8]
+2011-02-09 16:57:44,296 [24396322@qtp-25934938-3] DEBUG [cn.com.supertv.cmslite.service.cms.KtvManager] - 响应结果：0:null
+2011-02-09 16:58:01,608 [712266@qtp-25934938-2] DEBUG [cn.com.supertv.cmslite.dao.cms.TvDao] - save entity: cn.com.supertv.cmslite.entity.cms.Tv@355a6a[version=2,title=tv_beginnum:27_num:1,releaseYear=2000,description=<null>,runTime=100,suggestedPrice=1,ftpId=cms1,posterFtpPath=1.jpg,previewFtpPath=<null>,actors=actors,directors=directors,genreTreeIndex=0001-0002-0001-0002,regionTreeIndex=0001-0002-0002-0002,volumn=<null>,recommended=true,previewRunTime=100,createBy=<null>,createTime=2011-02-09 16:55:43.0,lastModifyBy=<null>,lastModifyTime=<null>,providerId=测试,beginNum=27,num=1,episodeNumber=10,state=INGESTED,productId=包月,episodes=[],id=8]
+2011-02-09 16:58:03,999 [712266@qtp-25934938-2] DEBUG [cn.com.supertv.cmslite.service.cms.KtvManager] - 响应结果：500:未知错误
+2011-02-09 17:19:39,671 [85136@qtp-25934938-11] DEBUG [cn.com.supertv.cmslite.dao.cms.TvDao] - save entity: cn.com.supertv.cmslite.entity.cms.Tv@51ad67[version=0,title=tv_beginnum:28_num:1,releaseYear=2000,description=<null>,runTime=100,suggestedPrice=1,ftpId=cms1,posterFtpPath=1.jpg,previewFtpPath=sheng.mpg,actors=actors,directors=directors,genreTreeIndex=0001-0002-0001-0002,regionTreeIndex=0001-0002-0002-0002,volumn=<null>,recommended=false,previewRunTime=100,createBy=<null>,createTime=Wed Feb 09 17:19:39 CST 2011,lastModifyBy=<null>,lastModifyTime=<null>,providerId=测试,beginNum=28,num=1,episodeNumber=1,state=EDITABLE,productId=包月,episodes=[],id=9]
+2011-02-09 17:19:39,780 [85136@qtp-25934938-11] DEBUG [cn.com.supertv.cmslite.service.cms.KtvManager] - 响应结果：0:null
+2011-02-09 17:19:42,499 [32690580@qtp-25934938-12] DEBUG [cn.com.supertv.cmslite.dao.cms.TvDao] - save entity: cn.com.supertv.cmslite.entity.cms.Tv@1fa1851[version=0,title=tv_beginnum:28_num:1,releaseYear=2000,description=<null>,runTime=100,suggestedPrice=1,ftpId=cms1,posterFtpPath=1.jpg,previewFtpPath=sheng.mpg,actors=actors,directors=directors,genreTreeIndex=0001-0002-0001-0002,regionTreeIndex=0001-0002-0002-0002,volumn=<null>,recommended=false,previewRunTime=100,createBy=<null>,createTime=2011-02-09 17:19:39.0,lastModifyBy=<null>,lastModifyTime=<null>,providerId=测试,beginNum=28,num=1,episodeNumber=1,state=CENSORING,productId=包月,episodes=[],id=9]
+2011-02-09 17:19:43,467 [32690580@qtp-25934938-12] DEBUG [cn.com.supertv.cmslite.service.cms.KtvManager] - 响应结果：0:null
+2011-02-09 17:19:52,858 [12014366@qtp-25934938-15] DEBUG [cn.com.supertv.cmslite.dao.cms.TvDao] - save entity: cn.com.supertv.cmslite.entity.cms.Tv@83c5e0[version=1,title=tv_beginnum:28_num:1,releaseYear=2000,description=<null>,runTime=100,suggestedPrice=1,ftpId=cms1,posterFtpPath=1.jpg,previewFtpPath=sheng.mpg,actors=actors,directors=directors,genreTreeIndex=0001-0002-0001-0002,regionTreeIndex=0001-0002-0002-0002,volumn=<null>,recommended=false,previewRunTime=100,createBy=<null>,createTime=2011-02-09 17:19:39.0,lastModifyBy=<null>,lastModifyTime=<null>,providerId=测试,beginNum=28,num=1,episodeNumber=1,state=INGESTABLE,productId=包月,episodes=[],id=9]
+2011-02-09 17:19:55,139 [12014366@qtp-25934938-15] DEBUG [cn.com.supertv.cmslite.service.cms.KtvManager] - 响应结果：0:null
+2011-02-09 17:20:05,842 [85136@qtp-25934938-11] DEBUG [cn.com.supertv.cmslite.dao.cms.TvDao] - save entity: cn.com.supertv.cmslite.entity.cms.Tv@189ed39[version=2,title=tv_beginnum:28_num:1,releaseYear=2000,description=<null>,runTime=100,suggestedPrice=1,ftpId=cms1,posterFtpPath=1.jpg,previewFtpPath=sheng.mpg,actors=actors,directors=directors,genreTreeIndex=0001-0002-0001-0002,regionTreeIndex=0001-0002-0002-0002,volumn=<null>,recommended=false,previewRunTime=100,createBy=<null>,createTime=2011-02-09 17:19:39.0,lastModifyBy=<null>,lastModifyTime=<null>,providerId=测试,beginNum=28,num=1,episodeNumber=1,state=INGESTED,productId=包月,episodes=[],id=9]
+2011-02-09 17:20:11,499 [85136@qtp-25934938-11] DEBUG [cn.com.supertv.cmslite.service.cms.KtvManager] - 响应结果：0:null
+2011-02-09 17:42:43,827 [2759009@qtp-25934938-18] DEBUG [cn.com.supertv.cmslite.dao.cms.TvDao] - save entity: cn.com.supertv.cmslite.entity.cms.Tv@91e459[version=0,title=tv_beginnum:29_num:1,releaseYear=2000,description=<null>,runTime=100,suggestedPrice=1,ftpId=cms1,posterFtpPath=1.jpg,previewFtpPath=sheng.mpg,actors=actors,directors=directors,genreTreeIndex=0001-0002-0001-0002,regionTreeIndex=0001-0002-0002-0002,volumn=<null>,recommended=false,previewRunTime=100,createBy=<null>,createTime=Wed Feb 09 17:42:43 CST 2011,lastModifyBy=<null>,lastModifyTime=<null>,providerId=测试,beginNum=29,num=1,episodeNumber=10,state=EDITABLE,productId=包月,episodes=[],id=10]
+2011-02-09 17:42:44,686 [2759009@qtp-25934938-18] DEBUG [cn.com.supertv.cmslite.service.cms.KtvManager] - 响应结果：0:null
+2011-02-09 17:42:48,077 [12014366@qtp-25934938-15] DEBUG [cn.com.supertv.cmslite.dao.cms.TvDao] - save entity: cn.com.supertv.cmslite.entity.cms.Tv@80d6b4[version=0,title=tv_beginnum:29_num:1,releaseYear=2000,description=<null>,runTime=100,suggestedPrice=1,ftpId=cms1,posterFtpPath=1.jpg,previewFtpPath=sheng.mpg,actors=actors,directors=directors,genreTreeIndex=0001-0002-0001-0002,regionTreeIndex=0001-0002-0002-0002,volumn=<null>,recommended=false,previewRunTime=100,createBy=<null>,createTime=2011-02-09 17:42:43.0,lastModifyBy=<null>,lastModifyTime=<null>,providerId=测试,beginNum=29,num=1,episodeNumber=10,state=CENSORING,productId=包月,episodes=[],id=10]
+2011-02-09 17:43:05,889 [12014366@qtp-25934938-15] DEBUG [cn.com.supertv.cmslite.service.cms.KtvManager] - 响应结果：0:null
+2011-02-09 17:43:09,389 [12014366@qtp-25934938-15] DEBUG [cn.com.supertv.cmslite.dao.cms.TvDao] - save entity: cn.com.supertv.cmslite.entity.cms.Tv@1db74a9[version=1,title=tv_beginnum:29_num:1,releaseYear=2000,description=<null>,runTime=100,suggestedPrice=1,ftpId=cms1,posterFtpPath=1.jpg,previewFtpPath=sheng.mpg,actors=actors,directors=directors,genreTreeIndex=0001-0002-0001-0002,regionTreeIndex=0001-0002-0002-0002,volumn=<null>,recommended=false,previewRunTime=100,createBy=<null>,createTime=2011-02-09 17:42:43.0,lastModifyBy=<null>,lastModifyTime=<null>,providerId=测试,beginNum=29,num=1,episodeNumber=10,state=INGESTABLE,productId=包月,episodes=[],id=10]
+2011-02-09 17:43:36,139 [12014366@qtp-25934938-15] DEBUG [cn.com.supertv.cmslite.service.cms.KtvManager] - 响应结果：0:null
+2011-02-09 17:45:20,296 [2632357@qtp-25934938-16] DEBUG [cn.com.supertv.cmslite.dao.cms.TvDao] - save entity: cn.com.supertv.cmslite.entity.cms.Tv@1efc201[version=2,title=tv_beginnum:29_num:1,releaseYear=2000,description=<null>,runTime=100,suggestedPrice=1,ftpId=cms1,posterFtpPath=1.jpg,previewFtpPath=sheng.mpg,actors=actors,directors=directors,genreTreeIndex=0001-0002-0001-0002,regionTreeIndex=0001-0002-0002-0002,volumn=<null>,recommended=false,previewRunTime=100,createBy=<null>,createTime=2011-02-09 17:42:43.0,lastModifyBy=<null>,lastModifyTime=<null>,providerId=测试,beginNum=29,num=1,episodeNumber=10,state=INGESTED,productId=包月,episodes=[],id=10]
+2011-02-09 17:46:20,827 [2632357@qtp-25934938-16] WARN  [org.apache.cxf.phase.PhaseInterceptorChain] - Interceptor for {http://cms.supertv.com.cn}CMSWebServiceService#{http://cms.supertv.com.cn}updateToIngested has thrown exception, unwinding now
+org.apache.cxf.interceptor.Fault: Could not send Message.
+	at org.apache.cxf.interceptor.MessageSenderInterceptor$MessageSenderEndingInterceptor.handleMessage(MessageSenderInterceptor.java:64)
+	at org.apache.cxf.phase.PhaseInterceptorChain.doIntercept(PhaseInterceptorChain.java:244)
+	at org.apache.cxf.endpoint.ClientImpl.invoke(ClientImpl.java:516)
+	at org.apache.cxf.endpoint.ClientImpl.invoke(ClientImpl.java:313)
+	at org.apache.cxf.endpoint.ClientImpl.invoke(ClientImpl.java:265)
+	at org.apache.cxf.frontend.ClientProxy.invokeSync(ClientProxy.java:73)
+	at org.apache.cxf.jaxws.JaxWsClientProxy.invoke(JaxWsClientProxy.java:124)
+	at $Proxy81.updateToIngested(Unknown Source)
+	at cn.com.supertv.cmslite.service.cms.TvManager.updateToIngested(TvManager.java:232)
+	at cn.com.supertv.cmslite.service.cms.TvManager$$FastClassByCGLIB$$e9969435.invoke(<generated>)
+	at net.sf.cglib.proxy.MethodProxy.invoke(MethodProxy.java:191)
+	at org.springframework.aop.framework.Cglib2AopProxy$CglibMethodInvocation.invokeJoinpoint(Cglib2AopProxy.java:688)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:150)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:110)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:172)
+	at org.springframework.aop.framework.Cglib2AopProxy$DynamicAdvisedInterceptor.intercept(Cglib2AopProxy.java:621)
+	at cn.com.supertv.cmslite.service.cms.TvManager$$EnhancerByCGLIB$$25794c40.updateToIngested(<generated>)
+	at cn.com.supertv.cmslite.web.cms.TvAction.updateToIngested(TvAction.java:114)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+	at java.lang.reflect.Method.invoke(Method.java:597)
+	at com.opensymphony.xwork2.DefaultActionInvocation.invokeAction(DefaultActionInvocation.java:452)
+	at com.opensymphony.xwork2.DefaultActionInvocation.invokeActionOnly(DefaultActionInvocation.java:291)
+	at com.opensymphony.xwork2.DefaultActionInvocation.invoke(DefaultActionInvocation.java:254)
+	at com.opensymphony.xwork2.interceptor.DefaultWorkflowInterceptor.doIntercept(DefaultWorkflowInterceptor.java:176)
+	at com.opensymphony.xwork2.interceptor.MethodFilterInterceptor.intercept(MethodFilterInterceptor.java:98)
+	at com.opensymphony.xwork2.DefaultActionInvocation.invoke(DefaultActionInvocation.java:248)
+	at com.opensymphony.xwork2.validator.ValidationInterceptor.doIntercept(ValidationInterceptor.java:263)
+	at org.apache.struts2.interceptor.validation.AnnotationValidationInterceptor.doIntercept(AnnotationValidationInterceptor.java:68)
+	at com.opensymphony.xwork2.interceptor.MethodFilterInterceptor.intercept(MethodFilterInterceptor.java:98)
+	at com.opensymphony.xwork2.DefaultActionInvocation.invoke(DefaultActionInvocation.java:248)
+	at com.opensymphony.xwork2.interceptor.ConversionErrorInterceptor.intercept(ConversionErrorInterceptor.java:133)
+	at com.opensymphony.xwork2.DefaultActionInvocation.invoke(DefaultActionInvocation.java:248)
+	at com.opensymphony.xwork2.interceptor.ParametersInterceptor.doIntercept(ParametersInterceptor.java:207)
+	at com.opensymphony.xwork2.interceptor.MethodFilterInterceptor.intercept(MethodFilterInterceptor.java:98)
+	at com.opensymphony.xwork2.DefaultActionInvocation.invoke(DefaultActionInvocation.java:248)
+	at com.opensymphony.xwork2.interceptor.ParametersInterceptor.doIntercept(ParametersInterceptor.java:207)
+	at com.opensymphony.xwork2.interceptor.MethodFilterInterceptor.intercept(MethodFilterInterceptor.java:98)
+	at com.opensymphony.xwork2.DefaultActionInvocation.invoke(DefaultActionInvocation.java:248)
+	at com.opensymphony.xwork2.interceptor.StaticParametersInterceptor.intercept(StaticParametersInterceptor.java:190)
+	at com.opensymphony.xwork2.DefaultActionInvocation.invoke(DefaultActionInvocation.java:248)
+	at org.apache.struts2.interceptor.FileUploadInterceptor.intercept(FileUploadInterceptor.java:243)
+	at com.opensymphony.xwork2.DefaultActionInvocation.invoke(DefaultActionInvocation.java:248)
+	at com.opensymphony.xwork2.interceptor.ModelDrivenInterceptor.intercept(ModelDrivenInterceptor.java:100)
+	at com.opensymphony.xwork2.DefaultActionInvocation.invoke(DefaultActionInvocation.java:248)
+	at com.opensymphony.xwork2.interceptor.ChainingInterceptor.intercept(ChainingInterceptor.java:142)
+	at com.opensymphony.xwork2.DefaultActionInvocation.invoke(DefaultActionInvocation.java:248)
+	at com.opensymphony.xwork2.interceptor.PrepareInterceptor.doIntercept(PrepareInterceptor.java:166)
+	at com.opensymphony.xwork2.interceptor.MethodFilterInterceptor.intercept(MethodFilterInterceptor.java:98)
+	at com.opensymphony.xwork2.DefaultActionInvocation.invoke(DefaultActionInvocation.java:248)
+	at org.apache.struts2.interceptor.ServletConfigInterceptor.intercept(ServletConfigInterceptor.java:164)
+	at com.opensymphony.xwork2.DefaultActionInvocation.invoke(DefaultActionInvocation.java:248)
+	at com.opensymphony.xwork2.interceptor.ParametersInterceptor.doIntercept(ParametersInterceptor.java:207)
+	at com.opensymphony.xwork2.interceptor.MethodFilterInterceptor.intercept(MethodFilterInterceptor.java:98)
+	at com.opensymphony.xwork2.DefaultActionInvocation.invoke(DefaultActionInvocation.java:248)
+	at org.apache.struts2.interceptor.MultiselectInterceptor.intercept(MultiselectInterceptor.java:75)
+	at com.opensymphony.xwork2.DefaultActionInvocation.invoke(DefaultActionInvocation.java:248)
+	at org.apache.struts2.interceptor.CheckboxInterceptor.intercept(CheckboxInterceptor.java:94)
+	at com.opensymphony.xwork2.DefaultActionInvocation.invoke(DefaultActionInvocation.java:248)
+	at com.opensymphony.xwork2.interceptor.I18nInterceptor.intercept(I18nInterceptor.java:176)
+	at com.opensymphony.xwork2.DefaultActionInvocation.invoke(DefaultActionInvocation.java:248)
+	at com.opensymphony.xwork2.interceptor.AliasInterceptor.intercept(AliasInterceptor.java:190)
+	at com.opensymphony.xwork2.DefaultActionInvocation.invoke(DefaultActionInvocation.java:248)
+	at com.opensymphony.xwork2.interceptor.ExceptionMappingInterceptor.intercept(ExceptionMappingInterceptor.java:187)
+	at com.opensymphony.xwork2.DefaultActionInvocation.invoke(DefaultActionInvocation.java:248)
+	at org.apache.struts2.interceptor.MessageStoreInterceptor.intercept(MessageStoreInterceptor.java:204)
+	at com.opensymphony.xwork2.DefaultActionInvocation.invoke(DefaultActionInvocation.java:248)
+	at org.apache.struts2.impl.StrutsActionProxy.execute(StrutsActionProxy.java:52)
+	at org.apache.struts2.dispatcher.Dispatcher.serviceAction(Dispatcher.java:485)
+	at org.apache.struts2.dispatcher.ng.ExecuteOperations.executeAction(ExecuteOperations.java:77)
+	at org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter.doFilter(StrutsPrepareAndExecuteFilter.java:91)
+	at org.mortbay.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1157)
+	at org.apache.struts2.dispatcher.ActionContextCleanUp.doFilter(ActionContextCleanUp.java:102)
+	at org.mortbay.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1157)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:343)
+	at org.springframework.security.web.access.intercept.FilterSecurityInterceptor.invoke(FilterSecurityInterceptor.java:109)
+	at org.springframework.security.web.access.intercept.FilterSecurityInterceptor.doFilter(FilterSecurityInterceptor.java:83)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:355)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:97)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:355)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:100)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:355)
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:78)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:355)
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:54)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:355)
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:35)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:355)
+	at org.springframework.security.web.authentication.www.BasicAuthenticationFilter.doFilter(BasicAuthenticationFilter.java:177)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:355)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:187)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:355)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:105)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:355)
+	at org.springframework.security.web.context.SecurityContextPersistenceFilter.doFilter(SecurityContextPersistenceFilter.java:79)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:355)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:149)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:237)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:167)
+	at org.mortbay.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1157)
+	at org.springframework.orm.hibernate3.support.OpenSessionInViewFilter.doFilterInternal(OpenSessionInViewFilter.java:198)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:76)
+	at org.mortbay.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1157)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:88)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:76)
+	at org.mortbay.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1157)
+	at org.mortbay.jetty.servlet.ServletHandler.handle(ServletHandler.java:388)
+	at org.mortbay.jetty.security.SecurityHandler.handle(SecurityHandler.java:216)
+	at org.mortbay.jetty.servlet.SessionHandler.handle(SessionHandler.java:182)
+	at org.mortbay.jetty.handler.ContextHandler.handle(ContextHandler.java:765)
+	at org.mortbay.jetty.webapp.WebAppContext.handle(WebAppContext.java:440)
+	at org.mortbay.jetty.handler.HandlerWrapper.handle(HandlerWrapper.java:152)
+	at org.mortbay.jetty.Server.handle(Server.java:326)
+	at org.mortbay.jetty.HttpConnection.handleRequest(HttpConnection.java:542)
+	at org.mortbay.jetty.HttpConnection$RequestHandler.headerComplete(HttpConnection.java:926)
+	at org.mortbay.jetty.HttpParser.parseNext(HttpParser.java:549)
+	at org.mortbay.jetty.HttpParser.parseAvailable(HttpParser.java:212)
+	at org.mortbay.jetty.HttpConnection.handle(HttpConnection.java:404)
+	at org.mortbay.jetty.bio.SocketConnector$Connection.run(SocketConnector.java:228)
+	at org.mortbay.thread.QueuedThreadPool$PoolThread.run(QueuedThreadPool.java:582)
+Caused by: java.net.SocketTimeoutException: SocketTimeoutException invoking http://192.168.7.85:8081/bo/ws/cmsservice: Read timed out
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:39)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:27)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:513)
+	at org.apache.cxf.transport.http.HTTPConduit$WrappedOutputStream.mapException(HTTPConduit.java:2058)
+	at org.apache.cxf.transport.http.HTTPConduit$WrappedOutputStream.close(HTTPConduit.java:2043)
+	at org.apache.cxf.transport.AbstractConduit.close(AbstractConduit.java:66)
+	at org.apache.cxf.transport.http.HTTPConduit.close(HTTPConduit.java:639)
+	at org.apache.cxf.interceptor.MessageSenderInterceptor$MessageSenderEndingInterceptor.handleMessage(MessageSenderInterceptor.java:62)
+	... 120 more
+Caused by: java.net.SocketTimeoutException: Read timed out
+	at java.net.SocketInputStream.socketRead0(Native Method)
+	at java.net.SocketInputStream.read(SocketInputStream.java:129)
+	at java.io.BufferedInputStream.fill(BufferedInputStream.java:218)
+	at java.io.BufferedInputStream.read1(BufferedInputStream.java:258)
+	at java.io.BufferedInputStream.read(BufferedInputStream.java:317)
+	at sun.net.www.http.HttpClient.parseHTTPHeader(HttpClient.java:687)
+	at sun.net.www.http.HttpClient.parseHTTP(HttpClient.java:632)
+	at sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1072)
+	at java.net.HttpURLConnection.getResponseCode(HttpURLConnection.java:373)
+	at org.apache.cxf.transport.http.HTTPConduit$WrappedOutputStream.handleResponseInternal(HTTPConduit.java:2165)
+	at org.apache.cxf.transport.http.HTTPConduit$WrappedOutputStream.handleResponse(HTTPConduit.java:2134)
+	at org.apache.cxf.transport.http.HTTPConduit$WrappedOutputStream.close(HTTPConduit.java:1988)
+	... 123 more

@@ -1,0 +1,348 @@
+/**
+ * Description: Framework.java
+ * Copyright (c) 永新视博
+ * All Rights Reserved.
+ * @version 1.0  2011-11-30 下午4:27:12 zhaojunfeng created
+ */
+package com.stv.supervod.activity;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import android.app.ActivityGroup;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.GestureDetector;
+import android.view.Gravity;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
+import android.view.Window;
+import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.BaseAdapter;
+import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.ViewFlipper;
+
+import com.stv.supervod.doc.DB;
+import com.stv.supervod.service.Connect2RCServer;
+import com.stv.supervod.service.ImageDownloader;
+import com.stv.supervod.utils.BaseCommon;
+import com.stv.supervod.utils.CacheUtils;
+import com.stv.supervod.utils.ErrorCode;
+import com.stv.supervod.utils.LogLevel;
+import com.stv.supervod.utils.TabStack;
+import com.stv.supervod.utils.VideoConstant;
+
+/**
+ * Description: 
+ * Copyright (c) 永新视博
+ * All Rights Reserved.
+ * @version 1.0  2011-11-30 下午4:27:12 zhaojunfeng created
+ */
+public class Framework extends ActivityGroup{
+	private static Framework currFramewrok = null;
+	private int currFocusId = 0;
+	private int checkedId = 0;
+	private final String TAG = "Framework";
+	
+	private Intent intent;
+	
+	private GridView mGridViewBar;
+	private BarImageAdapter mBarImgAdapte;
+	private ViewFlipper mViewFliper;
+	private GestureDetector detector;
+	private ArrayList<TabStack>  mTabStack = new ArrayList<TabStack>();
+	private ArrayList<HashMap<String, Object>> mTabListItem = new ArrayList<HashMap<String, Object>>();
+	
+	
+	private final int[] bar_image_array = {
+			R.drawable.tab_homepage,
+			R.drawable.tab_channel,
+			R.drawable.tab_search,
+			R.drawable.tab_myvod,
+			R.drawable.tab_more
+	};
+	
+	private final int[] bar_select_image_array = {
+			R.drawable.tab_homepage_select,
+			R.drawable.tab_channel_select,
+			R.drawable.tab_search_select,
+			R.drawable.tab_myvod_select,
+			R.drawable.tab_more_select
+	};
+	
+	private final int[] bar_text_array = {
+			R.string.framework_tab_home,
+			R.string.framework_tab_channel,
+			R.string.framework_tab_search,
+			R.string.framework_tab_mychannel,
+			R.string.framework_tab_more
+	};	
+	
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.framework);
+		
+		currFramewrok = this;
+		
+		initTabItemGui();
+        //hyt add
+		initService();
+        switchActivity("Homepage", new Intent(Framework.this, Homepage.class) );
+	}
+	
+	private void initService() {
+		// TODO Auto-generated method stub
+	    intent=new Intent();
+		intent.setAction(VideoConstant.FILTER_ACTION);
+		startService(intent);
+	}
+
+	private void initTabItemGui()
+	{
+		// init data
+		for(int i = 0; i < bar_image_array.length; i++)  
+        {  
+			HashMap<String, Object> map = new HashMap<String, Object>();  
+			map.put("pic", bar_image_array[i]);
+			map.put("spic", bar_select_image_array[i]);
+			map.put("name", bar_text_array[i]);
+			mTabListItem.add(map);  
+			mTabStack.add(new TabStack());
+        }
+		
+		mViewFliper = (ViewFlipper) findViewById(R.id.framework_view);
+		
+		mGridViewBar = (GridView) findViewById(R.id.framework_bar);
+		mGridViewBar.setColumnWidth(bar_image_array.length);
+		mGridViewBar.setSelector(new ColorDrawable(Color.TRANSPARENT));
+		mGridViewBar.setGravity(Gravity.CENTER);
+		mGridViewBar.setVerticalSpacing(0);// 垂直间隔
+		mBarImgAdapte = new BarImageAdapter(this);
+        mGridViewBar.setAdapter(mBarImgAdapte);// 设置菜单Adapter  
+        mGridViewBar.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int position,
+					long arg3) {
+				// TODO Auto-generated method stub
+				currFocusId = position;
+				mTabStack.get(currFocusId).clear();
+
+//				if(checkedId < currFocusId){
+//					mViewFliper.setInAnimation(AnimationUtils.loadAnimation(Framework.this,R.anim.push_left_in));
+//					mViewFliper.setOutAnimation(AnimationUtils.loadAnimation(Framework.this,R.anim.push_left_out));
+//				}else if (checkedId > currFocusId) {
+//					mViewFliper.setInAnimation(AnimationUtils.loadAnimation(Framework.this,R.anim.push_right_in));
+//					mViewFliper.setOutAnimation(AnimationUtils.loadAnimation(Framework.this,R.anim.push_right_out));					
+//				}
+				
+				switch (position) {
+				case 0:
+					switchActivity("Homepage", new Intent(Framework.this, Homepage.class));
+					break;
+				case 1:
+					switchActivity("Category", new Intent(Framework.this, Category.class));
+					break;
+				case 2:
+					switchActivity("Search", new Intent(Framework.this, Search.class));
+					break;
+				case 3:
+					switchActivity("MyVod", new Intent(Framework.this, MyVod.class));
+					break;
+				case 4:
+					switchActivity("Further", new Intent(Framework.this, Further.class));
+				default:
+					break;
+				}
+				checkedId=currFocusId;
+			}
+		});	
+	}
+
+	static public void switchActivity(String name, Intent intent) {
+		currFramewrok.startActivity( name, intent);
+	}
+	
+	private void startActivity( String name, Intent intent ){
+		mBarImgAdapte.notifyDataSetChanged();//选中项获得高亮  
+		
+		TabStack curr = mTabStack.get(currFocusId);
+		if (curr.top() == name) {
+			return;
+		} else {
+			getLocalActivityManager().removeAllActivities();
+		}
+		
+		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		Window window = getLocalActivityManager().startActivity(name, intent);
+		View v = window.getDecorView();
+		DisplayMetrics dm = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(dm);
+		LayoutParams param = new LayoutParams(LayoutParams.FILL_PARENT,
+				LayoutParams.FILL_PARENT);
+		v.setLayoutParams(param);		
+		mViewFliper.addView(v);
+		mViewFliper.showNext();
+		mTabStack.get(currFocusId).push(name);
+		BaseCommon.printLog(TAG, name, LogLevel.DEBUG);
+	}
+	
+	static public void switchActivityBack() {
+		currFramewrok.endActivity();
+	}
+	
+	private void endActivity(){
+		if(mTabStack.get(currFocusId).size() > 1){
+			int viewIndex = mViewFliper.getDisplayedChild();
+			/*mViewFliper.setInAnimation(AnimationUtils.loadAnimation(this, R.anim.push_right_in));
+			mViewFliper.setOutAnimation(AnimationUtils.loadAnimation(this,R.anim.push_right_out));*/
+			mViewFliper.showPrevious();
+			mViewFliper.removeViewAt(viewIndex);
+			getLocalActivityManager().destroyActivity(mTabStack.get(currFocusId).top(), true);
+			mTabStack.get(currFocusId).pop();
+		}else {
+			if( currFocusId == 0 ){
+				showQuitDialog();
+			} else {
+				for (TabStack it : mTabStack) {
+					it.clear();
+				}
+				mViewFliper.removeAllViews();
+				getLocalActivityManager().removeAllActivities();
+				currFocusId = 0;
+				switchActivity("Homepage", new Intent(Framework.this, Homepage.class) );
+			}
+		}
+	}
+	
+	private void showQuitDialog()
+	{
+		AlertDialog.Builder bd = new AlertDialog.Builder(Framework.this);
+		bd.setTitle(R.string.framework_dlg_title);
+		
+		bd.setMessage(R.string.framework_dlg_content);
+		bd.setPositiveButton( getString(R.string.framework_dlg_btn_ok), 
+				new OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface arg0, int arg1) {
+				// TODO Auto-generated method stub
+				finish();
+			}
+		});
+		
+		bd.setNegativeButton(getString(R.string.framework_dlg_btn_cancel), 
+				new OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				// TODO Auto-generated method stub
+			}
+		});
+		
+		bd.setCancelable(false);
+		bd.show();
+	}
+	
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		TabStack curr = mTabStack.get(currFocusId);
+		Log.i(TAG, "onKeyDown" + curr.toString());
+		if(keyCode == KeyEvent.KEYCODE_BACK){
+			endActivity();
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
+	}
+	
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		currFramewrok = null;
+		CacheUtils.gcCache();
+		Connect2RCServer.gcCache();
+		ImageDownloader.cleanPosterCache();
+		
+		DB.getDBInstance(this).close();
+		ErrorCode.closeErrorCode();
+		stopService(intent);
+		super.onDestroy();
+	}
+	
+	private class BarImageAdapter extends BaseAdapter{
+		private Context mCon;
+		
+		private class ViewHolder{
+			ImageView iv;
+			TextView  tv;
+		}
+		
+		public BarImageAdapter(Context c){
+			mCon = c;
+		}
+		
+		@Override
+		public int getCount() {
+			// TODO Auto-generated method stub
+			return bar_text_array.length;
+		}
+
+		@Override
+		public Object getItem(int arg0) {
+			// TODO Auto-generated method stub
+			return arg0;
+		}
+
+		@Override
+		public long getItemId(int arg0) {
+			// TODO Auto-generated method stub
+			return arg0;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			// TODO Auto-generated method stub
+			ViewHolder holder;		
+			if( convertView == null ){
+				LayoutInflater mInflater = (LayoutInflater) mCon.getSystemService(
+						Context.LAYOUT_INFLATER_SERVICE);
+				
+				convertView = mInflater.inflate(R.layout.framework_tab_item, parent, false);
+				
+				holder = new ViewHolder();
+				holder.iv = (ImageView) convertView.findViewById(R.id.framework_tab_iv);
+				holder.tv = (TextView) convertView.findViewById(R.id.framework_tab_tv);
+				convertView.setTag(holder);				
+			} else {
+				holder = (ViewHolder) convertView.getTag();
+			}
+			
+			if( position == currFocusId ){
+				convertView.setBackgroundResource(R.drawable.tab_bg_select);
+				holder.iv.setImageResource((Integer) mTabListItem.get(position).get("spic"));
+				
+			} else {
+				convertView.setBackgroundResource(R.drawable.tabview_bg);
+				holder.iv.setImageResource((Integer) mTabListItem.get(position).get("pic"));
+			}
+			
+			holder.tv.setText((Integer)mTabListItem.get(position).get("name"));
+			return convertView;
+		}
+	}
+}

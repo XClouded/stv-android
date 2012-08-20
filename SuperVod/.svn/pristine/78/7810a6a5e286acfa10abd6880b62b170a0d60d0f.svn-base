@@ -1,0 +1,39 @@
+package com.stv.supervod.utils;
+
+/**
+ * Description: 各种常量
+ * Copyright (c) 永新视博
+ * All Rights Reserved.
+ * @version 1.0  2011-12-12 下午04:11:08 mustang created
+ */
+public class Constant {
+	
+	/**
+	 * 图片过期时间 【3天】
+	 */
+	public static long interval_day = 3 * 24 * 60 * 60 * 1000;
+	/**
+	 * 各种URL常量
+	 */
+	public static final String PUB_URL = "http://192.168.14.200/bo";
+	/**
+	 * 登录
+	 */
+	public static final String LOGIN_URL = PUB_URL+"/login.json";
+	/**
+	 * 退出(注销)
+	 */
+	public static final String LOGOUT_URL = PUB_URL+"/logout.json";
+	
+	/**
+	 * 用户信息注册
+	 */
+	public static final String REGISTER_URL = PUB_URL+"/account/register.json";
+	
+	/**
+	 * 首页不同分类列表的URL
+	 */
+ public static final String HOMEPAGE_DATA_URL = "http://192.168.7.145/data/home";
+	//public static final String HOMEPAGE_DATA_URL = "http://192.168.0.133/data/home";
+	
+}

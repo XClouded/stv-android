@@ -1,0 +1,100 @@
+package com.stv.supervod.service;
+
+import java.lang.ref.WeakReference;
+
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
+import android.widget.ImageView;
+
+import com.stv.supervod.utils.ValidateUtil;
+
+public class ImageDownloader {
+
+	private ImageServiceImpl imgService = new ImageServiceImpl();
+
+	public void download(String url, ImageView imageView) {
+		Drawable db = imgService.getImageDrawableByUrl(url);
+		if (db != null && imageView != null) {
+			imageView.setImageDrawable(db);
+		} else {
+			forceDownload(url,imageView);
+		}
+		
+	}
+
+	private void forceDownload(String url, ImageView imageView) {
+		if (!ValidateUtil.isBlank(url)&&cancelPotentialDownload(url, imageView)) {
+
+			DrawableDownloaderTask task = new DrawableDownloaderTask(imageView);
+			DownloadedDrawable downloadedDrawable = new DownloadedDrawable(task);
+			imageView.setImageDrawable(downloadedDrawable);
+			task.execute(url);
+		}
+
+	}
+
+	public Drawable downloadDrawable(String url) {
+		return null;
+	}
+
+	private static DrawableDownloaderTask getBitmapDownloaderTask(ImageView imageView) {
+		if (imageView != null) {
+			Drawable drawable = imageView.getDrawable();
+			if (drawable instanceof DownloadedDrawable) {
+				DownloadedDrawable downloadedDrawable = (DownloadedDrawable) drawable;
+				return downloadedDrawable.getBitmapDownloaderTask();
+			}
+		}
+		return null;
+	}
+
+	
+	private static boolean cancelPotentialDownload(String url, ImageView imageView) {
+		DrawableDownloaderTask bitmapDownloaderTask = getBitmapDownloaderTask(imageView);
+
+        if (bitmapDownloaderTask != null) {
+            String bitmapUrl = bitmapDownloaderTask.url;
+            //!bitmapUrl.equals(url) 不太可能出现吧。
+            //原来的task下载不同图片或者已经下载完毕了，需要主动取消，否则返回false继续下
+            if ((bitmapUrl == null) || (!bitmapUrl.equals(url))) {
+                bitmapDownloaderTask.cancel(true);
+            } else {
+                // The same URL is already being downloaded.
+                return false;
+            }
+        }
+        return true;
+    }
+	/**
+	 * The actual AsyncTask that will asynchronously download the image.
+	 */
+	class DrawableDownloaderTask extends AsyncTask<String, Void, Drawable> {
+		private String url;
+		private final WeakReference<ImageView> imageViewReference;
+
+		public DrawableDownloaderTask(ImageView imageView) {
+			imageViewReference = new WeakReference<ImageView>(imageView);
+		}
+
+		@Override
+		protected Drawable doInBackground(String... params) {
+			url = params[0];
+			return downloadDrawable(url);
+		}
+
+	}
+
+	static class DownloadedDrawable extends ColorDrawable {
+		private final WeakReference<DrawableDownloaderTask> bitmapDownloaderTaskReference;
+
+		public DownloadedDrawable(DrawableDownloaderTask bitmapDownloaderTask) {
+			bitmapDownloaderTaskReference = new WeakReference<DrawableDownloaderTask>(bitmapDownloaderTask);
+		}
+
+		public DrawableDownloaderTask getBitmapDownloaderTask() {
+			return bitmapDownloaderTaskReference.get();
+		}
+	}
+
+}

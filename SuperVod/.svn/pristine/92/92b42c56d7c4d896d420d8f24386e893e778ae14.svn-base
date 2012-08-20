@@ -1,0 +1,312 @@
+package com.stv.supervod.service;
+
+import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.ProgressDialog;
+import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.Message;
+import android.util.Log;
+
+import com.stv.supervod.activity.Play;
+import com.stv.supervod.activity.R;
+import com.stv.supervod.utils.VideoConstant;
+import com.stv.supervod.utils.VodModel;
+
+
+public class VideoService extends Service{
+	private static final String TAG = "VideoService";	
+	private final int timeover = 10000;        //10s登陆超时
+	private int currentTime;
+	private int duration;
+	private Handler timer;
+	private ProgressDialog loginDialog;//登陆vod服务器对话框	
+	private Play pView;
+	private VodModel model;
+	public static TCPClient client = null;
+	private NotificationManager notificationMrg;
+	
+	public VideoService(){
+		
+	}
+	public VideoService(Play pv){
+		this.pView=pv;
+	}
+	@Override
+	public IBinder onBind(Intent intent) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void onCreate() {	
+		Log.d(TAG, "enter into oncreate method.");
+		super.onCreate();
+		timer=new Handler();
+		model=new VodModel();
+		
+		client= new TCPClient(handler,model);
+		notificationMrg=(NotificationManager) this.getSystemService(NOTIFICATION_SERVICE);
+		displayNotificationMessage("supervod is running");
+		Thread thr=new Thread(null,new ServiceWorker(),"SuperVodService");
+		thr.start();
+	}
+	
+	private void displayNotificationMessage(String message) {		
+		Notification notification=new Notification(R.drawable.icon,message,System.currentTimeMillis());
+		PendingIntent contentIntent=PendingIntent.getActivity(this, 0, new Intent(this,Play.class), 0);
+		notification.setLatestEventInfo(this, "SuperVod", message, contentIntent);
+		notificationMrg.notify(R.id.app_notification_id,notification);
+	}
+	//处理接收的数据
+	class ServiceWorker implements Runnable{
+		
+		public void run(){
+			//do something
+		}
+	}
+	    	
+	
+	
+	@Override
+	public void onStart(Intent intent, int startId) {
+		Log.d(TAG, "enter into onstart method.");
+		super.onStart(intent, startId);
+		int op = intent.getIntExtra("op", -1);
+		if (op!=-1){
+			switch (op) {
+			case VideoConstant.VIDEO_PLAY:
+                play(0);
+				break;
+			case VideoConstant.VIDEO_PAUSE:
+                pause();
+				break;
+			case VideoConstant.VIDEO_STOP://停止
+				stop();
+				break;
+			case VideoConstant.PROGRESS_CHANGE:
+			    currentTime = intent.getExtras().getInt("progress");
+			    play(currentTime);
+				break;
+			case VideoConstant.VIDEO_REWIND:
+				rewind();
+				break;
+			case VideoConstant.VIDEO_FORWARD:
+				forward();
+				break;
+			case VideoConstant.VIDEO_APPLY_SERVICE:
+				applyService();
+				break;
+			} 
+		}
+	}
+	
+	
+	//登陆vod服务器申请服务
+	private void applyService() {
+		// TODO Auto-generated method stub
+		SharedPreferences sp=this.getSharedPreferences("registerinfo", MODE_PRIVATE);
+		String username=sp.getString("username", "");
+		String password=sp.getString("password", "");
+		String isPassword=sp.getString("pwtype", "");
+		model.setSmartCardId(username);
+		model.setPassword(password);
+		model.setIsPassword(Byte.parseByte(isPassword));
+		client.applyServcie(model);
+		timer.postDelayed(loginTimeover, timeover);
+		
+	}
+
+	private void stop() {
+		// TODO Auto-generated method stub
+		client.Quit();
+	}
+
+	private void play(int startTime) {
+		// TODO Auto-generated method stub		
+		model.setOfferingId("1234");
+		model.setIsBookmark((byte)0);
+		model.setNpt_begin(startTime);
+		client.play(model);
+		
+	}
+
+	private void pause() {
+		// TODO Auto-generated method stub		
+		model.setOperation((byte)VideoConstant.VIDEO_PLAY);
+		client.playControl(model);
+	}
+
+	private void rewind() {
+		// TODO Auto-generated method stub
+		model.setOperation((byte)VideoConstant.VIDEO_REWIND);
+		client.playControl(model);
+	}
+
+	private void forward() {
+		// TODO Auto-generated method stub
+		model.setOperation((byte)VideoConstant.VIDEO_FORWARD);
+		client.playControl(model);
+	}
+
+	@Override
+	public void onDestroy() {		
+		super.onDestroy();
+		notificationMrg.cancel(R.id.app_notification_id);
+		
+	}
+	
+	private Runnable loginTimeover = new Runnable() {
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			
+			dialogLoginTimeout();
+			timer.removeCallbacks(loginTimeover);
+		}
+	};
+	private void dialogLoginTimeout(){		
+		if(!model.isApplyStatus()){			
+			new AlertDialog.Builder(this)
+			.setTitle(R.string.tip)
+			.setMessage(R.string.loginfail)
+			.setNegativeButton(R.string.exit, new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					// TODO Auto-generated method stub
+					stopSelf();
+				}
+			})
+			.setPositiveButton(R.string.relogin, new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					// TODO Auto-generated method stub
+		            client.applyServcie(model);
+		            timer.postDelayed(loginTimeover, timeover);
+		           
+				}
+			}).show();			
+		}				
+	}
+	   
+	/**
+	 * Handle message from RCServer
+	 */
+    private Handler handler = new Handler() {
+		@Override
+		public void handleMessage(Message msg){   		
+    		pView.cancleConDialog();
+//    		timer.removeCallbacks(loginTimeover);
+    		String info="";
+    		Bundle bundle=msg.getData();
+    		byte type=bundle.getByte("type");
+    		byte operationCode=bundle.getByte("operationCode");
+    		switch(type){
+    		case VideoConstant.APPLY_SERVICE: //申请服务
+    			if(operationCode==VideoConstant.SUCCESS_PLAY){
+    				info = "vod播放成功";
+    				Log.v("9999999999999999999999999=","1="+operationCode);
+    				model.setApplyStatus(true);//申请成功
+    				int beginStation=bundle.getShort("NPT_BEGIN");
+    				int duration=bundle.getShort("NPT_TOTAL");
+                    final Intent intent= new Intent();
+                    intent.setAction(VideoConstant.VIDEO_CURRENT);
+                    intent.putExtra("currentTime", beginStation);
+                    intent.putExtra("duration", duration);
+					sendBroadcast(intent);
+    				
+    			}
+    			
+    			if(operationCode==VideoConstant.FAIL_NOT_EXIST_USER){
+    				info = "服务器验证无此用户";
+    				Play.closeSocket();
+    				dialogSysinfo("服务器验证您没有开通点播业务，请确认手机号码和智能卡号是否输入正确，如有疑问请联系当地客服！");
+    				
+    			}
+    			if(operationCode==VideoConstant.FAIL_SYSTEM_ERROR){
+    				info="VOD系统错误";
+    				Play.closeSocket();
+//    				pView.finish();
+    				
+    			}
+    			if(operationCode==VideoConstant.FAIL_MULTI_ACTIVE_USER){
+    				info="其他用户已经登陆";
+    				Play.closeSocket();
+//    				pView.finish();
+    			}
+    			if(operationCode==VideoConstant.FAIL_SYSTEM_MAINTAINING){
+    				info = "VOD系统维护中";
+    				Play.closeSocket();
+    				dialogSysinfo(info);
+    			}
+    			if(operationCode==VideoConstant.FAIL_PASSWORD_ERROR){
+    				info = "密码错误";
+    				Play.closeSocket();
+    				dialogSysinfo(info);
+    			}
+								
+				break;
+    		case VideoConstant.MTV_BATCH_PLAY://mtv play
+    		case VideoConstant.VIDEO_BATCH_PLAY:
+    		case VideoConstant.SINGLE_PLAY:
+    			if(operationCode==VideoConstant.FAIL_NOT_EXIST_RESOURCE){
+    				info="资源不存在";
+    				Play.closeSocket();
+    				dialogSysinfo(info);
+    			}
+    			if(operationCode==VideoConstant.FAIL_RESOURCE_NOT_ENOUGH){
+    				info="资源不足";
+    				Play.closeSocket();
+    				dialogSysinfo(info);
+    			}
+    			if(operationCode==VideoConstant.FAIL_SYSTEM_ERROR){
+    				info="VOD系统错误";
+    				Play.closeSocket();
+//    				pView.finish();
+    				
+    			}
+    			if(operationCode==VideoConstant.FAIL_CA_SWITHCHFREP){
+    				info="CA系统切换频点失败";
+    				Play.closeSocket();
+//    				pView.finish();
+    				
+    			}
+    			
+    			break;
+    		case VideoConstant.PLAY_CONTROL:
+    			if(operationCode==VideoConstant.FAIL_SYSTEM_ERROR){
+    				info="VOD系统错误,请重新连接";
+    				Play.closeSocket();
+//    				pView.finish();
+    				
+    			}
+    			break;
+    		case VideoConstant.HEART_BEAT:
+    			break;
+    			
+			default:
+				break;
+    		}
+
+    	}
+	};
+	
+  
+	protected void dialogSysinfo(String string) {
+		// TODO Auto-generated method stub
+		
+	}
+	public void cancleLoginDialog() {
+		loginDialog.cancel();
+	}
+	
+}

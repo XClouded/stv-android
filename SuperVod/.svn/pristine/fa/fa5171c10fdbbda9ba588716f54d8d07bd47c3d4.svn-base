@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/background">
+
+    <LinearLayout
+        android:id="@+id/interest_ll_title"
+        android:layout_width="fill_parent"
+        android:layout_height="43dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/homepage_top"
+        android:gravity="center_vertical|center_horizontal" >
+
+        <Button
+            android:id="@+id/interest_btn_back"
+            android:layout_width="68dp"
+            android:layout_height="wrap_content"
+            android:text="@string/detail_btn_back" 
+            style="@style/Button_Return" 
+            android:layout_marginLeft="5dp"/>
+
+        <TextView
+            android:id="@+id/interest_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/further_interest_title"
+            android:textAppearance="?android:attr/textAppearanceLarge" android:layout_marginLeft="50dp"/>
+
+        <Button
+            android:id="@+id/interest_btn_edit"
+            style="@style/further_title_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="90dp" android:text="@string/further_btn_edit"/>
+
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/interest_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:cacheColorHint="#00000000" android:layout_below="@id/interest_ll_title"/>
+
+</RelativeLayout>

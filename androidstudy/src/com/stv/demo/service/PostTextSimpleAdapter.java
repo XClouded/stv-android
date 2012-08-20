@@ -1,0 +1,73 @@
+package com.stv.demo.service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import android.content.Context;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.SimpleAdapter;
+
+import com.stv.R;
+
+public class PostTextSimpleAdapter extends SimpleAdapter {
+
+	public PostTextSimpleAdapter(Context context, List<? extends Map<String, ?>> data, int resource, String[] from, int[] to) {
+		super(context, data, resource, from, to);
+		listlength = data.size();
+		list = data;
+	}
+
+	public static int listlength = 6;
+	public List<? extends Map<String, ?>> list = null;
+
+	@Override
+	public int getCount() {
+		return Integer.MAX_VALUE;
+	}
+
+	@Override
+	public View getView(int position, View convertView, ViewGroup parent) {
+
+		View view = super.getView(position % listlength, convertView, parent);
+		if (list != null && !list.isEmpty()) {
+			Map<?, ?> map = (Map<?, ?>) list.get(position % listlength);
+			int imgid = (Integer) map.get("imgbg");
+			view.findViewById(R.id.posterlayout).setBackgroundResource(imgid);
+		}
+
+		return view;
+	}
+
+	public static List<Map<String, Object>> getData() {
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+			Map<String, Object> map1 = new HashMap<String, Object>();
+			map1.put("name", "《失恋三十三天》热播1");
+			map1.put("imgbg", R.drawable.poster1);
+			list.add(map1);
+			Map<String, Object> map2 = new HashMap<String, Object>();
+			map2.put("name", "《失恋三十三天》热播2");
+			map2.put("imgbg", R.drawable.poster2);
+			list.add(map2);
+			Map<String, Object> map3 = new HashMap<String, Object>();
+			map3.put("name", "《失恋三十三天》热播3");
+			map3.put("imgbg", R.drawable.poster3);
+			list.add(map3);
+			Map<String, Object> map4 = new HashMap<String, Object>();
+			map4.put("name", "《失恋三十三天》热播4");
+			map4.put("imgbg", R.drawable.poster4);
+			list.add(map4);
+			Map<String, Object> map5 = new HashMap<String, Object>();
+			map5.put("name", "《失恋三十三天》热播5");
+			map5.put("imgbg", R.drawable.poster5);
+			list.add(map5);
+			Map<String, Object> map6 = new HashMap<String, Object>();
+			map6.put("name", "《失恋三十三天》热播6");
+			map6.put("imgbg", R.drawable.poster6 );
+			list.add(map6);
+		return list;
+	}
+
+}

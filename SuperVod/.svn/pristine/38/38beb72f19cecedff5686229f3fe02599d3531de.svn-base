@@ -1,0 +1,174 @@
+package com.stv.supervod.adapter;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseExpandableListAdapter;
+import android.widget.ImageView;
+import android.widget.RatingBar;
+import android.widget.TextView;
+
+import com.stv.supervod.activity.R;
+import com.stv.supervod.service.ImageDownloader;
+
+/**
+ * Description: 首页列表数据装载解析 Copyright (c) 永新视博 All Rights Reserved.
+ * 
+ * @version 1.0 2011-12-30 下午04:49:58 mustang created
+ */
+public class HomePageListAdapter extends BaseExpandableListAdapter {
+
+	private Context context;
+	private List<String> group = new ArrayList<String>();
+	List<List<Map<String, Object>>> children = new ArrayList<List<Map<String, Object>>>();
+	Drawable shrink;
+	Drawable expand;
+
+	public HomePageListAdapter(Context context, List<String> group, List<List<Map<String, Object>>> children) {
+		this.context = context;
+		this.group = group;
+		this.children = children;
+	}
+
+	@Override
+	public int getGroupCount() {
+		return group.size();
+	}
+
+	@Override
+	public int getChildrenCount(int groupPosition) {
+		return children.get(groupPosition).size();
+	}
+
+	@Override
+	public Object getGroup(int groupPosition) {
+		return group.get(groupPosition).toString();
+	}
+
+	@Override
+	public Object getChild(int groupPosition, int childPosition) {
+		// 其实是一个map
+		return children.get(groupPosition).get(childPosition);
+	}
+
+	@Override
+	public long getGroupId(int groupPosition) {
+		return groupPosition;
+	}
+
+	@Override
+	public long getChildId(int groupPosition, int childPosition) {
+		return childPosition;
+	}
+
+	@Override
+	public boolean hasStableIds() {
+		return true;
+	}
+
+	@Override
+	public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+		GroupHolder holder = null;
+		if (convertView == null) {
+			LayoutInflater mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			convertView = mInflater.inflate(R.layout.homepage_listview_group, parent, false);
+			holder = new GroupHolder();
+			holder.textView = (TextView) convertView.findViewById(R.id.groupName);
+			holder.pg = (com.stv.supervod.widget_extended.PosterGallery) convertView.findViewById(R.id.gallery);
+			convertView.setTag(holder);
+		} else {
+			holder = (GroupHolder) convertView.getTag();
+		}
+		// 放在holder里的好处是避免每次都去find控件
+		holder.textView.setText(getGroup(groupPosition).toString());
+
+		if (isExpanded == true) {
+			if (expand == null) {
+				expand = context.getResources().getDrawable(R.drawable.homepage_group_button_expand);
+				expand.setBounds(0, 0, expand.getMinimumWidth(), expand.getMinimumHeight());
+			}
+			holder.textView.setCompoundDrawables(null, null, expand, null);
+		} else {
+			if (shrink == null) {
+				shrink = context.getResources().getDrawable(R.drawable.homepage_group_button_shrink);
+				shrink.setBounds(0, 0, shrink.getMinimumWidth(), shrink.getMinimumHeight());
+			}
+			holder.textView.setCompoundDrawables(null, null, shrink, null);
+		}
+		return convertView;
+	}
+
+	@Override
+	public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+		ChildHolder holder;
+		if (convertView == null) {
+			LayoutInflater mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			convertView = mInflater.inflate(R.layout.homepage_listview_item, parent, false);
+			holder = new ChildHolder();
+			holder.img = (ImageView) convertView.findViewById(R.id.img);
+			holder.title = (TextView) convertView.findViewById(R.id.title);
+			holder.category = (TextView) convertView.findViewById(R.id.category);
+			holder.ratingBar = (RatingBar) convertView.findViewById(R.id.ratingBar);
+			holder.ratingScore1 = (TextView) convertView.findViewById(R.id.ratingScore1);
+			holder.ratingScore2 = (TextView) convertView.findViewById(R.id.ratingScore2);
+			convertView.setTag(holder);
+		} else {
+			holder = (ChildHolder) convertView.getTag();
+		}
+
+		String imgurl = children.get(groupPosition).get(childPosition).get("imgurl").toString();
+		ImageDownloader d = new ImageDownloader();
+		d.download(imgurl, holder.img);
+
+		// System.out.println("=============childPosition=========" +
+		// childPosition + "========" + imgurl);
+
+		holder.title.setText(children.get(groupPosition).get(childPosition).get("title").toString());
+		holder.category.setText(children.get(groupPosition).get(childPosition).get("category").toString());
+		Float vrating;
+		if (children.get(groupPosition).get(childPosition).get("ratingBar") != null) {
+			vrating = Float.parseFloat(children.get(groupPosition).get(childPosition).get("ratingBar").toString());
+			holder.ratingBar.setRating(vrating);
+		}
+
+		if (children.get(groupPosition).get(childPosition).get("ratingScore1") != null) {
+			holder.ratingScore1.setText(children.get(groupPosition).get(childPosition).get("ratingScore1").toString());
+		}
+		if (children.get(groupPosition).get(childPosition).get("ratingScore2") != null) {
+			holder.ratingScore2.setText(children.get(groupPosition).get(childPosition).get("ratingScore2").toString());
+		}
+		// 隔行换色
+		if (childPosition % 2 == 0) {
+			convertView.setBackgroundResource(R.drawable.list_bg);
+		} else {
+			convertView.setBackgroundResource(R.drawable.list_bg_focus);
+		}
+
+		return convertView;
+	}
+
+	@Override
+	public boolean isChildSelectable(int groupPosition, int childPosition) {
+		return true;
+	}
+
+	class GroupHolder {
+		TextView textView;
+		com.stv.supervod.widget_extended.PosterGallery pg;
+	}
+
+	class ChildHolder {
+		ImageView img;
+		TextView title;
+		TextView category;
+		RatingBar ratingBar;
+		TextView ratingScore1;
+		TextView ratingScore2;
+	}
+}

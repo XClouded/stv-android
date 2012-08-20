@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- A theme for a custom dialog appearance.  Here we use an ugly
+         custom frame. -->
+    <style name="Theme.CustomDialog" parent="android:style/Theme.Dialog">
+        <item name="android:windowBackground">@color/all_white</item>
+    </style>
+</resources>

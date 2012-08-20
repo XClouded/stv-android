@@ -1,0 +1,5 @@
+package com.stv.supervod.foundation;
+
+public class HTTP_Protocol {
+
+}

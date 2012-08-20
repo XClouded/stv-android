@@ -1,0 +1,30 @@
+1323056125239	Rename resource 'study_horizontal_item1.xml'
+1323056150427	Delete element
+1323056247083	Rename resource 'homepagel_poster.xml'
+1323056548739	Rename local variable 'adp1'
+1323056572817	Rename type 'PostTextSimpleAdapter'
+1323057192739	Delete element
+1323057794864	Rename resource 'study_vertical_item.xml'
+1323064919239	Rename local variable 'myBundle'
+1323070804645	Delete element
+1323139406562	Copy compilation unit
+1323139482750	Copy file
+1323150800609	Copy compilation unit
+1323153661515	Rename method 'saveRegisterInfo'
+1323234949593	Rename method 'getAutoLogin'
+1323235259921	Rename method 'saveUserInfo'
+1323236617500	Rename type 'ToastUtil'
+1323238361312	Rename field 'loginSuccess'
+1323240771796	Rename method 'isAutoLogin'
+1323244283734	Rename type 'RegisterService'
+1323250020781	Copy compilation unit
+1323318799859	Copy file
+1323326249718	Copy compilation unit
+1323326276562	Rename type 'PosterGellery'
+1323327045843	Delete element
+1323327067781	Copy compilation unit
+1323327071984	Delete element
+1323329478500	Rename field 'listlength'
+1323330033125	Rename field 'handler'
+1323339400156	Copy compilation unit
+1323394252937	Delete element

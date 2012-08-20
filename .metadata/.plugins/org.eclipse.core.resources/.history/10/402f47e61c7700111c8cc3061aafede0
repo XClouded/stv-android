@@ -1,0 +1,31 @@
+package com.test;
+
+public class Test6 {
+	private String name="test";
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public static void main(String[] args) {
+		User u = new User();
+		String str = "test1";
+		testu(u,str);
+		System.out.println(u.getName());
+		System.out.println(str);
+		
+		
+
+	}
+	
+	public static void testu(User u ,String tempStr){
+		u.setName("name");
+		tempStr="test";
+	}
+	
+	
+}

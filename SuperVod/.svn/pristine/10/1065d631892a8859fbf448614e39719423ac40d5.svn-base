@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/linearLayout1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" 
+        android:orientation="vertical" android:background="@drawable/background">
+
+		<LinearLayout
+			android:id="@+id/detail_rl_title"
+			android:layout_width="fill_parent"
+			android:layout_height="43dp" 
+			android:background="@drawable/homepage_top" >
+
+			<Button
+			    android:id="@+id/detail_btn_back"
+			    android:layout_width="68dp"
+			    android:layout_height="wrap_content"
+			    android:layout_alignParentLeft="true"
+			    android:text="@string/detail_btn_back" 
+			    android:layout_centerVertical="true" 
+			    style="@style/Button_Return" 
+			    android:layout_marginLeft="5dp"/>
+
+			<TextView
+            	android:id="@+id/detail_title_textView"
+            	android:layout_width="fill_parent"
+            	android:layout_height="wrap_content"
+            	android:textAppearance="?android:attr/textAppearanceLarge" 
+            	android:singleLine="true" android:layout_gravity="center" android:layout_marginLeft="10dp" android:layout_marginRight="10dp" android:gravity="center"/>
+			
+			
+	        <Button
+	            android:id="@+id/detail_btn_point"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_alignParentRight="true"
+	            android:text="@string/detail_btn_point" 
+	            android:layout_centerVertical="true" 
+	            android:visibility="invisible"/>
+
+		</LinearLayout> 
+        
+        <ScrollView
+            android:id="@+id/scrollView1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+            
+			<LinearLayout
+	            android:id="@+id/detail_rl_content"
+	            android:layout_width="fill_parent"
+	            android:layout_height="fill_parent"
+	            android:orientation="vertical" >                
+                
+				<LinearLayout
+				     android:id="@+id/detail_ll_info"
+				     android:layout_width="fill_parent"
+				     android:layout_height="wrap_content"
+				     android:layout_below="@+id/tableLayout_title"
+				     android:layout_margin="5dp" >
+
+					<ImageView
+					    android:id="@+id/detail_iv_poster"
+					    style="@style/Detail_Poster"
+					    android:src="@drawable/video_cover_default" />
+
+					<LinearLayout
+					    android:id="@+id/linearLayout2"
+					    android:layout_width="fill_parent"
+					    android:layout_height="fill_parent"
+					    android:orientation="vertical" >
+
+						<TextView
+						    android:id="@+id/detail_tv_row1"
+						    android:layout_width="fill_parent"
+						    android:layout_height="30dp"
+						    android:layout_margin="5dp" 
+						    android:layout_gravity="left|center_vertical" 
+						    android:gravity="center_vertical" 
+						    android:textColor="@android:color/white"
+						    android:textSize="18sp" android:singleLine="true"/>
+
+						<TextView
+						    android:id="@+id/detail_tv_row2"
+						    android:layout_width="fill_parent"
+						    android:layout_height="30dp"
+						    android:layout_margin="5dp" 
+						    android:layout_gravity="left|center_vertical" 
+						    android:gravity="center_vertical" 
+						    android:textColor="@android:color/white"
+						    android:textSize="18sp" android:singleLine="true"/>
+
+						<LinearLayout
+						    android:id="@+id/linearLayout3"
+						    android:layout_width="fill_parent"
+						    android:layout_height="wrap_content" 
+						    android:gravity="center_vertical" 
+						    android:layout_margin="5dp">
+
+						<RatingBar   
+						    android:id="@+id/detail_ratingBar"  
+						    style="@style/List_RatingBar" 
+							android:rating="2.0" />
+
+						<TextView
+						    android:id="@+id/detail_tv_point"
+						    android:layout_width="wrap_content"
+						    android:layout_height="wrap_content"
+						    android:layout_marginLeft="10dp" 
+						    android:layout_gravity="bottom" 
+						    android:textColor="@android:color/white"
+						    android:textSize="18sp"/>
+
+						<TextView
+						    android:id="@+id/textView2"
+						    android:layout_width="wrap_content"
+						    android:layout_height="wrap_content"
+						    android:text="@string/detail_txt_point" 
+						    android:layout_gravity="bottom" 
+						    android:textColor="@android:color/white"
+						    android:textSize="18sp"/>
+
+						</LinearLayout>
+
+					</LinearLayout>
+            		
+				</LinearLayout>
+				<LinearLayout 
+				    android:id="@+id/detail_ll_control" 
+				    android:layout_width="fill_parent" 
+				    android:layout_height="wrap_content" 
+				    android:layout_margin="5dp" >
+					
+					<Button 
+					    android:id="@+id/detail_btn_play" 
+					    android:layout_width="68dp" 
+					    android:layout_height="wrap_content" 
+					    android:text="@string/detail_btn_play" 
+					    android:drawableLeft="@drawable/poster_play" 
+					    android:background="@drawable/btn_poster_bar_play_selector" 
+					    style="@style/Detail_Button" />
+					
+					<Button 
+					    android:id="@+id/detail_btn_fav" 
+					    android:layout_width="68dp" 
+					    android:layout_height="wrap_content" 
+					    android:text="@string/detail_btn_fav" 
+					    android:background="@drawable/btn_poster_bar_selector" 
+					    android:drawableLeft="@drawable/poster_collect" 
+					    style="@style/Detail_Button" />
+					<Button
+					    android:id="@+id/detail_btn_epg"
+					    style="@style/Detail_Button"
+					    android:layout_width="98dp"
+					    android:layout_height="wrap_content"
+					    android:layout_margin="5dp"
+					    android:background="@drawable/btn_poster_bar_selector"
+					    android:drawableLeft="@drawable/poster_collect"
+					    android:text="@string/detail_btn_add" />
+					
+				</LinearLayout>
+				<RelativeLayout 
+					android:layout_width="fill_parent" 
+					android:id="@+id/detail_rl_episode" 
+					android:layout_height="wrap_content">
+				
+					<TextView
+					    android:id="@+id/detail_tv_episode_number"
+					    style="@style/Detail_Movie_Name"
+					    android:layout_alignParentLeft="true"
+					    android:layout_marginLeft="10dp"
+					    android:layout_toLeftOf="@+id/detail_btn_episode_sort"
+					    android:text="@string/detail_txt_episode_number" />
+	
+					<Button 
+					    android:id="@+id/detail_btn_episode_sort" 
+					    android:layout_width="68dp" 
+					    android:layout_height="wrap_content" 
+					    android:text="@string/detail_btn_rsort" 
+					    android:layout_alignParentRight="true" 
+					    android:layout_alignParentTop="true" 
+						android:layout_marginRight="10dp" 
+					    style="@style/Button" 
+						android:drawableLeft="@drawable/poster_detail_fan" 
+						android:background="@drawable/poster_detail_sort_image_normal" 
+						android:drawablePadding="5dp" />
+
+					<FrameLayout
+					    android:id="@+id/detail_episode_fl_top"
+					    android:layout_width="fill_parent"
+					    android:layout_height="wrap_content"
+					    android:background="@drawable/poster_detail_top" android:layout_below="@id/detail_btn_episode_sort" android:layout_marginLeft="10dp" android:layout_marginRight="10dp" android:layout_marginTop="10dp">
+					</FrameLayout>
+					
+					<com.stv.supervod.widget_extended.ExGridViewTvList 
+					    android:layout_width="fill_parent" 
+					    android:numColumns="5" 
+					    android:id="@+id/detail_egv_episode_list" 
+					    android:layout_height="wrap_content"  
+					    android:gravity="center" 
+					    android:stretchMode="columnWidth"
+					    android:background="#272727" 
+						android:layout_marginLeft="10dp" 
+						android:layout_marginRight="10dp" android:layout_below="@id/detail_episode_fl_top"/>
+
+					<FrameLayout
+					    android:id="@+id/detail_episode_fl_bottom"
+					    android:layout_width="fill_parent"
+					    android:layout_height="wrap_content" android:background="@drawable/poster_detail_bottom" android:layout_marginLeft="10dp" android:layout_marginRight="10dp" android:layout_below="@id/detail_egv_episode_list">
+
+						<Button
+						    android:id="@+id/detail_btn_expand"
+						    style="@style/Button"
+						    android:layout_height="wrap_content"
+						    android:background="#272727"
+						    android:drawableLeft="@drawable/poster_fenji_down"
+						    android:drawablePadding="5dp"
+						    android:text="@string/detail_btn_expand" android:layout_gravity="right|center_vertical" android:layout_width="wrap_content" android:layout_marginRight="7dp"/>
+
+					</FrameLayout>
+
+				</RelativeLayout>
+				<LinearLayout 
+				    android:layout_width="wrap_content" 
+				    android:id="@+id/detail_ll_desc" 
+				    android:layout_height="wrap_content" 
+				    android:orientation="vertical" 
+				    android:layout_margin="5dp" >  
+				               
+					<TextView
+					    android:id="@+id/textView6"
+					    style="@style/Detail_Movie_Name"
+					    android:text="@string/detail_txt_desc" 
+					    android:layout_margin="5dp"/>
+
+					<TextView
+					    android:id="@+id/detail_tv_desc"
+					    style="@style/Detail_Info"
+					    android:layout_margin="5dp"/>
+           
+				</LinearLayout>   
+                
+			</LinearLayout>       
+            
+		</ScrollView>
+
+    </LinearLayout>

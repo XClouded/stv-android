@@ -1,0 +1,286 @@
+package com.stv.supervod.service;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.lang.ref.SoftReference;
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
+import android.view.View;
+import android.widget.ImageView;
+
+import com.stv.supervod.activity.R;
+import com.stv.supervod.utils.Constant;
+import com.stv.supervod.utils.ValidateUtil;
+
+public class ImageDownloader {
+
+	/**
+	 * 写文件的线程是否在执行的标记
+	 */
+	private volatile boolean writeFileFlag = false;
+
+	private int HARD_CACHE_CAPACITY = 100;
+
+	private ConcurrentHashMap<String, SoftReference<Drawable>> posterCache = new ConcurrentHashMap<String, SoftReference<Drawable>>(
+			HARD_CACHE_CAPACITY);
+
+	private List<Map<String, Object>> writeList = new ArrayList<Map<String, Object>>();
+
+	private static ImageDownloader imageDownloader;
+
+	public static ImageDownloader getImageDownloader() {
+		if (imageDownloader == null) {
+			imageDownloader = new ImageDownloader();
+		}
+		return imageDownloader;
+	}
+
+	private ImageDownloader() {
+
+	}
+
+	public static void cleanPosterCache() {
+		if (imageDownloader != null) {
+			imageDownloader.posterCache.clear();
+			imageDownloader.writeList.clear();
+			imageDownloader = null;
+		}
+	}
+
+	/**
+	 * Description: 所有人调用的公共入口
+	 * 
+	 * @Version1.0 2011-12-29 下午04:22:15 mustang created
+	 * @param url
+	 * @param imageView
+	 */
+	public void download(String url, View view) {
+		//如果是空就不要在往下走了
+		if(ValidateUtil.isBlank(url)){
+			if (view instanceof ImageView) {
+				((ImageView) view).setImageResource(R.drawable.video_cover_default);
+			} else {
+				view.setBackgroundResource(R.drawable.homepage_init);
+			}
+			return;
+		}
+		
+		Drawable db = null;
+		SoftReference<Drawable> sd = posterCache.get(url);
+		if (sd != null) {
+			if (sd.get() != null) {
+				db = sd.get();
+			} else {
+				posterCache.remove(url);
+			}
+		}
+		if (db == null) {
+			db = ImageServiceImpl.getImageDrawableByUrl(url);
+			// 进缓存
+			if (db != null) {
+				SoftReference<Drawable> srf = new SoftReference<Drawable>(db);
+				posterCache.put(url, srf);
+			}
+		}
+		if (db != null && view != null) {
+			if (view instanceof ImageView) {
+				((ImageView) view).setImageDrawable(db);
+			} else {
+				view.setBackgroundDrawable(db);
+			}
+		} else {
+			forceDownload(url, view);
+		}
+	}
+
+	/**
+	 * Description: 强制下载
+	 * 
+	 * @Version1.0 2011-12-29 下午04:20:21 mustang created
+	 * @param url
+	 * @param imageView
+	 */
+	private void forceDownload(String url, View view) {
+		DrawableDownloaderTask task = new DrawableDownloaderTask(view);
+		if (view instanceof ImageView) {
+			((ImageView) view).setImageResource(R.drawable.video_cover_default);
+		} else {
+			view.setBackgroundResource(R.drawable.homepage_init);
+		}
+		task.execute(url);
+	}
+
+	/**
+	 * Description: 下载图片并保存
+	 * 
+	 * @Version1.0 2011-12-29 下午04:20:51 mustang created
+	 * @param url
+	 * @return
+	 */
+	public Drawable asyncDownloadDrawable(String url) {
+
+		HttpDownloadImpl httpDownloader = HttpDownloadImpl.getHttpDownloader();
+		Drawable drawable = null;
+		if (!ValidateUtil.isBlank(url)) {
+			try {
+				SoftReference<Drawable> sd = posterCache.get(url);
+				if (sd != null) {
+					if (sd.get() != null) {
+						return sd.get();
+					} else {
+						posterCache.remove(url);
+					}
+				}
+				drawable = httpDownloader.downloadImageByUrl(url);
+				String[] names = url.split("/");
+				String filename = "";
+				if (names.length > 0) {
+					filename = names[names.length - 1];
+				}
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("filename", filename);
+				map.put("drawable", drawable);
+				SoftReference<Drawable> softRef = new SoftReference<Drawable>(drawable);
+				posterCache.put(url, softRef);
+				writePoster2File(map);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return drawable;
+	}
+
+	/**
+	 * Description: 把写文件单独提出来
+	 * 
+	 * @Version1.0 2012-1-4 下午06:10:10 mustang created
+	 * @param map
+	 */
+	public void writePoster2File(Map<String, Object> map) {
+		writeList.add(map);
+		final String dpath = Constant.download_dir;
+		if (writeFileFlag == false) {
+			new Thread() {
+				@Override
+				public void run() {
+					while (writeList != null && !writeList.isEmpty()) {
+						writeFileFlag = true;
+						Map<String, Object> map = writeList.get(writeList.size() - 1);
+						String filename = (String) map.get("filename");
+						Drawable drawable = (Drawable) map.get("drawable");
+						BitmapDrawable bd = null;
+						if (drawable != null) {
+							bd = (BitmapDrawable) drawable;
+						}
+						Bitmap bm = null;
+						if (bd != null) {
+							bm = bd.getBitmap();
+						}
+						if (bm != null) {
+							FileOutputStream fos;
+							try {
+								fos = new FileOutputStream(new File(dpath, filename));
+								bm.compress(Bitmap.CompressFormat.PNG, 100, fos);
+								try {
+									fos.close();
+								} catch (IOException e) {
+									e.printStackTrace();
+								}
+							} catch (FileNotFoundException e) {
+								e.printStackTrace();
+							}
+						}
+						writeList.remove(map);
+					}
+					writeFileFlag = false;
+				}
+			}.start();
+		}
+	}
+
+	/**
+	 * Description: 通过View获得绑定的task
+	 * 
+	 * @Version1.0 2011-12-29 下午04:21:25 mustang created
+	 * @param view
+	 * @return
+	 */
+	/*
+	 * private static DrawableDownloaderTask getDrawableDownloaderTask(View
+	 * view) { if (view != null) { Drawable drawable = null; if (view instanceof
+	 * ImageView) { drawable = ((ImageView) view).getDrawable(); } else {
+	 * drawable = view.getBackground(); }
+	 * 
+	 * if (drawable instanceof DownloadedDrawable) { DownloadedDrawable
+	 * downloadedDrawable = (DownloadedDrawable) drawable; return
+	 * downloadedDrawable.getDrawableDownloaderTask(); } } return null; }
+	 */
+
+	/**
+	 * Description: 异步的下载任务 Copyright (c) 永新视博 All Rights Reserved.
+	 * 
+	 * @version 1.0 2011-12-29 下午04:10:30 mustang created
+	 */
+	class DrawableDownloaderTask extends AsyncTask<String, Void, Drawable> {
+		private String url;
+		private WeakReference<View> viewReference;
+
+		public DrawableDownloaderTask(View view) {
+			viewReference = new WeakReference<View>(view);
+		}
+
+		@Override
+		protected Drawable doInBackground(String... params) {
+			url = params[0];
+			return asyncDownloadDrawable(url);
+		}
+
+		@Override
+		protected void onPostExecute(Drawable result) {
+			if (viewReference != null && result != null) {
+				View view = viewReference.get();
+				// DrawableDownloaderTask dt = getDrawableDownloaderTask(view);
+				// if (view != null && this == dt) {
+				if (view != null) {
+					if (view instanceof ImageView) {
+						((ImageView) view).setImageDrawable(result);
+					} else {
+						view.setBackgroundDrawable(result);
+
+					}
+				}
+			}
+		}
+
+	}
+
+	/**
+	 * Description: 设置弱引用关联 Copyright (c) 永新视博 All Rights Reserved.
+	 * 
+	 * @version 1.0 2011-12-31 上午10:34:58 mustang created
+	 */
+	static class DownloadedDrawable extends ColorDrawable {
+		private final WeakReference<DrawableDownloaderTask> DrawableDownloaderTaskReference;
+
+		public DownloadedDrawable(DrawableDownloaderTask drawableDownloaderTask) {
+			DrawableDownloaderTaskReference = new WeakReference<DrawableDownloaderTask>(drawableDownloaderTask);
+		}
+
+		public DrawableDownloaderTask getDrawableDownloaderTask() {
+			return DrawableDownloaderTaskReference.get();
+		}
+	}
+
+}

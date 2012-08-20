@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="103dp"
+    android:orientation="horizontal" >
+
+    <ImageView
+        android:id="@+id/img"
+        style="@style/List_Image" />
+
+    <LinearLayout style="@style/List_Layout1" >
+
+        <TextView
+            android:id="@+id/name"
+            style="@style/List_Movie_Name" />
+
+        <LinearLayout style="@style/List_Layout2" >
+
+            <TextView
+                android:id="@+id/widget11"
+                style="@style/List_Movie_Text" />
+
+            <TextView
+                android:id="@+id/type"
+                style="@style/List_Movie_Type" />
+        </LinearLayout>
+
+        <!--
+        <TextView
+            android:id="@+id/type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="武侠、动作"
+            android:textColor="#FFFFFFFF" /> 
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <RatingBar
+                android:id="@+id/small_ratingbar"
+                style="?android:attr/ratingBarStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:numStars="8" />
+
+            <TextView
+                android:id="@+id/score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#FFFFFFFF" />
+        </LinearLayout>
+        -->
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:orientation="horizontal" >
+
+            <RatingBar
+                android:id="@+id/ratingBar"
+                style="@style/List_RatingBar"
+                android:rating="9.0" />
+
+            <TextView
+                android:id="@+id/ratingScore1"
+                style="@style/Int_Score"
+                android:text="9." />
+
+            <TextView
+                android:id="@+id/ratingScore2"
+                style="@style/Float_Score"
+                android:text="2" />
+
+            <TextView style="@style/Text_Score" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<item value="Merge a range of revisions" key="MergeWizardMainPage.lastInputProvider"/>
+	<item value="676" key="com.collabnet.subversion.merge.wizards.MergeWizard.size.y"/>
+	<item value="0" key="com.collabnet.subversion.merge.wizards.MergeWizard.location.y"/>
+	<item value="/Client%202.0/Android/VODClient/src/com/stv/supervod/activity/Register.java,/Client%202.0/Android/VODClient/src/com/stv/supervod/activity/Register.java" key="mergeFromUrls_https://192.168.7.128/svn/QuickVodMobile/Client%202.0/Android/SuperVod/src/com/stv/supervod/activity/Register.java"/>
+	<item value="358" key="com.collabnet.subversion.merge.wizards.MergeWizard.location.x"/>
+	<item value="724" key="com.collabnet.subversion.merge.wizards.MergeWizard.size.x"/>
+</section>

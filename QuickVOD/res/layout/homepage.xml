@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+	android:id="@+id/widget62"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:background="@drawable/background_new"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	>
+<TextView 
+	android:textStyle="bold" 
+	android:layout_height="wrap_content" 
+	android:text="智能卡号:" 
+	android:textSize="25sp" 
+	android:id="@+id/textView2" 
+	android:layout_width="272dp" 
+	android:layout_above="@+id/SmartCard" 
+	android:layout_centerHorizontal="true" />
+<EditText 
+	android:inputType="phone" 
+	android:maxLength="11" 
+	android:layout_height="wrap_content" 
+	android:id="@+id/PhoneNum" 
+	android:layout_width="272dp" 
+	android:hint="请输入11位手机号码" 
+	android:layout_above="@+id/textView2" 
+	android:layout_centerHorizontal="true" 
+	android:layout_marginBottom="21dp">
+    <requestFocus></requestFocus>
+</EditText>
+<TextView 
+	android:textStyle="bold" 
+	android:layout_height="wrap_content" 
+	android:text="本机号码:" 
+	android:textSize="25sp" 
+	android:id="@+id/textView1" 
+	android:layout_width="272dp" 
+	android:layout_above="@+id/PhoneNum" 
+	android:layout_centerHorizontal="true" />
+<ProgressBar 
+	android:visibility="visible" 
+	android:id="@+id/homepage_progress" 
+	android:layout_width="20dp" 
+	android:layout_height="20dp" 
+	android:layout_alignTop="@+id/homepage_info" 
+	android:layout_alignRight="@+id/homepage_info" />
+<TextView 
+	android:layout_height="30dp" 
+	android:visibility="visible" 
+	android:text="检测网络连接中..." 
+	android:textSize="14sp" 
+	android:gravity="center" 
+	android:id="@+id/homepage_info" 
+	android:layout_width="150dp" 
+	android:layout_alignParentBottom="true" 
+	android:layout_centerHorizontal="true" 
+	android:layout_marginBottom="24dp" />
+<ImageView 
+	android:src="@drawable/logo" 
+	android:id="@+id/widget57" 
+	android:layout_width="wrap_content" 
+	android:layout_height="wrap_content" 
+	android:layout_above="@+id/textView1" 
+	android:layout_centerHorizontal="true" 
+	android:layout_marginBottom="23dp" />
+<Button android:textSize="15sp" 
+	android:gravity="center" 
+	android:id="@+id/login_button" 
+	android:layout_height="wrap_content" 
+	android:text="确定" 
+	android:layout_width="61dp" 
+	android:layout_above="@+id/homepage_info" 
+	android:layout_centerHorizontal="true" 
+	android:layout_marginBottom="21dp" />
+<EditText 
+	android:numeric="integer" 
+	android:maxLength="16" 
+	android:layout_height="wrap_content" 
+	android:id="@+id/SmartCard" 
+	android:password="true" 
+	android:layout_width="272dp" 
+	android:hint="请输入16位机顶盒智能卡卡号" 
+	android:layout_above="@+id/login_button" 
+	android:layout_centerHorizontal="true" 
+	android:layout_marginBottom="24dp" />
+</RelativeLayout>

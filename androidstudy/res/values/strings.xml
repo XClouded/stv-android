@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hello">Hello World, StudyActivity!</string>
+    <string name="study_test">Hello World, Study test!</string>
+    <string name="app_name">Study</string>
+    <string name="prompt_gesture_nam">name</string>
+    <string name="str_dialog_title">请稍候片刻...</string>
+  <string name="str_dialog_body">正在执行云运算中...</string>
+    
+</resources>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AbsoluteLayout
+	android:id="@+id/widget62"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:background="@drawable/background_new"
+	xmlns:android="http://schemas.android.com/apk/res/android" >
+<ProgressBar 
+	android:visibility="invisible" 
+	android:layout_width="20dp" 
+	android:id="@+id/homepage_progress" 
+	android:layout_height="20dp" 
+	android:layout_x="241dp" 
+	android:layout_y="516dp" />
+<TextView 
+	android:visibility="invisible" 
+	android:layout_width="150dp" 
+	android:text="检测网络连接中..." 
+	android:textSize="14sp" 
+	android:gravity="center" 
+	android:id="@+id/homepage_info" 
+	android:layout_height="30dp" 
+	android:layout_x="103dp" 
+	android:layout_y="510dp" />
+<Button 
+	android:textSize="15sp" 
+	android:gravity="center" 
+	android:id="@+id/login_button" 
+	android:layout_width="61dp" 
+	android:text="确定" 
+	android:layout_height="wrap_content" 
+	android:layout_x="146dp" android:layout_y="438dp" />
+<TextView 
+	android:textStyle="bold" 
+	android:layout_width="269dp" 
+	android:text="智能卡号:" 
+	android:textSize="25sp" 
+	android:id="@+id/textView2" 
+	android:layout_height="wrap_content" 
+	android:layout_x="47dp" 
+	android:layout_y="314dp" />
+<TextView 
+	android:textStyle="bold" 
+	android:layout_width="276dp" 
+	android:text="本机号码:" 
+	android:textSize="25sp" 
+	android:id="@+id/textView1" 
+	android:layout_height="wrap_content" 
+	android:layout_x="47dp" 
+	android:layout_y="200dp" />
+<EditText 
+	android:numeric="integer" 
+	android:maxLength="16" 
+	android:layout_width="272dp" 
+	android:id="@+id/SmartCard" 
+	android:password="true" 
+	android:layout_height="50dp" 
+	android:hint="请输入16位机顶盒智能卡卡号" 
+	android:layout_x="47dp" 
+	android:layout_y="348dp">
+    <requestFocus></requestFocus>
+</EditText>
+<EditText 
+	android:maxLength="11" 
+	android:inputType="phone" 
+	android:layout_width="272dp" 
+	android:id="@+id/PhoneNum" 
+	android:layout_height="50dp" 
+	android:hint="请输入11位手机号码" 
+	android:layout_x="47dp" 
+	android:layout_y="234dp" />
+<ImageView 
+	android:layout_width="wrap_content" 
+	android:src="@drawable/logo" 
+	android:id="@+id/widget57" 
+	android:layout_height="wrap_content" 
+	android:layout_x="65dp" 
+	android:layout_y="88dp" />
+</AbsoluteLayout>

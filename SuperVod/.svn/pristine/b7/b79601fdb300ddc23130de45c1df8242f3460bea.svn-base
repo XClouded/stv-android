@@ -1,0 +1,238 @@
+package com.stv.supervod.activity;
+
+
+import com.stv.supervod.widget_extended.ExGridViewTvList;
+import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.view.Gravity;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+import android.view.View.OnClickListener;
+
+/**
+ * @author      Administrator
+ * @description 影片详细页
+ * @authority   登录或激活业务用户
+ * @function    1、向用户展示固定影片详细信息
+ *              2、用户点击评分按钮，判断用户是否已登录，未登录则进入登录页面：Login
+ *              3、用户点击收藏按钮，判断用户是否已激活，未激活则进入激活页面：Register，
+ *                已激活则提交数据到服务器，并提示用户收藏成功
+ *              4、用户点击播放按钮，判断用户是否已激活，未激活则进入激活页面：Register，
+ *                已激活则进入播放页面：Play
+ */
+
+/**
+ * Description: 
+ * Copyright (c) 永新视博
+ * All Rights Reserved.
+ * @version 1.0  2011-11-29 下午4:56:07 zhaojunfeng created
+ */
+public class Detail extends BaseActivity{
+	
+	/**
+	 * 全局变量
+	 */
+	private int mEpisodeCount = 22;
+	private boolean isExpand = false;
+	private boolean ableExpand = false;
+	
+	private boolean isSort = true;
+	
+	
+	/**
+	 * 常量
+	 */
+	private final String TAG = "Detail";
+	private final int DEFAULT_EPISODE_COUNT = 10;
+	
+	
+	/**
+	 * 控件
+	 */
+	private ExGridViewTvList mgv = null;
+	private Button btnExpand = null;
+	private Button btnSort = null;
+	
+	@Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.detail);
+        
+        Bundle data = getIntent().getExtras();
+        if( data != null ){
+        	mEpisodeCount = data.getInt("EpisodeNumber", 0);
+        }
+        
+        initEpisodeGui();
+        initGui();	
+    }
+	
+	private void initGui(){
+		Button btn_back = (Button) findViewById(R.id.detail_btn_back);
+		btn_back.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				Framework.switchActivityBack();
+			}
+		});
+		
+		
+	}
+	
+	private void initEpisodeGui(){
+		RelativeLayout episodeView = (RelativeLayout) findViewById(R.id.detail_rl_episode);
+		
+		if( mEpisodeCount == 0 ){
+			episodeView.setVisibility(View.GONE);
+			ableExpand = false;			
+			return ;
+		} else if( mEpisodeCount <= DEFAULT_EPISODE_COUNT ){
+			ableExpand = false;	
+		} else {
+			ableExpand = true;	
+		}
+		
+		TextView episodeTitle = (TextView)findViewById(R.id.detail_tv_episode_number);
+		episodeTitle.setText( String.format( 
+				getString(R.string.detail_txt_episode_number), mEpisodeCount) );
+		
+		// do GridView
+		mgv = (ExGridViewTvList) findViewById( R.id.detail_egv_episode_list );
+		mgv.setAdapter(new EpisodeListAdapter( this ));
+		mgv.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+					long arg3) {
+				// TODO Auto-generated method stub
+				int select = 0;
+				if( isSort ){
+					select = arg2 + 1;
+				} else {
+					select = mEpisodeCount - arg2;
+				}
+        		Toast.makeText(Detail.this, 
+        				String.format("you click %d", select), Toast.LENGTH_SHORT).show();
+			}
+		});
+		
+		// do expand 
+		btnExpand = (Button) findViewById(R.id.detail_btn_expand);
+		if( ableExpand ){
+			btnExpand.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					isExpand = !isExpand;
+					mgv.setAdapter(new EpisodeListAdapter( Detail.this ));
+					Drawable img = null;
+					
+					if( isExpand ){
+						img = getResources().getDrawable(R.drawable.poster_fenji_up);
+						btnExpand.setText(R.string.detail_btn_unexpand);
+					} else {
+						btnExpand.setText(R.string.detail_btn_expand);
+						img = getResources().getDrawable(R.drawable.poster_fenji_down);
+					}
+					img.setBounds(0, 0, img.getMinimumWidth(), img.getMinimumHeight());
+					btnExpand.setCompoundDrawables(img, null, null, null);
+				}
+			});
+		} else {
+			btnExpand.setVisibility(View.GONE);
+		}
+		
+		// do sort
+		btnSort = (Button) findViewById(R.id.detail_btn_episode_sort);
+		btnSort.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				isSort = !isSort;
+				Drawable img = null;
+				mgv.setAdapter(new EpisodeListAdapter( Detail.this ));
+				if( isSort ){
+					btnSort.setText(R.string.detail_btn_rsort);
+					img = getResources().getDrawable(R.drawable.poster_detail_fan);
+				} else {
+					btnSort.setText(R.string.detail_btn_sort);
+					img = getResources().getDrawable(R.drawable.poster_detail_zheng);
+				}
+				img.setBounds(0, 0, img.getMinimumWidth(), img.getMinimumHeight());
+				btnSort.setCompoundDrawables(img, null, null, null);
+			}
+		});
+	}
+	
+	
+	private class EpisodeListAdapter extends BaseAdapter{
+		private Context _Con;
+		private int _Count;
+		
+		public EpisodeListAdapter( Context c ){
+			_Con = c;
+			
+			// 展开
+			if( isExpand ){ 
+				_Count = mEpisodeCount;
+			} else {
+				_Count = (mEpisodeCount>DEFAULT_EPISODE_COUNT)?
+						DEFAULT_EPISODE_COUNT:mEpisodeCount;
+			}
+		}
+		
+		@Override
+		public int getCount() {
+			// TODO Auto-generated method stub
+			return _Count;
+		}
+
+		@Override
+		public Object getItem(int arg0) {
+			// TODO Auto-generated method stub
+			return arg0;
+		}
+
+		@Override
+		public long getItemId(int arg0) {
+			// TODO Auto-generated method stub
+			return arg0;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup arg2) {
+			// TODO Auto-generated method stub
+			TextView textView;
+			if( convertView == null ){
+				textView = new TextView(_Con);
+				textView.setPadding(8, 8, 8, 8);
+			} else {
+				textView = (TextView)convertView;
+			}
+			
+			textView.setGravity(Gravity.CENTER);
+			textView.setTextSize(16);
+			
+			if( isSort ){
+				textView.setText(String.format("%02d", position+1));
+			} else {
+				textView.setText(String.format("%02d", mEpisodeCount - position));
+			}
+			return textView;			
+			
+		}
+		
+	}
+}

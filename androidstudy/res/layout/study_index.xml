@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="43dp"
+        android:background="@drawable/about_btn_bg_normal"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/logo" >
+        </ImageView>
+
+        <Button
+            android:id="@+id/button1"
+            android:layout_width="68dp"
+            android:layout_height="30dp"
+            android:layout_gravity="right|center_vertical"
+            android:layout_marginRight="1dp"
+            android:background="@drawable/viplogo_logout"
+            android:text="会员" >
+        </Button>
+    </LinearLayout>
+
+    <ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/widget29"
+        android:layout_width="fill_parent"
+        android:layout_height="370dp" >
+
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <FrameLayout
+                android:id="@+id/frameLayout1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+
+                <Gallery
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:id="@+id/gallery"
+                    android:layout_width="fill_parent"
+                    android:layout_height="171dp" />
+
+                <TextView
+                    android:id="@+id/name"
+                    android:layout_width="320dp"
+                    android:layout_height="29dp"
+                    android:gravity="center_horizontal|bottom"
+                    android:textColor="@android:color/white"
+                    android:text="中国功夫"
+                    android:textSize="18sp" />
+            </FrameLayout>
+
+            <ImageView
+                android:id="@+id/today_1"
+                android:layout_width="fill_parent"
+                android:layout_height="27dp"
+                android:onClick="showtype"
+                android:src="@drawable/today_1" />
+
+            <ListView
+                android:id="@+id/study_vertical_list"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/today_2"
+                android:layout_width="fill_parent"
+                android:layout_height="27dp"
+                android:onClick="showtype2"
+                android:src="@drawable/today_1" />
+
+            <ListView
+                android:id="@+id/study_vertical_list1"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/today_3"
+                android:layout_width="fill_parent"
+                android:layout_height="27dp"
+                android:src="@drawable/today_1" />
+
+            <ImageView
+                android:id="@+id/today_4"
+                android:layout_width="fill_parent"
+                android:layout_height="27dp"
+                android:src="@drawable/today_1" />
+
+            <ImageView
+                android:id="@+id/today_5"
+                android:layout_width="fill_parent"
+                android:layout_height="27dp"
+                android:src="@drawable/today_1" />
+
+            <ImageView
+                android:id="@+id/today_6"
+                android:layout_width="fill_parent"
+                android:layout_height="27dp"
+                android:src="@drawable/today_1" />
+
+            <ImageView
+                android:id="@+id/today_7"
+                android:layout_width="fill_parent"
+                android:layout_height="27dp"
+                android:background="@drawable/playcontrol_bg"
+                android:src="@drawable/homepage_listfoot_img" />
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/shownowinfo"
+        android:layout_width="fill_parent"
+        android:layout_height="370dp"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
+            android:layout_height="100dp"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:id="@+id/img"
+                android:layout_width="100dp"
+                android:layout_height="93dp"
+                android:src="@drawable/poster6" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="93dp"
+                android:gravity="center_vertical"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="天龙八部"
+                    android:textColor="#FFFFFFFF" />
+
+                <TextView
+                    android:id="@+id/type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="武侠、动作"
+                    android:textColor="#FFFFFFFF" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" >
+
+                    <RatingBar
+                        android:id="@+id/small_ratingbar"
+                        style="?android:attr/ratingBarStyleSmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:numStars="8" />
+
+                    <TextView
+                        android:id="@+id/score"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#FFFFFFFF" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
+            android:layout_height="260dp"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="若干内容介绍..."
+                android:textColor="#FFFFFFFF" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/shownowbutton"
+        android:layout_width="fill_parent"
+        android:layout_height="27dp"
+        android:layout_marginBottom="1dp"
+        android:background="@drawable/playcontrol_bg"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:id="@+id/shownow"
+            android:layout_width="50dp"
+            android:layout_height="27dp"
+            android:onClick="shownow"
+            android:src="@drawable/player_pause" />
+
+        <ViewFlipper
+            android:id="@+id/flipper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:flipInterval="2000" >
+
+            <TextView
+                android:id="@+id/nowname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/playcontrol_bg"
+                android:gravity="center"
+                android:onClick="shownow"
+                android:text="无正在播放的内容"
+                android:textColor="#FFFFFFFF" />
+        </ViewFlipper>
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">Hello World, VODClientActivity!</string>
+    <string name="app_name">SuperVod</string>
+
+      
+    <!-- 详细节目信息页面 -->    
+    <string name="detail_prg_name">节目名称: </string>
+    <string name="detail_prg_desc">节目简介: \n</string>
+    
+    <string name="detail_btn_back">返回</string>
+    <string name="detail_btn_point">我要评分</string>
+    
+    <string name="detail_btn_play">播放</string>
+    <string name="detail_btn_fav">收藏</string>
+    <string name="detail_btn_add">加入我的频道</string>
+    
+    <string name="detail_btn_sort">正序</string>
+    <string name="detail_btn_rsort">反序</string>
+    <string name="detail_btn_expand">展开</string>
+    <string name="detail_btn_unexpand">收起</string>
+    <string name="detail_txt_episode_number">剧集列表 共%d集</string>
+    
+        
+
+    <string name="detail_txt_type">类型:</string>
+    <string name="detail_txt_directer">导演:</string>
+    <string name="detail_txt_actor">主演:</string>
+    <string name="detail_txt_desc">剧情简介:</string>        
+        
+        
+    <string name="framework_tab_home">首页</string>  
+    <string name="framework_tab_channel">分类</string> 
+    <string name="framework_tab_search">搜索</string> 
+    <string name="framework_tab_myfav">历史</string> 
+    <string name="framework_tab_more">更多</string>       
+        
+</resources>

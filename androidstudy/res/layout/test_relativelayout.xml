@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="fill_parent" android:layout_height="fill_parent" android:gravity="top">
+	<TextView android:id="@+id/label" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="Type here:" />
+	<EditText android:id="@+id/entry" android:layout_width="fill_parent" android:layout_height="wrap_content" android:background="@android:drawable/editbox_background"
+		android:layout_below="@id/label" />
+	<Button android:text="Cancel" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignBaseline="@+id/ok" android:layout_alignBottom="@+id/ok" android:layout_alignParentLeft="true" android:layout_marginLeft="83dp" android:id="@+id/button1"></Button>
+	<Button android:text="OK" android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/ok" android:layout_below="@+id/entry" android:layout_toRightOf="@+id/button1" android:layout_marginLeft="19dp"></Button>
+</RelativeLayout> 
+

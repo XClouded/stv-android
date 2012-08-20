@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/listGroup"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+<!-- 
+    <com.stv.supervod.widget_extended.PosterGallery
+        android:id="@+id/gallery"
+        android:layout_width="fill_parent"
+        android:layout_height="171dp"
+        android:visibility="gone" >
+    </com.stv.supervod.widget_extended.PosterGallery>
+ -->
+    <TextView
+        android:id="@+id/groupName"
+        style="@style/TitleButton"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="列表分组" >
+    </TextView>
+
+</LinearLayout>

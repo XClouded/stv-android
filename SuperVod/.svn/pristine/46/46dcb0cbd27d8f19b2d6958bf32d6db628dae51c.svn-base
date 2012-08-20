@@ -1,0 +1,38 @@
+package com.stv.supervod.doc;
+
+/**
+ * Description: 
+ * Copyright (c) 永新视博
+ * All Rights Reserved.
+ * @version 1.0  2012-1-4 下午4:33:46 zhaojunfeng created
+ */
+public class Program {
+	// must defined
+	public String mProgramType;
+	public String mTitle;
+	public String mPoster;
+	public int mOfferingId;
+	public String mCategorys;
+	public float mRecommendedRank;
+	public String mServiceName;
+	
+	// just for songs, other optional
+	public String mDirector;
+	
+	// just for tvback, other optional
+	public String mStartTime;
+	
+	public Program( String type, String title, String poster, int offId,
+			String categorys, float rank, String service, 
+			String director, String starttime){
+		mProgramType = type;
+		mTitle = title;
+		mPoster = poster;
+		mOfferingId = offId;
+		mCategorys = categorys;
+		mRecommendedRank = rank;
+		mServiceName = service;
+		mDirector = director;
+		mStartTime = starttime;
+	}
+}

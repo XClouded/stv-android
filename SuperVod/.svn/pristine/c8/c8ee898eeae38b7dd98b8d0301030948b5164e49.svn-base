@@ -1,0 +1,442 @@
+package com.stv.supervod.activity;
+
+
+import java.util.ArrayList;
+
+import android.R.integer;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RatingBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.stv.supervod.doc.Program;
+import com.stv.supervod.utils.AlertUtils;
+import com.stv.supervod.utils.Constant;
+import com.stv.supervod.widget_extended.ExGridViewTvList;
+
+/**
+ * @author      Administrator
+ * @description 影片详细页
+ * @authority   登录或激活业务用户
+ * @function    1、向用户展示固定影片详细信息
+ *              2、用户点击评分按钮，判断用户是否已登录，未登录则进入登录页面：Login
+ *              3、用户点击收藏按钮，判断用户是否已激活，未激活则进入激活页面：Register，
+ *                已激活则提交数据到服务器，并提示用户收藏成功
+ *              4、用户点击播放按钮，判断用户是否已激活，未激活则进入激活页面：Register，
+ *                已激活则进入播放页面：Play
+ */
+
+/**
+ * Description: 
+ * Copyright (c) 永新视博
+ * All Rights Reserved.
+ * @version 1.0  2011-11-29 下午4:56:07 zhaojunfeng created
+ */
+public class Detail extends BaseActivity{
+	
+	/**
+	 * 全局变量
+	 */
+	private Program mProgram = null;
+	private int mEpisodeCount = 22;
+	private boolean isExpand = false;
+	private boolean ableExpand = false;
+	
+	private boolean isSort = true;
+	private int mEpisodeSelected = -1;
+	private SharedPreferences sp;
+	private EpisodeListAdapter episodeAdapter = null ;
+	private ArrayList<String> mEpisodeOffIds = new ArrayList<String>();
+	
+	/**
+	 * 常量
+	 */
+	private final String TAG = "Detail";
+	private final int DEFAULT_EPISODE_COUNT = 10;
+	private final int MSG_GET_DATA_FINISH = 1; 
+	
+	/**
+	 * 控件
+	 */
+	private ExGridViewTvList mgv = null;
+	private ProgressDialog mProgressDlg;
+	private Button btnExpand = null;
+	private Button btnSort = null;
+	private Button btn_play = null;
+	private Button btn_add_myfav = null;
+	private Button btn_add_myepg = null;
+	private Button btn_back = null;
+	private ImageView mIvPoster = null;
+	private TextView mTvTitle;
+	private TextView mTvInfoRow1;
+	private TextView mTvInfoRow2;
+	private TextView mTvInfoDesc;
+	private TextView mTvInfoPoint;
+	private RatingBar mRateBar;
+	
+	private RelativeLayout episodeView;
+	private FrameLayout episodeExpose;
+	
+	@Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.detail);
+        
+        Bundle data = getIntent().getExtras();
+        if( data != null ){
+        	mProgram = (Program) data.get(Constant.DETAIL_EXTRAS_KEY_PROGRAM);
+        } else {
+        	Toast.makeText(this, "No program", Toast.LENGTH_LONG).show();
+        	Framework.switchActivityBack();
+        	return;
+        }
+//         tv=(TextView) findViewById(R.id.textView_name);
+//        playBtn=(Button) this.findViewById(R.id.detail_btn_play);
+//        playBtn.setOnClickListener(new View.OnClickListener() {
+//		
+//			@Override
+//			public void onClick(View v) {
+//				// TODO Auto-generated method stub
+//				//判断用户是否登录
+//			    sp = getSharedPreferences("registerinfo", Context.MODE_PRIVATE);
+//			    Boolean online=sp.getBoolean("online", false);
+//			    Intent intent;
+//			    if(online){
+//			        intent=new Intent(Detail.this,Play.class);
+//					intent.putExtra("video",tv.getText().toString());
+//					Framework.switchActivity("Detail2Play", intent);
+//			    }else{
+//			        intent=new Intent(Detail.this,Login.class);
+//			        Framework.switchActivity("Detail2Login", intent);
+//			    }				
+////				startActivity(intent);
+//				
+//			}
+//		});
+        
+        initGui();
+        
+        doLoadingData();
+                
+		bindAction();
+    }
+	
+	private void initGui()
+	{
+		btn_back = (Button) findViewById(R.id.detail_btn_back);
+		mIvPoster = (ImageView) findViewById(R.id.detail_iv_poster);
+		mTvTitle = (TextView) findViewById(R.id.detail_title_textView);
+		mTvInfoRow1 = (TextView) findViewById(R.id.detail_tv_row1);
+		mTvInfoRow2 = (TextView) findViewById(R.id.detail_tv_row2);
+		mTvInfoDesc = (TextView) findViewById(R.id.detail_tv_desc);
+		mTvInfoPoint  = (TextView) findViewById(R.id.detail_tv_point);
+		
+		btn_play = (Button) findViewById(R.id.detail_btn_play);
+		btn_add_myepg = (Button) findViewById(R.id.detail_btn_epg);
+		btn_add_myfav = (Button) findViewById(R.id.detail_btn_fav);
+		
+		mRateBar = (RatingBar) findViewById(R.id.detail_ratingBar);
+		
+		episodeView = (RelativeLayout) findViewById(R.id.detail_rl_episode);
+		episodeExpose = (FrameLayout) findViewById(R.id.detail_episode_fl_bottom);
+	
+	}
+	
+	private void doLoadingData()
+	{
+		if( mProgram.mProgramType.equals(Constant.PROGRAM_TYPE_MTV) ){ 
+			// mtv do not need to download more info
+			mEpisodeCount = 0;
+			mTvTitle.setText(mProgram.mTitle);
+			mTvInfoRow1.setText( getString(R.string.detail_txt_singer) + mProgram.mDirector );
+			mTvInfoRow2.setText( getString(R.string.detail_txt_type) + mProgram.mCategorys );
+			mTvInfoPoint.setText( Float.toString(mProgram.mRecommendedRank) );
+			mRateBar.setRating(mProgram.mRecommendedRank);
+			mTvInfoDesc.setText(getString(R.string.detail_txt_null));
+			
+			episodeView.setVisibility(View.GONE);
+			ableExpand = false;		
+			
+			return;
+		} else if (	mProgram.mProgramType.equals(Constant.PROGRAM_TYPE_TVBACK)){
+			mEpisodeCount = 0;
+			mTvTitle.setText(mProgram.mTitle);
+			mTvInfoRow1.setText( getString(R.string.detail_txt_starttime) + mProgram.mStartTime );
+			mTvInfoRow2.setText( getString(R.string.detail_txt_type) + mProgram.mCategorys );
+			mTvInfoPoint.setText( Float.toString(mProgram.mRecommendedRank) );
+			mRateBar.setRating(mProgram.mRecommendedRank);
+			mTvInfoDesc.setText(getString(R.string.detail_txt_null));
+			
+			episodeView.setVisibility(View.GONE);
+			ableExpand = false;		
+			
+			return;
+		}
+		
+		
+		mProgressDlg = (ProgressDialog) AlertUtils.createDialog(AlertUtils.NO_TITLE, this);
+		mProgressDlg.show();
+		
+		new Thread() {
+			public void run() {
+				try {
+					// get data
+			        getDataFromServer();
+			        Thread.sleep(1500);
+			        mHandle.sendEmptyMessage( MSG_GET_DATA_FINISH );
+					
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}.start();	
+	}
+	
+	private void getDataFromServer()
+	{
+		// ... get data
+		
+	
+		mTvTitle.setText(mProgram.mTitle);
+		mTvInfoRow1.setText( getString(R.string.detail_txt_director) + "asd" );
+		mTvInfoRow2.setText( getString(R.string.detail_txt_actor) + "李连杰，成龙" );
+		mTvInfoPoint.setText( Float.toString(mProgram.mRecommendedRank) );
+		mRateBar.setRating(mProgram.mRecommendedRank);
+		mTvInfoDesc.setText( "Detail" );
+	
+		mEpisodeCount = 15;
+		for (int i = 0; i < mEpisodeCount; i++) {
+			mEpisodeOffIds.add(Integer.toString(i));
+		}
+		initEpisodeGui();
+	}
+	
+	private Handler mHandle = new Handler(){
+		
+		@Override
+		public void handleMessage(Message msg){
+			mProgressDlg.dismiss();
+			switch (msg.what) {
+			case MSG_GET_DATA_FINISH:
+				break;
+			default:
+				break;
+			}
+		}
+	};
+	
+	private void bindAction(){
+		btn_back.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				Framework.switchActivityBack();
+			}
+		});
+	}
+	
+	private void initEpisodeGui(){
+	
+		if( mEpisodeCount == 0 ){
+			episodeView.setVisibility(View.GONE);
+			ableExpand = false;			
+			return ;
+		} else if( mEpisodeCount <= DEFAULT_EPISODE_COUNT ){
+			ableExpand = false;	
+		} else {
+			ableExpand = true;	
+		}
+		
+		TextView episodeTitle = (TextView)findViewById(R.id.detail_tv_episode_number);
+		episodeTitle.setText( String.format( 
+				getString(R.string.detail_txt_episode_number), mEpisodeCount) );
+		
+		// do GridView
+		mgv = (ExGridViewTvList) findViewById( R.id.detail_egv_episode_list );
+		mgv.setDrawSelectorOnTop(false);
+		mgv.setColumnWidth(78);
+		mgv.setSelector(new ColorDrawable(Color.TRANSPARENT));
+		episodeAdapter = new EpisodeListAdapter( this );
+		mgv.setAdapter(episodeAdapter);
+		mgv.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+					long arg3) {
+				// TODO Auto-generated method stub
+				if( isSort ){
+					mEpisodeSelected = arg2 + 1;
+				} else {
+					mEpisodeSelected = mEpisodeCount - arg2;
+				}
+        		Toast.makeText(Detail.this, 
+        				String.format("you click %d", mEpisodeSelected), Toast.LENGTH_SHORT).show();
+        		
+        		episodeAdapter.notifyDataSetChanged();
+			}
+		});
+		
+		// do expand 
+		btnExpand = (Button) findViewById(R.id.detail_btn_expand);
+		if( ableExpand ){
+			btnExpand.setVisibility(View.VISIBLE);
+			episodeExpose.setBackgroundResource(R.drawable.poster_detail_bottom);
+			
+			btnExpand.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					isExpand = !isExpand;
+					episodeAdapter.doExpand();
+					Drawable img = null;
+					
+					if( isExpand ){
+						img = getResources().getDrawable(R.drawable.poster_fenji_up);
+						btnExpand.setText(R.string.detail_btn_unexpand);
+					} else {
+						btnExpand.setText(R.string.detail_btn_expand);
+						img = getResources().getDrawable(R.drawable.poster_fenji_down);
+					}
+					img.setBounds(0, 0, img.getMinimumWidth(), img.getMinimumHeight());
+					btnExpand.setCompoundDrawables(img, null, null, null);
+				}
+			});
+		} else {
+			btnExpand.setVisibility(View.GONE);
+			episodeExpose.setBackgroundResource(R.drawable.poster_detail_bottom_no_content);
+		}
+		
+		// do sort
+		btnSort = (Button) findViewById(R.id.detail_btn_episode_sort);
+		btnSort.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				isSort = !isSort;
+				Drawable img = null;
+				episodeAdapter.notifyDataSetChanged();
+				if( isSort ){
+					btnSort.setText(R.string.detail_btn_rsort);
+					img = getResources().getDrawable(R.drawable.poster_detail_fan);
+				} else {
+					btnSort.setText(R.string.detail_btn_sort);
+					img = getResources().getDrawable(R.drawable.poster_detail_zheng);
+				}
+				img.setBounds(0, 0, img.getMinimumWidth(), img.getMinimumHeight());
+				btnSort.setCompoundDrawables(img, null, null, null);
+			}
+		});
+	}
+	
+	
+	private class EpisodeListAdapter extends BaseAdapter{
+		private Context _Con;
+		private int _Count;
+		
+		private class ViewHolder{
+			LinearLayout mSubItemBg;
+			TextView mSubItemTv;
+		}
+		
+		public EpisodeListAdapter( Context c ){
+			_Con = c;
+			
+			// 展开
+			if( isExpand ){ 
+				_Count = mEpisodeCount;
+			} else {
+				_Count = (mEpisodeCount>DEFAULT_EPISODE_COUNT)?
+						DEFAULT_EPISODE_COUNT:mEpisodeCount;
+			}
+		}
+		
+		public void doExpand(){
+			if( isExpand ){ 
+				_Count = mEpisodeCount;
+			} else {
+				_Count = (mEpisodeCount>DEFAULT_EPISODE_COUNT)?
+						DEFAULT_EPISODE_COUNT:mEpisodeCount;
+			}
+			notifyDataSetChanged();
+		}
+		
+		@Override
+		public int getCount() {
+			// TODO Auto-generated method stub
+			return _Count;
+		}
+
+		@Override
+		public Object getItem(int arg0) {
+			// TODO Auto-generated method stub
+			return arg0;
+		}
+
+		@Override
+		public long getItemId(int arg0) {
+			// TODO Auto-generated method stub
+			return arg0;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup arg2) {
+			// TODO Auto-generated method stub
+			ViewHolder v;
+			int select = 0;
+			if( isSort ){
+				select = position+1;
+			} else {
+				select = mEpisodeCount - position;
+			}
+			
+			if( convertView == null ){
+				LayoutInflater mInflater = (LayoutInflater) _Con.getSystemService(
+						Context.LAYOUT_INFLATER_SERVICE);
+				convertView = mInflater.inflate(R.layout.detail_episode_item, arg2, false);
+				
+				v = new ViewHolder();
+				v.mSubItemBg = (LinearLayout) convertView.findViewById(R.id.detail_subitem_ll);
+				v.mSubItemTv = (TextView) convertView.findViewById(R.id.detail_subitem_tv_number);
+				convertView.setTag(v);
+			} else {
+				v = (ViewHolder) convertView.getTag();
+			}			
+			
+			v.mSubItemTv.setText(String.format("%02d", select));
+			
+			if( mEpisodeSelected == select ){
+				v.mSubItemBg.setBackgroundResource(R.drawable.poster_detail_press);
+				v.mSubItemTv.setTextColor(Color.BLACK);
+			} else {
+				v.mSubItemBg.setBackgroundDrawable(null);
+				v.mSubItemTv.setTextColor(Color.WHITE);
+			}
+			return convertView;			
+		}
+		
+	}
+}

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/List_Layout">
+
+    <ImageView android:id="@+id/tvback_item_image"
+        style="@style/List_Image"/>
+
+    <TextView android:id="@+id/tvback_item_name"
+         style="@style/List_Layout1" />
+
+</LinearLayout>

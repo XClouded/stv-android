@@ -1,0 +1,583 @@
+package com.stv.supervod.activity;
+
+import java.security.spec.MGF1ParameterSpec;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.RatingBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
+
+import com.stv.supervod.adapter.EpisodeDetailListAdapter;
+import com.stv.supervod.service.HttpDownloadImpl;
+import com.stv.supervod.service.ImageDownloader;
+import com.stv.supervod.service.MyVodServiceImpl;
+import com.stv.supervod.service.VideoServiceImpl;
+import com.stv.supervod.service.HttpDownloadImpl.KeyEnum;
+import com.stv.supervod.service.HttpDownloadImpl.TypeEnum;
+import com.stv.supervod.service.MyVodServiceImpl.MyVodAddResult;
+import com.stv.supervod.utils.Constant;
+import com.stv.supervod.utils.DpPxUtil;
+import com.stv.supervod.utils.ErrorCode;
+import com.stv.supervod.utils.ValidateUtil;
+import com.stv.supervod.utils.Constant.PlayerType;
+import com.stv.supervod.utils.Constant.ServiceTypeEnum;
+import com.stv.supervod.widget_extended.ExGridViewTvList;
+
+/**
+ * @author      Administrator
+ * @description 电视详细页
+ * @authority   登录或激活业务用户
+ * @function    1、向用户展示固定影片详细信息
+ *              2、用户点击评分按钮，判断用户是否已登录，未登录则进入登录页面：Login
+ *              3、用户点击收藏按钮，判断用户是否已激活，未激活则进入激活页面：Register，
+ *                已激活则提交数据到服务器，并提示用户收藏成功
+ *              4、用户点击播放按钮，判断用户是否已激活，未激活则进入激活页面：Register，
+ *                已激活则进入播放页面：Play
+ */
+public class EpisodeDetail extends BaseActivity{
+	/* 常量 */
+	private final String TAG = "EpisodeDetail";
+	
+	/* 全局变量 */
+	private Map<String, Object> mProgram = null;
+	private List<Map<String, Object>> mEpisodeLists = null;
+	private Map<String, Object> mServiceInfo = null;
+	private String mAssetId = "";
+	private Boolean mInfoVaild = false;
+	private MyVodAddResult mMyVodAddResult = MyVodAddResult.none;
+	private int mEpisodeCount = 0;
+	private Boolean mIsInMyvod = false;
+	
+	private EpisodeDetailListAdapter mEpisodeListAdapter = null;
+	
+	/* 控件 */
+	private Button mBtnPlay = null;
+	private Button mBtnAddMyFav = null;
+	private Button mBtnAddMyVod = null;
+	private Button mBtnBack = null;
+	private ImageView mIvPoster = null;
+	private TextView mTvTitle;
+	private TextView mTvInfoRow1;
+	private TextView mTvInfoRow2;
+	private TextView mTvInfoDesc;
+	private TextView mTvInfoScore1;
+	private TextView mTvInfoScore2;
+	private RatingBar mRateBar;
+
+	private ExGridViewTvList mEGVTvList = null;
+	private ProgressDialog mProgressDlg;
+	private Button mBtnExpand = null;
+	private Button mBtnSort = null;
+	private TextView mEpisodeTitle;
+	private FrameLayout mFlEpisodeExpose;
+	
+	private processAsyncTask mProcessTask = null;
+	
+	private enum EpiDetailOp{
+		error, get_info, get_service_info, add_myvod, play
+	};
+	
+	@Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.episode_detail);
+        
+		// 初始化
+		mBtnBack = (Button) findViewById(R.id.tv_detail_btn_back);
+		mBtnAddMyFav = (Button) findViewById(R.id.tv_detail_btn_fav);
+		mBtnAddMyVod = (Button) findViewById(R.id.tv_detail_btn_epg);
+		mBtnPlay = (Button) findViewById(R.id.tv_detail_btn_play);
+		
+		mIvPoster = (ImageView) findViewById(R.id.tv_detail_iv_poster);
+		mTvTitle = (TextView) findViewById(R.id.tv_detail_tv_title);
+		mTvInfoRow1 = (TextView) findViewById(R.id.tv_detail_tv_row1);
+		mTvInfoRow2 = (TextView) findViewById(R.id.tv_detail_tv_row2);
+		mTvInfoDesc = (TextView) findViewById(R.id.tv_detail_tv_desc);
+		mTvInfoScore1 = (TextView) findViewById(R.id.ratingScore1);
+		mTvInfoScore2 = (TextView) findViewById(R.id.ratingScore2);			
+		mRateBar = (RatingBar) findViewById(R.id.tv_detail_ratingBar);
+		
+		
+		mFlEpisodeExpose = (FrameLayout) findViewById(R.id.tv_detail_episode_fl_bottom);
+		mFlEpisodeExpose.setVisibility(View.GONE);
+		mEpisodeTitle = (TextView)findViewById(R.id.tv_detail_tv_episode_number);
+		mEpisodeTitle.setText( String.format( 
+				getString(R.string.detail_txt_episode_number), mEpisodeCount) );
+		mEGVTvList = (ExGridViewTvList) findViewById( R.id.tv_detail_egv_episode_list );
+		mEGVTvList.setDrawSelectorOnTop(false);
+		mEGVTvList.setColumnWidth(78);
+		mEGVTvList.setSelector(new ColorDrawable(Color.TRANSPARENT));
+		mBtnSort = (Button) findViewById(R.id.tv_detail_btn_episode_sort);
+		mBtnExpand = (Button) findViewById(R.id.tv_detail_btn_expand);
+		mBtnExpand.setVisibility(View.INVISIBLE);
+		
+		mProgressDlg = new ProgressDialog(this);
+		mProgressDlg.setMessage("数据加载中...");
+		mProgressDlg.setIndeterminate(true);
+		mProgressDlg.setCancelable(true);
+
+        // 绑定数据
+        mBtnBack.setOnClickListener(mBtnBackListener);
+        mBtnAddMyFav.setOnClickListener(mBtnAddMyFavListener);
+        mBtnAddMyVod.setOnClickListener(mBtnAddMyVodListener);
+        mBtnPlay.setOnClickListener(mBtnPlayListener);
+        mEGVTvList.setOnItemClickListener(mEGVListOnItemClickListener);
+        mBtnSort.setOnClickListener(mBtnSortListener);
+        mBtnExpand.setOnClickListener(mBtnExpandListener);
+        
+        // 获取数据进行显示
+        mAssetId = getIntent().getStringExtra(KeyEnum.assetId.toString());
+        
+        mProcessTask = new processAsyncTask(this);
+        mProcessTask.execute(EpiDetailOp.get_info);
+    }
+	
+	//[start] 后台操作线程
+	private class processAsyncTask extends AsyncTask<EpiDetailOp, String, EpiDetailOp>{
+		private Context mCon;
+		private String mLastError = "";
+		private HttpDownloadImpl httpDownload = null;
+		
+		public processAsyncTask( Context con ){
+			mCon = con;
+			httpDownload = new HttpDownloadImpl();
+			mProgressDlg.show();
+		}
+		
+		@Override
+		protected void onPostExecute(EpiDetailOp result) {
+			// TODO Auto-generated method stub
+			switch (result) {
+			case get_info:
+				showInfo();
+				break;
+			case add_myvod:
+				showAddMyVodResult();
+				break;
+			case get_service_info:
+				mEpisodeListAdapter.notifyDataSetChanged();
+				break;
+			case error:
+			default:
+				showMessage(mLastError);
+				break;
+			}
+			if( mProgressDlg.isShowing() ){
+				mProgressDlg.dismiss();
+			}
+		}
+		
+		@Override
+		protected EpiDetailOp doInBackground(EpiDetailOp... params) {
+			// TODO Auto-generated method stub
+			EpiDetailOp ret = params[0];
+			try {
+				if( params[0] == EpiDetailOp.get_info ){
+					//[start] 获取节目详细信息
+					mProgram = httpDownload.downloadTvDetail(mAssetId);
+					if( mProgram == null ){
+						mLastError = "没有数据";
+						ret = EpiDetailOp.error;						
+					}
+					
+					// 获取剧集信息
+					mEpisodeLists = (List<Map<String, Object>>) mProgram.get(KeyEnum.list.toString());
+					if( mEpisodeLists != null ){
+						mEpisodeCount = mEpisodeLists.size();
+						String assetId = mEpisodeLists.get(0).get(KeyEnum.assetId.toString()).toString();
+						mServiceInfo = httpDownload.downloadOffingId(assetId, TypeEnum.EPISODE.toString());
+						MyVodServiceImpl myvodSer = new MyVodServiceImpl();
+						mIsInMyvod = myvodSer.isMyVod("1", assetId, TypeEnum.EPISODE.toString());
+						if( mServiceInfo == null ){
+							mLastError = "没有有效数据";
+							ret = EpiDetailOp.error;							
+						}
+					}
+					//[end]
+				} else if( params[0] == EpiDetailOp.add_myvod ){
+					//[start] 加入我的频道
+					mAssetId = mEpisodeListAdapter.getSelectItem().get(KeyEnum.assetId.toString()).toString();
+					Log.d(TAG, "AddMyvod mAssetId="+mAssetId);
+					MyVodServiceImpl myvodSer = new MyVodServiceImpl();
+					mMyVodAddResult = myvodSer.add( "1", mAssetId, TypeEnum.EPISODE.toString());
+					//[end]
+				} else if( params[0] == EpiDetailOp.get_service_info ){
+					//[start] 获取剧集的服务信息
+					if( mEpisodeLists != null ){
+						String assetId =  mEpisodeListAdapter.getSelectItem().get(KeyEnum.assetId.toString()).toString();
+						mServiceInfo = httpDownload.downloadOffingId(assetId, TypeEnum.EPISODE.toString());
+						MyVodServiceImpl myvodSer = new MyVodServiceImpl();
+						mIsInMyvod = myvodSer.isMyVod("1", assetId, TypeEnum.EPISODE.toString());
+						if( mServiceInfo == null ){
+							mLastError = "没有有效数据";
+							ret = EpiDetailOp.error;							
+						}
+					}//[end]
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				mLastError = ErrorCode.getErrorInfo(e);
+				ret = EpiDetailOp.error;
+			}	
+			return ret;
+		}
+
+	}
+	//[end]
+	
+	//[start] 显示
+	private void showInfo()
+	{
+		try {
+			String row1 = getString(R.string.detail_txt_director)+ 
+					mProgram.get(KeyEnum.director.toString()).toString();
+			String row2 = getString(R.string.detail_txt_actor) + 
+					mProgram.get(KeyEnum.actor.toString()).toString();
+			String desc = mProgram.get(KeyEnum.descrip.toString()).toString();			
+
+			mTvTitle.setText(mProgram.get(KeyEnum.title.toString()).toString());
+			mTvInfoRow1.setText(row1 );
+			mTvInfoRow2.setText( row2 );
+			
+			// 解析评分
+			String ratingBar = mProgram.get(KeyEnum.recommendedRank.toString()).toString();
+			if (!ValidateUtil.isBlank(ratingBar)) {
+				float vr = Float.parseFloat(ratingBar);
+				if (vr > -1) {
+					vr = vr / 10;
+					mRateBar.setRating(vr);
+				}
+				String[] rs = (vr + "").split("\\.");
+				if (rs != null && rs.length > 1) {
+					mTvInfoScore1.setText(rs[0] + ".");
+					mTvInfoScore2.setText(rs[1]);
+				}
+			} else {
+				mRateBar.setRating(5);
+				mTvInfoScore1.setText("5.");
+				mTvInfoScore2.setText("0");
+			}
+			mTvInfoDesc.setText(desc);
+			
+	        String poster = mProgram.get(KeyEnum.poster.toString()).toString();
+			if (!ValidateUtil.isBlank(poster)) {
+		        ImageDownloader downloader =ImageDownloader.getImageDownloader();
+		        downloader.download(poster, mIvPoster);
+			}
+			
+			mEpisodeTitle.setText( String.format( 
+					getString(R.string.detail_txt_episode_number), mEpisodeCount) );
+			
+			mEpisodeListAdapter = new EpisodeDetailListAdapter(this, mEpisodeLists);
+			mEpisodeListAdapter.setIsShowAll(false);
+			mEpisodeListAdapter.setIsSortOrder(true);
+			mEpisodeListAdapter.setSelectIndex(0);
+			if( mEpisodeListAdapter.getIsHaveMore() ){
+				mBtnExpand.setVisibility(View.VISIBLE);
+				mFlEpisodeExpose.setVisibility(View.VISIBLE);
+			}
+			mEGVTvList.setAdapter(mEpisodeListAdapter);			
+			mInfoVaild = true;
+		} catch (Exception e) {
+			// TODO: handle exception
+			showMessage( e.getMessage() );
+		}
+		if( mProgressDlg.isShowing() ){
+			mProgressDlg.dismiss();
+		}
+	}
+	
+	/**
+	 * Description: 显示加入我的频道结果
+	 * @Version1.0 2012-3-8 上午11:10:55 zhaojunfeng created
+	 */
+	private void showAddMyVodResult(){
+		String msg = "";
+		switch (mMyVodAddResult) {
+		case channel_exsit:
+			msg += getResources().getString(R.string.server_err_20304 );
+			break;
+		case count_overflow:
+			msg += getResources().getString(R.string.server_err_20302 );
+			break;
+		case duration_overflow:
+			msg += getResources().getString(R.string.server_err_20303 );
+			break;
+		case success:
+			msg += getResources().getString(R.string.detail_txt_addvod_ok );
+			break;
+		case none:
+		default:
+			msg += getResources().getString(R.string.detail_txt_addvod_error );
+			break;
+		}
+		showMessage(msg);
+	}
+	
+	/**
+	 * Description: Toast显示信息
+	 * @Version1.0 2012-3-8 上午10:57:12 zhaojunfeng created
+	 * @param msg
+	 */
+	private void showMessage( String msg ){
+		Toast tt = Toast.makeText(this, msg, Toast.LENGTH_SHORT);
+		tt.setGravity(Gravity.CENTER, 0, DpPxUtil.dp2px(this, 60));
+		tt.show();
+	}	
+	//[end]
+	
+	
+	//[start] Listerner
+	private View.OnClickListener mBtnBackListener = new View.OnClickListener() {
+		
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			Framework.switchActivityBack();
+		}
+	}; 
+	
+	private View.OnClickListener mBtnPlayListener = new View.OnClickListener() {
+		
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			if( mInfoVaild ){
+				if( mServiceInfo != null ){
+					String offingId = mServiceInfo.get(KeyEnum.offeringId.toString()).toString();
+					VideoServiceImpl impl = VideoServiceImpl.getInstance();
+					if( impl.getPlayStatus(offingId) ){
+						// 已经在播放了，直接启动播放器
+						EpisodeDetail.this.showPlayer( 
+								offingId, 
+								mProgram.get(KeyEnum.title.toString()).toString() + "#" + 
+										mEpisodeListAdapter.getSelectItem().get(KeyEnum.episode.toString()).toString(),
+								false, PlayerType.lite);
+					} else {
+						if( ServiceTypeEnum.MOD.toString().equalsIgnoreCase(
+								mServiceInfo.get(KeyEnum.serviceType.toString()).toString()) ){
+							// 显示收费提示框
+							float price = Integer.parseInt(mServiceInfo.get(KeyEnum.price.toString()).toString()) / 100;
+							showServiceDialog( Float.toString(price), EpiDetailOp.play );
+						} else { // 免费节目，直接播放
+							EpisodeDetail.this.showPlayer( 
+									offingId, 
+									mProgram.get(KeyEnum.title.toString()).toString() + "#" + 
+									mEpisodeListAdapter.getSelectItem().get(KeyEnum.episode.toString()).toString(),
+									false, PlayerType.common);
+						}
+					}
+				}
+			}			
+		}
+	};
+
+	private View.OnClickListener mBtnAddMyFavListener = new View.OnClickListener() {
+		
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			if( mInfoVaild ){
+				Map<String, Object> it = mEpisodeListAdapter.getSelectItem();
+				if( it != null ){
+					String title = mProgram.get(KeyEnum.title.toString()).toString() 
+							+ "#" + it.get(KeyEnum.episode.toString()).toString();
+					String type = TypeEnum.EPISODE.toString();
+					String category = mProgram.get(KeyEnum.categories.toString()).toString();
+					String poster = mProgram.get(KeyEnum.poster.toString()).toString();
+					String assetId = it.get(KeyEnum.assetId.toString()).toString();
+					boolean ret = addMyfav(title, type, category, poster, assetId); 
+					if( ret ){
+						showMessage( getString(R.string.detail_txt_addfav_ok) );				
+					} else {
+						showMessage(getString(R.string.detail_txt_addfav_error));			
+					}						
+				}
+			}
+		}
+	};
+	
+	private View.OnClickListener mBtnAddMyVodListener = new View.OnClickListener() {
+		
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			if( mInfoVaild ){
+				if( mServiceInfo != null ){
+					if( mIsInMyvod ){
+						// 已经加入我的频道了
+						showMessage( getString(R.string.myvod_program_exist) );
+					} else if( ServiceTypeEnum.MOD.toString().equalsIgnoreCase(
+							mServiceInfo.get(KeyEnum.serviceType.toString()).toString()) ){
+						// 显示收费提示框
+						float price = Integer.parseInt(mServiceInfo.get(KeyEnum.price.toString()).toString()) / 100;
+						showServiceDialog( Float.toString(price), EpiDetailOp.add_myvod );
+					} else { // 免费节目，直接加入
+				        mProcessTask = new processAsyncTask(EpisodeDetail.this);
+				        mProcessTask.execute(EpiDetailOp.add_myvod);
+					}
+				}
+			}
+		}
+	};	
+	
+	private OnItemClickListener mEGVListOnItemClickListener = new OnItemClickListener() {
+
+		@Override
+		public void onItemClick(AdapterView<?> arg0, View arg1, int position,
+				long arg3) {
+			// TODO Auto-generated method stub
+			mEpisodeListAdapter.setSelectIndex(position);
+			Log.d(TAG, "mEGVListOnItemClickListener position=" + position);
+	        mProcessTask = new processAsyncTask(EpisodeDetail.this);
+	        mProcessTask.execute(EpiDetailOp.get_service_info);
+		}
+	};
+	
+	private View.OnClickListener mBtnSortListener = new View.OnClickListener() {
+
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			Boolean isSort = mEpisodeListAdapter.getIsSortOrder();
+			isSort = !isSort;
+			mEpisodeListAdapter.setIsSortOrder(isSort);
+			mEpisodeListAdapter.notifyDataSetChanged();
+			
+			Drawable img = null;
+			if( isSort ){
+				mBtnSort.setText(R.string.detail_btn_rsort);
+				img = getResources().getDrawable(R.drawable.poster_detail_fan);
+			} else {
+				mBtnSort.setText(R.string.detail_btn_sort);
+				img = getResources().getDrawable(R.drawable.poster_detail_zheng);
+			}
+			img.setBounds(0, 0, img.getMinimumWidth(), img.getMinimumHeight());
+			mBtnSort.setCompoundDrawables(img, null, null, null);
+		}
+		
+	};
+	
+	private View.OnClickListener mBtnExpandListener = new View.OnClickListener() {
+
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			if( mEpisodeListAdapter.getIsHaveMore() ){
+				Boolean isShowAll = mEpisodeListAdapter.getIsShowAll();
+				Drawable img = null;
+				isShowAll = !isShowAll;
+				if( isShowAll ){
+					img = getResources().getDrawable(R.drawable.poster_fenji_up);
+					mBtnExpand.setText(R.string.detail_btn_unexpand);					
+				} else {
+					mBtnExpand.setText(R.string.detail_btn_expand);
+					img = getResources().getDrawable(R.drawable.poster_fenji_down);					
+				}
+				img.setBounds(0, 0, img.getMinimumWidth(), img.getMinimumHeight());
+				mBtnExpand.setCompoundDrawables(img, null, null, null);
+				
+				mEpisodeListAdapter.setIsShowAll(isShowAll);
+				mEpisodeListAdapter.notifyDataSetChanged();
+			}			
+		}
+		
+	};
+	//[end]    
+	    
+	//[start] 对话框	
+	/**
+	 * Description: 显示收费对话框 
+	 * @Version1.0 2012-3-8 上午10:36:51 zhaojunfeng created
+	 */
+	private void showServiceDialog( String price, final EpiDetailOp op ){
+		AlertDialog.Builder bd = new AlertDialog.Builder(EpisodeDetail.this);
+		bd.setTitle(R.string.further_dlg_title);
+		
+		String msg = String.format(getString(R.string.detail_txt_price), price);
+		
+		bd.setMessage(msg);
+		bd.setPositiveButton( getString(R.string.framework_dlg_btn_ok)
+				, new OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface arg0, int arg1) {
+				// TODO Auto-generated method stub
+				if( op == EpiDetailOp.play ){
+					EpisodeDetail.this.showPlayer( 
+							mServiceInfo.get(KeyEnum.offeringId.toString()).toString(), 
+							mProgram.get(KeyEnum.title.toString()).toString() 
+							+ "#" + mEpisodeListAdapter.getSelectItem().get(KeyEnum.episode.toString()).toString(),
+							false, PlayerType.common);
+					
+				} else {
+			        mProcessTask = new processAsyncTask(EpisodeDetail.this);
+			        mProcessTask.execute(op);				
+				}
+			}
+		});
+		
+		bd.setNegativeButton(getString(R.string.framework_dlg_btn_cancel)
+				, new OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				// TODO Auto-generated method stub
+			}
+		});
+		
+		bd.setCancelable(false);
+		bd.show();
+	}
+	//[end]
+
+	
+	//[start] test data
+	private void getTestInfo(){
+		// ... get data
+		mProgram = new HashMap<String, Object>();
+		mProgram.put(KeyEnum.title.toString(), "龙门飞甲");
+		mProgram.put(KeyEnum.poster.toString(), "http://www.baidu.com/img/baidu_jgylogo3.gif");
+		mProgram.put(KeyEnum.categories.toString(), "惊悚、3D");
+		mProgram.put(KeyEnum.recommendedRank.toString(), "85");
+		mProgram.put(KeyEnum.director.toString(), "徐克");
+		mProgram.put(KeyEnum.actor.toString(), "李连杰");
+		mProgram.put(KeyEnum.runTime.toString(), "2000");
+		mProgram.put(KeyEnum.bandwidth.toString(), "SD");
+		mProgram.put(KeyEnum.descrip.toString(), "费拉了拉了上拉力赛拉链上两大lsd拉萨的");
+		mProgram.put(KeyEnum.assetId.toString(), "2000");
+		
+		mEpisodeCount = 15;
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		for (int i = 0; i < mEpisodeCount; i++) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put(KeyEnum.assetId.toString(), (i+1)*10);
+			map.put(KeyEnum.episode.toString(), i+1);
+			list.add(map);
+		}
+		mProgram.put("list", list);
+	}
+	//[end]
+}

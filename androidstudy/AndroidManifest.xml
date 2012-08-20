@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.stv"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk android:minSdkVersion="6" />
+    <!-- 加速度感应权限 -->
+    <uses-permission android:name="android.hardware.sensor.accelerometer" />
+    <!-- 手势识别时，写文件的权限 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <application
+        android:icon="@drawable/icon"
+        android:label="@string/app_name"
+        android:theme="@android:style/Theme.NoTitleBar" >
+
+        <!--
+             <activity android:name="com.stv.SensorTest"> <intent-filter> <action android:name="android.intent.action.MAIN" /> <category android:name="android.intent.category.LAUNCHER" 
+			/> </intent-filter> </activity> <activity android:name="com.stv.gesture.GestureBuilderActivity" android:label="@string/app_name"> <intent-filter> <action 
+			android:name="android.intent.action.MAIN" /> <category android:name="android.intent.category.LAUNCHER" /> <category android:name="android.intent.category.DEFAULT" 
+			/> </intent-filter> </activity> <activity android:name="com.stv.gesture.CreateGestureActivity" /> <activity android:name="com.stv.gesture.TestGestureActivity" 
+			/> <activity android:name="com.stv.demo.activity.MediaListActivity"> <intent-filter> <action android:name="android.intent.action.MAIN" /> <category android:name="android.intent.category.LAUNCHER" 
+			/> </intent-filter> </activity>
+        -->
+
+        <activity android:name="com.stv.SensorTest" />
+        <activity android:name="com.stv.demo.activity.TabTestActivity" >
+            <intent-filter >
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name="com.stv.demo.activity.TabTestActivity1" />
+        <activity android:name="com.stv.demo.activity.ListActivityDemo" />
+        <activity android:name="com.stv.demo.activity.MediaInfoActivity" />
+        <activity android:name="com.stv.demo.activity.ChannelActivity" />
+        <activity android:name="com.stv.demo.activity.SearchActivity" />
+        <activity android:name="com.stv.demo.activity.GalleryTest" />
+        <activity android:name="com.stv.demo.activity.ListActivityDemo1" />
+        <activity android:name="com.stv.demo.activity.ImageSwitcherAct" />
+        <activity android:name=".demo.activity.HomeActivity" />
+        <activity android:name=".demo.activity.BaseActivity" />
+        <activity android:name=".demo.activity.MoreActivity" />
+    </application>
+
+</manifest>

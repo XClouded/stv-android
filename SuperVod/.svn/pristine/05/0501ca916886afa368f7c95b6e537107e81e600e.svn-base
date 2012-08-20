@@ -1,0 +1,82 @@
+package com.stv.supervod.service;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.HttpParams;
+
+public class HttpRequestServiceImpl {
+
+	/**
+	 * Description: 提交json串到服务器，同时从服务器获取json串
+	 * 
+	 * @Version1.0 2011-12-12 下午06:09:47 mustang created
+	 * @param json
+	 * @return
+	 * @throws IOException
+	 * @throws ClientProtocolException
+	 * @throws Exception
+	 */
+	public StringBuilder requestByHttpPost(String json, String url) throws ClientProtocolException, IOException {
+		HttpPost httprequest = new HttpPost(url);
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new BasicNameValuePair("json", json));
+		HttpEntity httpentity = new UrlEncodedFormEntity(params, "utf-8");
+		httprequest.setEntity(httpentity);
+		HttpClient client = new DefaultHttpClient();
+		HttpResponse response = client.execute(httprequest);
+		HttpEntity responseEntity = response.getEntity();
+		InputStream is = responseEntity.getContent();
+		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+		String line = "";
+		StringBuilder sb = new StringBuilder();
+		while ((line = reader.readLine()) != null) {
+			sb.append(line);
+		}
+		return sb;
+	}
+
+	/**
+	 * Description: 通过get方式取数据
+	 * 
+	 * @Version1.0 2011-12-21 下午02:44:25 mustang created
+	 * @param params
+	 * @param url
+	 * @return
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 */
+	public StringBuilder requestByHttpGet(HttpParams params, String url) throws ClientProtocolException, IOException {
+		HttpGet httprequest = new HttpGet(url);
+		// HttpParams params = new BasicHttpParams();
+		if (params != null) {
+			httprequest.setParams(params);
+		}
+		HttpClient client = new DefaultHttpClient();
+		HttpResponse response = client.execute(httprequest);
+		HttpEntity responseEntity = response.getEntity();
+		InputStream is = responseEntity.getContent();
+		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+		String line = "";
+		StringBuilder sb = new StringBuilder();
+		while ((line = reader.readLine()) != null) {
+			sb.append(line);
+		}
+		return sb;
+	}
+
+}

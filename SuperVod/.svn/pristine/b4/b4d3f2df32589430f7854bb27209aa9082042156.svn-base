@@ -1,0 +1,370 @@
+package com.stv.supervod.activity;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.text.format.Time;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.GridView;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import com.stv.supervod.adapter.WeekListItemAdapter;
+import com.stv.supervod.service.HttpDownloadImpl;
+import com.stv.supervod.service.HttpDownloadImpl.KeyEnum;
+import com.stv.supervod.service.HttpDownloadImpl.TypeEnum;
+import com.stv.supervod.utils.AlertUtils;
+import com.stv.supervod.utils.ErrorCode;
+
+public class TvBackEpg extends BaseActivity {
+	private final String TAG = "TvBackEpg";
+	
+	private final String WEEKLIST_KEY_DATE = "DateInDate";
+	private final String WEEKLIST_KEY_WEEK = "DateInWeek";
+	private final String WEEKLIST_KEY_NET = "DateInNet";
+	
+	private final int MSG_GET_DATA_FINISH = 1; 
+	private final int MSG_GET_DATA_ERROR = 2; 
+	
+	private final long MillisOneDay = 1000 * 60 * 60 * 24;
+		
+	private ListView mListView;
+	private ArrayList<HashMap<String, Object>> mListItem = new ArrayList<HashMap<String, Object>>();
+	private Button mBtnBack;
+	private TextView mTVChannelName;
+	private ArrayList<HashMap<String, Object>> mListWeek = new ArrayList<HashMap<String, Object>>();
+	private GridView mGvWeekList;
+	private WeekListItemAdapter   mWeekListAdapter = null;
+	private ProgramListAdapter mPrglistAdapter = null;
+	
+	private ProgressDialog mProgressDlg;
+	
+	private int mListWeekSelect = 0;
+	private int mProgramSelect = 0;
+	private String mAssetId;
+	// 由于回看节目EPG不太多(最多50)，并且没有图片，所以一次就全部获取完毕
+	private final int mNumPerPage  =  10; // 500
+	private final int mPageIndex  =  1;
+	
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.tvbackepg);
+		
+		initGui();
+
+        getDataFromServer();
+        
+        bindAction();
+    }
+	
+	private void getDataFromServer()
+	{
+		mProgressDlg.show();
+		
+		new Thread() {
+			public void run() {
+				try {
+					// TODO 1、准备显示数据的					
+//					sleep(1000);
+//					getTestProgramData();
+					
+					String date = mListWeek.get(mListWeekSelect).get(WEEKLIST_KEY_NET).toString();
+					HttpDownloadImpl httpDownload = new HttpDownloadImpl();
+					mListItem = ((ArrayList<HashMap<String, Object>>) httpDownload.
+							downloadProgramList( date, mAssetId ).get("list"));
+					mHandler.sendEmptyMessage( MSG_GET_DATA_FINISH );
+				} catch (Exception e){
+					e.printStackTrace();
+					Message msg = new Message();
+					msg.what = MSG_GET_DATA_ERROR;
+					msg.obj=ErrorCode.getErrorInfo(e);
+					mHandler.sendMessage(msg);
+				}
+			}
+		}.start();
+	}
+	
+	/**
+	 * 关闭滚动条
+	 */
+	private Handler mHandler = new Handler() {
+		@Override
+		public void handleMessage(Message msg) {
+			mProgressDlg.dismiss();
+			switch (msg.what) {
+			case MSG_GET_DATA_FINISH:
+				showList();
+				break;
+			case MSG_GET_DATA_ERROR:
+				AlertUtils.displayToast(TvBackEpg.this, (String) msg.obj);
+				break;
+			default:
+				break;
+			}
+		}
+	};
+	
+	private void bindAction()
+	{
+		mGvWeekList.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				// TODO Auto-generated method stub
+				if( position != mListWeekSelect ){
+					mWeekListAdapter.updateFocus(position);
+					mListWeekSelect = position;
+					
+					// 清空当前显示，否则新的显示位置是上次的位置
+					mListItem.clear();
+					showList();
+					
+					getDataFromServer();
+				}
+
+			}
+		});
+		
+		mListView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				// TODO Auto-generated method stub
+				mProgramSelect = position;
+				makeOptionDialog();
+			}
+		});
+		
+		mBtnBack.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Framework.switchActivityBack();
+			}
+		});
+	}
+	
+	private void makeOptionDialog(){
+		AlertDialog.Builder dlg = new AlertDialog.Builder(TvBackEpg.this);
+		dlg.setTitle(getString(R.string.dlg_title_play_option));
+		String[] options = getResources().getStringArray(R.array.dlg_tvback_dlg_option);
+		
+		dlg.setItems(options, new DialogInterface.OnClickListener() {
+
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				// TODO Auto-generated method stub
+				dialog.dismiss();
+				if( which == 0 ){
+					playProgram();
+				} else if(which == 1){
+					addMyFav();
+				} else if(which == 2){
+					//addMyVod();
+				}
+			}
+		});
+		dlg.show();		
+	}
+	
+	private void playProgram()
+	{
+		Map<String, Object> program = mListItem.get(mProgramSelect);
+		AlertUtils.displayToast(TvBackEpg.this, "Play " + "title=" +
+				program.get(KeyEnum.title.toString()));
+	}
+	
+	private void addMyFav()
+	{
+		Map<String, Object> program = mListItem.get(mProgramSelect);
+
+		boolean ret = addMyfav(program.get(KeyEnum.title.toString()).toString(), 
+				TypeEnum.TSTV.toString().toString(), 
+				program.get(KeyEnum.categories.toString()).toString(), 
+				"xxx", program.get(KeyEnum.assetId.toString()).toString());
+		if( ret ){
+			AlertUtils.displayToast(TvBackEpg.this, "addMyFav " + "title=" +
+					program.get(KeyEnum.title.toString()) + "Success" );				
+		} else {
+			AlertUtils.displayToast(TvBackEpg.this, "addMyFav " + "title=" +
+					program.get(KeyEnum.title.toString()) + "Failed" );				
+		}
+	}
+	
+	private void addMyVod()
+	{
+		Map<String, Object> program = mListItem.get(mProgramSelect);
+		AlertUtils.displayToast(TvBackEpg.this, "addMyVod " + "title=" +
+				program.get(KeyEnum.title.toString()));	
+	}	
+	
+	private void showList()
+	{
+		if( mPrglistAdapter == null ){
+			mPrglistAdapter = new ProgramListAdapter(this);
+			mListView.setAdapter(mPrglistAdapter);
+		} else {
+			mPrglistAdapter.notifyDataSetChanged();
+		}
+	}
+	
+	private void initGui()
+	{
+        mListView = (ListView) findViewById(R.id.tvbackepg_lv_epglist);
+        mTVChannelName = (TextView) findViewById(R.id.tvbackepg_channel_name);
+        mBtnBack = (Button) findViewById(R.id.tvbackepg_btn_back);
+        mGvWeekList = (GridView) findViewById(R.id.tvbackepg_gv_week);
+        
+        mProgressDlg = (ProgressDialog) AlertUtils.createDialog(AlertUtils.NO_TITLE, this);
+        
+        // get channel name
+        Bundle data = getIntent().getExtras();
+        if( data != null ){
+        	String title = data.getString(KeyEnum.name.toString());
+            mTVChannelName.setText(title);   
+            
+            mAssetId = data.getString(KeyEnum.channelId.toString());
+        }
+                
+        // init weeklist
+        String[] WeekDays = getResources().getStringArray(R.array.tvback_text_week);
+        Time currTime = new Time();
+        long lCurrTime = System.currentTimeMillis();
+        for (int i = 6; i >= 0; i--) {
+            HashMap<String, Object> map = new HashMap<String, Object>(); 
+            currTime.set(lCurrTime - i * MillisOneDay);            
+            map.put(WEEKLIST_KEY_DATE, currTime.format("%Y/%m/%d"));  
+            map.put(WEEKLIST_KEY_NET, currTime.format("%Y-%m-%d"));  
+            
+            if( i != 0 ){
+            	map.put(WEEKLIST_KEY_WEEK, WeekDays[currTime.weekDay]); // 星期
+            } else {
+            	map.put(WEEKLIST_KEY_WEEK, WeekDays[WeekDays.length-1]); // 今天
+            }
+            mListWeek.add(map);              
+		}
+        
+        mGvWeekList.setHorizontalSpacing(0); 
+        mGvWeekList.setVerticalSpacing(0); 
+        mGvWeekList.setSelector(new ColorDrawable(Color.TRANSPARENT));
+        mWeekListAdapter = new WeekListItemAdapter(this, mListWeek, 6);
+        mGvWeekList.setAdapter(mWeekListAdapter); 
+	}
+	
+	private class ProgramListAdapter extends BaseAdapter{
+		private Context mCon;
+		
+		public ProgramListAdapter(Context c){
+			mCon = c;
+		}
+		
+		@Override
+		public int getCount() {
+			// TODO Auto-generated method stub
+			return mListItem.size();
+		}
+
+		@Override
+		public Object getItem(int arg0) {
+			// TODO Auto-generated method stub
+			return arg0;
+		}
+
+		@Override
+		public long getItemId(int arg0) {
+			// TODO Auto-generated method stub
+			return arg0;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			// TODO Auto-generated method stub
+			ViewHolder holder;
+			if( convertView == null ){
+				LayoutInflater mInflater = (LayoutInflater) mCon.getSystemService(
+						Context.LAYOUT_INFLATER_SERVICE);
+				
+				convertView = mInflater.inflate(R.layout.tvbackepg_program_item, parent, false);
+				
+				holder = new ViewHolder();
+				holder.tv_name = (TextView) convertView.findViewById(R.id.tvbackepg_prg_item_name);
+				holder.tv_time = (TextView) convertView.findViewById(R.id.tvbackepg_prg_item_time);
+				holder.tv_type = (TextView) convertView.findViewById(R.id.tvbackepg_prg_item_type);
+				convertView.setTag(holder);				
+			} else {
+				holder = (ViewHolder) convertView.getTag();
+			}
+			
+			// title
+			Object obj = mListItem.get(position).get(KeyEnum.title.toString());
+			if( obj != null ){
+//				String title = obj.toString();
+//				if( title.length() > 10 ){
+//					holder.tv_name.setText( title.substring(0, 20) + "..." );
+//				} else {
+//					holder.tv_name.setText(title);
+//				}
+				holder.tv_name.setText(obj.toString());
+			} else {
+				holder.tv_name.setText("");
+			}
+			
+			obj = mListItem.get(position).get(KeyEnum.startTime.toString());
+			if(obj!=null){
+				holder.tv_time.setText(obj.toString());
+			} else {
+				holder.tv_time.setText("");
+			}
+			
+			return convertView;
+		}
+		private class ViewHolder{
+			TextView  tv_name;
+			TextView  tv_time;
+			TextView  tv_type;
+		};
+	}
+	
+	
+	private void getTestProgramData()
+	{
+		for (int i = 0; i < 22; i++) {
+			HashMap<String, Object> map = new HashMap<String, Object>(); 
+			if( i == 3 ){
+				map.put(KeyEnum.title.toString(), String.format("东方时空%d-%s,2100110加上降低阿散井嗲", i, 
+		        		  mListWeek.get(mListWeekSelect).get(WEEKLIST_KEY_WEEK)));				
+			} else {
+				map.put(KeyEnum.title.toString(), String.format("东方时空%d-%s", i, 
+		        		  mListWeek.get(mListWeekSelect).get(WEEKLIST_KEY_WEEK)));				
+			}
+
+			map.put(KeyEnum.startTime.toString(), String.format("%02d:%02d", i,i));
+			map.put(KeyEnum.categories.toString(), "回看");
+			map.put(KeyEnum.recommendedRank.toString(), 8.5f);
+			map.put(KeyEnum.assetId.toString(), i);
+			map.put(KeyEnum.runTime.toString(), "7200");
+			mListItem.add(map);  
+		}
+	}
+}

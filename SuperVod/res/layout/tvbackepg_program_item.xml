@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+     android:background="#5a5a5a" android:paddingBottom="1dp" android:paddingTop="1dp">
+<LinearLayout 
+    android:layout_width="fill_parent"
+    android:orientation="vertical" 
+    android:background="#313131" 
+    android:layout_height="fill_parent">
+
+    <TextView
+        android:id="@+id/tvbackepg_prg_item_name"
+        android:layout_width="fill_parent"
+        android:layout_height="25dp"
+        android:text="Large Text"
+        android:textColor="@android:color/white"
+        android:paddingLeft="20dp" 
+        android:textStyle="bold" 
+        android:textSize="16dp" android:gravity="center_vertical" android:singleLine="true"/>
+
+    <FrameLayout
+        android:id="@+id/tvbackepg_prg_ll"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" 
+        android:background="#313131" >
+
+        <TextView
+            android:id="@+id/tvbackepg_prg_item_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TextView" 
+            android:textColor="@android:color/darker_gray"
+            android:layout_marginLeft="20dp" 
+            android:layout_gravity="left|center_vertical"/>
+
+        <TextView
+            android:id="@+id/tvbackepg_prg_item_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            android:textColor="@android:color/darker_gray"
+            android:layout_gravity="right|center_vertical" 
+            android:layout_marginRight="20dp" android:visibility="invisible"/>
+
+    </FrameLayout>
+</LinearLayout>
+</FrameLayout>

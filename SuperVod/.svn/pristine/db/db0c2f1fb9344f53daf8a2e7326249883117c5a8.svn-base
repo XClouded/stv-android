@@ -1,0 +1,158 @@
+package com.stv.supervod.service;
+
+import java.io.IOException;
+import java.lang.ref.WeakReference;
+
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
+import android.view.View;
+import android.widget.ImageView;
+
+import com.stv.supervod.activity.R;
+import com.stv.supervod.utils.ValidateUtil;
+
+public class ImageDownloader {
+
+	/**
+	 * Description: 所有人调用的公共入口
+	 * 
+	 * @Version1.0 2011-12-29 下午04:22:15 mustang created
+	 * @param url
+	 * @param imageView
+	 */
+	public void download(String url, View view) {
+		Drawable db = ImageServiceImpl.getImageDrawableByUrl(url);
+		if (db != null && view != null) {
+			if (view instanceof ImageView) {
+				((ImageView) view).setImageDrawable(db);
+			} else {
+				view.setBackgroundDrawable(db);
+			}
+		} else {
+			forceDownload(url, view);
+		}
+	}
+
+	/**
+	 * Description: 强制下载
+	 * 
+	 * @Version1.0 2011-12-29 下午04:20:21 mustang created
+	 * @param url
+	 * @param imageView
+	 */
+	private void forceDownload(String url, View view) {
+		DrawableDownloaderTask task = new DrawableDownloaderTask(view);
+		DownloadedDrawable downloadedDrawable = new DownloadedDrawable(task);
+		if (view instanceof ImageView) {
+			((ImageView) view).setImageDrawable(downloadedDrawable);
+			((ImageView) view).setImageResource(R.drawable.video_cover_default);
+		} else {
+			view.setBackgroundDrawable(downloadedDrawable);
+			view.setBackgroundResource(R.drawable.homepage_init);
+		}
+
+		task.execute(url);
+
+	}
+
+	/**
+	 * Description: 下载图片并保存
+	 * 
+	 * @Version1.0 2011-12-29 下午04:20:51 mustang created
+	 * @param url
+	 * @return
+	 */
+	public Drawable downloadDrawable(String url) {
+		HttpDownloadImpl hd = HttpDownloadImpl.getHttpDownloader();
+		Drawable drawable = null;
+		if (!ValidateUtil.isBlank(url)) {
+			try {
+				drawable = hd.downloadPoster(url);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return drawable;
+	}
+
+	/**
+	 * Description: 通过View获得绑定的task
+	 * 
+	 * @Version1.0 2011-12-29 下午04:21:25 mustang created
+	 * @param view
+	 * @return
+	 */
+	private static DrawableDownloaderTask getDrawableDownloaderTask(View view) {
+		if (view != null) {
+			Drawable drawable = null;
+			if (view instanceof ImageView) {
+				drawable = ((ImageView) view).getDrawable();
+			} else {
+				drawable = view.getBackground();
+			}
+
+			if (drawable instanceof DownloadedDrawable) {
+				DownloadedDrawable downloadedDrawable = (DownloadedDrawable) drawable;
+				return downloadedDrawable.getDrawableDownloaderTask();
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Description: 异步的下载任务 
+	 * Copyright (c) 永新视博 All Rights Reserved.
+	 * @version 1.0 2011-12-29 下午04:10:30 mustang created
+	 */
+	class DrawableDownloaderTask extends AsyncTask<String, Void, Drawable> {
+		private String url;
+		private WeakReference<View> viewReference;
+
+		public DrawableDownloaderTask(View view) {
+			viewReference = new WeakReference<View>(view);
+		}
+
+		@Override
+		protected Drawable doInBackground(String... params) {
+			url = params[0];
+			return downloadDrawable(url);
+		}
+
+		@Override
+		protected void onPostExecute(Drawable result) {
+			if (viewReference != null && result != null) {
+				View view = viewReference.get();
+				DrawableDownloaderTask dt = getDrawableDownloaderTask(view);
+				if (view != null && this == dt) {
+					if (view instanceof ImageView) {
+						((ImageView) view).setImageDrawable(result);
+					} else {
+						view.setBackgroundDrawable(result);
+					}
+				}
+			}
+		}
+
+	}
+
+	
+	/**
+	 * Description: 设置弱引用关联
+	 * Copyright (c) 永新视博
+	 * All Rights Reserved.
+	 * @version 1.0  2011-12-31 上午10:34:58 mustang created
+	 */
+	static class DownloadedDrawable extends ColorDrawable {
+		private final WeakReference<DrawableDownloaderTask> DrawableDownloaderTaskReference;
+
+		public DownloadedDrawable(DrawableDownloaderTask drawableDownloaderTask) {
+			DrawableDownloaderTaskReference = new WeakReference<DrawableDownloaderTask>(drawableDownloaderTask);
+		}
+
+		public DrawableDownloaderTask getDrawableDownloaderTask() {
+			return DrawableDownloaderTaskReference.get();
+		}
+	}
+
+}

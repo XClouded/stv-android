@@ -1,0 +1,395 @@
+package com.stv.supervod.activity;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import com.stv.supervod.exception.ErrorCodeException;
+import com.stv.supervod.service.HttpDownloadImpl;
+import com.stv.supervod.service.HttpDownloadImpl.KeyEnum;
+import com.stv.supervod.utils.AlertUtils;
+import com.stv.supervod.utils.ErrorCode;
+
+/**
+ * @author      Administrator
+ * @description 书签，上一级菜单：更多
+ * @authority   激活用户
+ * @function    1、向服务器请求该用户书签数据并显示，加载本地或服务器图片
+ *              2、用户点击编辑按钮，允许用户删除影片，并给予确认提示
+ *              3、播放影片
+ */
+public class Bookmark extends BaseActivity{
+	private final String TAG = "Bookmark";
+		
+	private ListView mListView;
+	private List<Map<String, Object>> mListItem =  new ArrayList<Map<String, Object>>();
+	private Map<String, Object> mServiceInfo = null;
+	private Button mBtnBack;
+	
+	// load more widget
+	private LinearLayout mLlLoaded;
+	private LinearLayout mLlLoading;
+	private View mVwMore = null;
+	
+	private final int mNumPerPage = 10;
+	private int mPageIndex = 1;
+	private int mTotalNumber = 0;
+	private boolean mIsToEnd = false;
+	private int mLastCount = 0;
+	private int mItemSelected = -1;
+	
+	private final int MsgPageLoadError = 1;
+	private final int MsgPageLoadFinish = 2;
+
+	private final int MsgPlayError = 3;
+	private final int MsgPlayFinish = 4;
+	
+	private BookmarkItemAdapter  mItemListadapter = null;
+	private ProgressDialog mProgressDlg;
+	
+	private enum LoadingState{
+		loading, finsh, over
+	};
+	
+	
+	@Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.bookmark);
+                
+        initGui();
+        
+        showLoading( LoadingState.loading );
+        
+		bindAction();
+    }
+		
+	private void initGui()
+	{
+        mListView = (ListView) findViewById(R.id.bookmark_list);
+        mBtnBack = (Button) findViewById(R.id.bookmark_btn_back);
+        
+		mVwMore = LayoutInflater.from(this).inflate(R.layout.bookmark_item_loadmore, null);
+		mLlLoaded = (LinearLayout) mVwMore.findViewById(R.id.loadbar_ll_loaded);
+		mLlLoading = (LinearLayout) mVwMore.findViewById(R.id.loadbar_ll_loading); 		
+		
+		mListView.addFooterView(mVwMore);
+		
+        mItemListadapter = new BookmarkItemAdapter(this);
+        mListView.setAdapter(mItemListadapter);
+        
+		mProgressDlg = new ProgressDialog(this);
+	}
+	
+	private void bindAction()
+	{
+        mListView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int position,
+					long arg3) {
+				// TODO Auto-generated method stub
+				mItemSelected = position;
+				doPlay();
+			}
+		});
+        
+        mListView.setOnScrollListener(new OnScrollListener() {
+			
+			@Override
+			public void onScrollStateChanged(AbsListView arg0, int scrollState) {
+				// TODO Auto-generated method stub
+				Log.d(TAG, "mLastCount="+mLastCount+" mItemListadapter.getCount()="+mItemListadapter.getCount());
+				if( mLastCount >= mItemListadapter.getCount() && !mIsToEnd &&
+						scrollState == OnScrollListener.SCROLL_STATE_IDLE){
+					showLoading(LoadingState.loading);
+				}
+			}
+			
+			@Override
+			public void onScroll(AbsListView view, int firstVisibleItem,
+					int visibleItemCount, int totalItemCount) {
+				// TODO Auto-generated method stub
+				mLastCount = firstVisibleItem + visibleItemCount;
+//				Log.d(TAG, "mLastCount="+mLastCount+" mTotalNumber="+mTotalNumber);
+				if( mLastCount >= mTotalNumber && mIsToEnd ){
+					showLoading(LoadingState.over);
+				}
+			}
+		});
+        
+        //
+        mBtnBack.setOnClickListener(new Button.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Framework.switchActivityBack();
+			}
+		});
+        
+        // 
+        mLlLoaded.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				if(!mIsToEnd){
+					showLoading(LoadingState.loading);
+				}
+			}
+		});
+	}
+	
+	private void doPlay(){
+		mProgressDlg.setMessage("请稍等...");
+		mProgressDlg.setIndeterminate(true);
+		mProgressDlg.setCancelable(true);
+		mProgressDlg.show();
+		
+		Thread th = new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				try {
+					Map<String, Object> it = mListItem.get(mItemSelected);
+					if( it != null ){
+						HttpDownloadImpl httpDownload = new HttpDownloadImpl();
+						mServiceInfo = httpDownload.downloadOffingId(
+								it.get(KeyEnum.assetId.toString()).toString(), 
+								it.get(KeyEnum.type.toString()).toString());
+						if( mServiceInfo != null ){
+							throw new ErrorCodeException("20201");
+						}
+						mHandle.sendEmptyMessage( MsgPlayFinish );
+					}
+				} catch (Exception e) {
+					// TODO: handle exception
+					e.printStackTrace();
+					Message msg = new Message();
+					msg.what = MsgPlayError;
+					msg.obj=ErrorCode.getErrorInfo(e);
+					mHandle.sendMessage(msg);
+				} finally {
+					if( mProgressDlg.isShowing() ){
+						mProgressDlg.dismiss();
+					}
+				}
+			}
+		});
+		th.start();
+	}
+	
+	/**
+	 * Description: 加载数据
+	 * @Version1.0 2012-3-12 上午11:04:19 zhaojunfeng created
+	 */
+	private void doLoadingData()
+	{
+		new Thread() {
+			public void run() {
+				try {
+					// TODO 1、准备显示数据的
+//					sleep(1500);
+//					Map<String, Object> map = getTestItemsData();
+					
+					HttpDownloadImpl httpDownload = new HttpDownloadImpl();
+					Map<String, Object> map = httpDownload.
+							downloadBookmarkList(mNumPerPage, mPageIndex);
+					
+					
+					if( map != null && map.containsKey("list") && 
+							map.containsKey(KeyEnum.totalNum.toString()) ){
+						
+						mTotalNumber = (Integer) map.get(KeyEnum.totalNum.toString());
+						
+						int end ;
+						if( mPageIndex*mNumPerPage >  mTotalNumber ){
+							end = mTotalNumber % mNumPerPage;
+						} else {
+							end = mNumPerPage;
+						}
+						
+						for (int i = 0; i < end; i++) {
+							mListItem.add(((List<Map<String, Object>>) map.get("list")).get(i));
+						}
+					}	
+					
+					mPageIndex++;
+					if( mPageIndex * mNumPerPage >= mTotalNumber ){
+						mIsToEnd = true;
+					}
+					
+					mHandle.sendEmptyMessage( MsgPageLoadFinish );
+				} catch (Exception e) {
+					e.printStackTrace();
+					Message msg = new Message();
+					msg.what = MsgPageLoadError;
+					msg.obj=ErrorCode.getErrorInfo(e);
+					mHandle.sendMessage(msg);
+				}
+			}
+		}.start();	
+	}
+	
+    void showLoading( LoadingState state )
+    {
+    	switch (state) {
+		case loading:
+			mLlLoaded.setVisibility(View.GONE);
+			mLlLoading.setVisibility(View.VISIBLE);
+	        doLoadingData();
+			break;
+		case finsh:
+			mLlLoaded.setVisibility(View.VISIBLE);
+			mLlLoading.setVisibility(View.GONE);
+			break;
+		case over:
+			mListView.removeFooterView(mVwMore);
+		default:
+			break;
+		}
+    }
+	
+	private Handler mHandle = new Handler(){
+		
+		@Override
+		public void handleMessage(Message msg){
+			switch (msg.what) {
+			case MsgPageLoadFinish:
+				if( mIsToEnd ){
+					showLoading(LoadingState.over);
+				} else {
+					showLoading(LoadingState.finsh);
+				}
+				mItemListadapter.notifyDataSetChanged();
+				break;
+			case MsgPageLoadError:
+				AlertUtils.displayToast(Bookmark.this, (String) msg.obj);
+				mIsToEnd = true;
+				showLoading(LoadingState.over);
+				break;
+			case MsgPlayError:
+				AlertUtils.displayToast(Bookmark.this, (String) msg.obj);
+				break;
+			case MsgPlayFinish:
+				Bookmark.this.showPlayer(mServiceInfo.get(KeyEnum.offeringId.toString()).toString(), true);
+				break;
+			default:
+				break;
+			}
+		}
+	};
+		
+
+	private class BookmarkItemAdapter extends BaseAdapter{
+		private Context mCon;
+		
+		public BookmarkItemAdapter(Context c){
+			mCon = c;
+		}
+		
+		@Override
+		public int getCount() {
+			// TODO Auto-generated method stub
+			return mListItem.size();
+		}
+
+		@Override
+		public Object getItem(int arg0) {
+			// TODO Auto-generated method stub
+			return arg0;
+		}
+
+		@Override
+		public long getItemId(int arg0) {
+			// TODO Auto-generated method stub
+			return arg0;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			// TODO Auto-generated method stub
+			ViewHolder holder = null;
+			Map<String, Object> item = mListItem.get(position);
+			if( convertView == null ){
+				LayoutInflater mInflater = (LayoutInflater) mCon.getSystemService(
+						Context.LAYOUT_INFLATER_SERVICE);
+				convertView = mInflater.inflate(R.layout.bookmark_item_list, parent, false);
+				holder = new ViewHolder();
+				holder.itemName = (TextView) convertView.findViewById(R.id.item_name);
+				holder.itemType = (TextView) convertView.findViewById(R.id.item_type);
+				holder.itemTime = (TextView) convertView.findViewById(R.id.item_time);
+				convertView.setTag(holder);
+			} else {
+				holder = (ViewHolder)convertView.getTag();
+			}
+			
+			Object obj = item.get(KeyEnum.title.toString());
+			if( obj != null ){
+				holder.itemName.setText(obj.toString());		
+			} else {
+				holder.itemName.setText("");
+				Log.w(TAG, "no name idex=" + position);
+			}
+			
+			obj = item.get(KeyEnum.type.toString());
+			if( obj != null ){
+				holder.itemType.setText(obj.toString());		
+			} else {
+				holder.itemType.setText("");
+				Log.w(TAG, "no itemType idex=" + position);
+			}			
+
+			obj = item.get(KeyEnum.npt.toString());
+			if( obj != null ){
+				int time = Integer.parseInt(obj.toString());
+				if( time < 60 ){
+					holder.itemTime.setText(mCon.getText(R.string.further_txt_lesstime));
+				} else {
+					holder.itemTime.setText(String.format(
+							mCon.getString(R.string.further_txt_moretime), time/60));
+				}	
+			} else {
+				holder.itemTime.setText(mCon.getText(R.string.further_txt_lesstime));
+				Log.w(TAG, "no npt idex=" + position);
+			}
+			
+	        //隔行换色
+	        if( position%2 == 0) {
+	        	convertView.setBackgroundResource(R.drawable.list_bg);
+	        } else {
+	        	convertView.setBackgroundResource(R.drawable.list_bg_focus);
+			}
+	        
+	        return convertView;
+		}
+		
+		private class ViewHolder{
+	        TextView itemName;
+	        TextView itemType;
+	        TextView itemTime;
+		}
+		
+	}
+}

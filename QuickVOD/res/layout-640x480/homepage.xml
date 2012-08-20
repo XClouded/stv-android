@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AbsoluteLayout
+	android:id="@+id/widget62"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:background="@drawable/background_new"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	>
+<ImageView 
+	android:layout_width="wrap_content" 
+	android:src="@drawable/logo" 
+	android:id="@+id/widget57" 
+	android:layout_height="wrap_content" 
+	android:layout_x="37dp" 
+	android:layout_y="56dp" />
+<ProgressBar android:visibility="invisible" android:layout_width="20dp" android:id="@+id/homepage_progress" android:layout_height="20dp" android:layout_x="229dp" android:layout_y="393dp"></ProgressBar>
+<TextView android:visibility="invisible" android:layout_width="150dp" android:text="检测网络连接中..." android:textSize="14sp" android:gravity="center" android:id="@+id/homepage_info" android:layout_height="30dp" android:layout_x="96dp" android:layout_y="388dp"></TextView>
+<EditText android:numeric="integer" android:maxLength="16" android:id="@+id/SmartCard" android:password="true" android:layout_height="wrap_content" android:hint="请输入16位机顶盒智能卡卡号" android:layout_x="25dp" android:layout_y="254dp" android:layout_width="264dp">
+    <requestFocus></requestFocus>
+</EditText>
+<TextView android:textStyle="bold" android:text="智能卡号:" android:textSize="25sp" android:id="@+id/textView2" android:layout_height="wrap_content" android:layout_x="25dp" android:layout_y="224dp" android:layout_width="263dp"></TextView>
+<TextView android:textStyle="bold" android:text="本机号码:" android:textSize="25sp" android:id="@+id/textView1" android:layout_height="wrap_content" android:layout_x="25dp" android:layout_y="143dp" android:layout_width="259dp"></TextView>
+<EditText android:maxLength="11" android:inputType="phone" android:id="@+id/PhoneNum" android:layout_height="wrap_content" android:hint="请输入11位手机号码" android:layout_x="25dp" android:layout_y="172dp" android:layout_width="260dp"></EditText>
+<Button android:textSize="15sp" android:gravity="center" android:id="@+id/login_button" android:layout_width="61dp" android:text="确定" android:layout_height="wrap_content" android:layout_x="134dp" android:layout_y="332dp"></Button>
+</AbsoluteLayout>

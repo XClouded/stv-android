@@ -1,0 +1,271 @@
+package com.stv.supervod.activity;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
+import android.widget.ListView;
+
+import com.stv.supervod.adapter.ListItemSimpleAdapter;
+import com.stv.supervod.adapter.PosterSimpleAdapter;
+import com.stv.supervod.service.RegisterServiceImpl;
+import com.stv.supervod.utils.AlertUtils;
+import com.stv.supervod.utils.DpPxUtil;
+import com.stv.supervod.utils.ListUtil;
+import com.stv.supervod.widget_extended.PosterGallery;
+
+/**
+ * @author Administrator
+ * @description 首页
+ * @authority 所有用户
+ * @function 1、向服务器请求推荐影片（6部，实时更新），以及各个分类中的推荐影片（20部），并展示
+ *           2、用户点击推荐区、分类推荐区的影片后，进入到详细页面:Detail 3、用户点击会员按钮，进入用户登录页面：Login
+ */
+public class Homepage extends BaseActivity {
+
+	ProgressDialog dialog;
+	Activity act = this;
+	PosterGallery pge;
+	ListView todaylist;
+	boolean today_hit_flag = false;
+	Button regbutton;
+	boolean online = false;
+	static int poster_select = PosterSimpleAdapter.POSTER_LENGTH * 1000;
+	int currentType = 0;
+	/**
+	 * 首页要分类显示的列表
+	 */
+	List<Map<String, Object>> today_hit = null;
+	ListItemSimpleAdapter today_hit_adapter = null;
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.homepage);
+		dialog = (ProgressDialog) AlertUtils.createDialog(AlertUtils.NO_TITLE, this);
+		dialog.show();
+		new Thread() {
+			public void run() {
+				try {
+					// TODO 1、准备显示数据的
+					sleep(1500);
+					// 这里已经把数据下载到相应的列表中了，等到下载完毕后，对应的分类去列表中显示数据即可
+					//Map<String, List<Map<String, Object>>> map = HttpDownloadImpl.dowaloadHomePageData(act);
+					//today_hit = map.get("today_hit");
+					hpDateListHandler.sendEmptyMessage(0);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}.start();
+
+		// 如果用户选择过记住密码并自动登录，这里会员图片有区别
+		regbutton = (Button) this.findViewById(R.id.regbutton);
+		online = (Boolean) RegisterServiceImpl.getUserinfo(this).get("online");
+
+		Drawable img = null;
+		if (online) {
+			img = getResources().getDrawable(R.drawable.viplogo_login);
+		} else {
+			img = getResources().getDrawable(R.drawable.viplogo_logout);
+		}
+		img.setBounds(0, 0, img.getMinimumWidth(), img.getMinimumHeight());
+		regbutton.setCompoundDrawables(img, null, null, null);
+
+		PosterSimpleAdapter adp = new PosterSimpleAdapter(act, PosterSimpleAdapter.getData(), R.layout.homepage_poster, new String[] { "name" },
+				new int[] { R.id.name });
+		pge = (PosterGallery) act.findViewById(R.id.gallery);
+		pge.setAdapter(adp);
+		pge.setSelection(poster_select);
+		pge.setOnItemClickListener(new ItemClickListener());
+	}
+
+	/**
+	 * Description: 根据ID显示（隐藏）不同不同列表
+	 * 
+	 * @Version1.0 2011-12-5 下午01:06:58 mustang created
+	 * @param view
+	 */
+	public void showtype(View view) {
+
+		Drawable shrink = getResources().getDrawable(R.drawable.homepage_group_button_shrink);
+		shrink.setBounds(0, 0, shrink.getMinimumWidth(), shrink.getMinimumHeight());
+		Drawable expand = getResources().getDrawable(R.drawable.homepage_group_button_expand);
+		expand.setBounds(0, 0, shrink.getMinimumWidth(), shrink.getMinimumHeight());
+		Button bt;
+		int vid = view.getId();
+		currentType = vid;
+		Integer titleheight = DpPxUtil.dp2px(this, 0);
+		switch (vid) {
+		case R.id.today: {
+			// TODO 测试需要暂时加上这段代码
+			if (today_hit == null || today_hit.isEmpty()) {
+				today_hit = getData();
+			}
+
+			if (today_hit != null && !today_hit.isEmpty()) {
+
+				todaylist = (ListView) this.findViewById(R.id.today_hit);
+				bt = (Button) this.findViewById(R.id.today);
+				if (today_hit_flag == false) {
+					today_hit_flag = true;
+					todaylist.setVisibility(View.VISIBLE);
+					bt.setCompoundDrawables(null, null, expand, null);
+					today_hit_adapter = new ListItemSimpleAdapter(this, today_hit, R.layout.homepage_list_item, new String[] { "name", "type", "img",
+							"ratingBar", "ratingScore1", "ratingScore2" }, new int[] { R.id.name, R.id.type, R.id.img, R.id.ratingBar,
+							R.id.ratingScore1, R.id.ratingScore2 });
+					todaylist.setAdapter(today_hit_adapter);
+					ListUtil.setListViewHeightBasedOnChildren(todaylist, titleheight);
+					todaylist.setOnItemClickListener(new ItemClickListener());
+				} else {
+					today_hit_flag = false;
+					todaylist.setVisibility(View.GONE);
+					bt.setCompoundDrawables(null, null, shrink, null);
+				}
+			}
+		}
+			break;
+		default:
+			break;
+		}
+
+	}
+
+	/**
+	 * Description: 刷新列表海报
+	 * 
+	 * @Version1.0 2011-12-13 下午03:36:50 mustang created
+	 */
+	public void updateImageList(List<Map<String, Object>> list) {
+		/*if (list != null && !list.isEmpty()) {
+			for (Map<String, Object> map : today_hit) {
+				String imagename = (String) map.get("imagename");
+				if (!ValidateUtil.isBlank(imagename)) {
+					Drawable db = ImageServiceImpl.getImageDrawable(imagename, act);
+					if (db != null) {
+						map.put("img", db);
+						map.put("imagename", "");
+					}
+				}
+			}
+		}*/
+		if (list != null && !list.isEmpty()) {
+			list.get(2).put("img", R.drawable.a2);
+			list.get(3).put("img", R.drawable.a3);
+			list.get(4).put("img", R.drawable.a4);
+			list.get(0).put("img", R.drawable.a6);
+
+		}
+	}
+
+	/**
+	 * Description: 列表显示假数据
+	 * 
+	 * @Version1.0 2011-12-5 下午12:58:10 mustang created
+	 * @return
+	 */
+	public List<Map<String, Object>> getData() {
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		for (int i = 0; i < 5; i++) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("id", i);
+			map.put("name", "影子写手");
+			map.put("type", "悬疑，惊悚，剧情");
+			map.put("img", R.drawable.video_cover_default);
+			map.put("ratingBar", 8.0f);
+			map.put("ratingScore1", "8.");
+			map.put("ratingScore2", "0");
+			list.add(map);
+		}
+		return list;
+	}
+
+	/**
+	 * Description: 显示登录页面
+	 * 
+	 * @Version1.0 2011-12-5 下午02:51:26 mustang created
+	 * @param view
+	 */
+	public void showLoginPage(View view) {
+		if (online) {
+			String username = (String) RegisterServiceImpl.getUserinfo(this).get("username");
+			Intent intent = new Intent();
+			intent.setClass(this, LoginSuccess.class);
+			Bundle bd = new Bundle();
+			bd.putString("username", username);
+			intent.putExtras(bd);
+			Framework.switchActivity("home2loginsucess", intent);
+		} else {
+			Intent intent = new Intent();
+			intent.setClass(this, Login.class);
+			Framework.switchActivity("homepage2login", intent);
+		}
+
+	}
+
+	/**
+	 * 关闭滚动条
+	 */
+	private Handler hpDateListHandler = new Handler() {
+		@Override
+		public void handleMessage(Message msg) {
+			dialog.dismiss();
+			// 到这里说明已经下载完了数据列表，接下来要下载不存在的海报
+			new Thread() {
+				public void run() {
+					try {
+						//HttpDownloadImpl.downloadImageList(act);
+						Thread.sleep(5000);
+						updateListHandler.sendEmptyMessage(0);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}.start();
+		}
+	};
+
+	/**
+	 * 刷新列表海报,通知当前浏览列表数据发生变化
+	 */
+	private Handler updateListHandler = new Handler() {
+		@Override
+		public void handleMessage(Message msg) {
+			updateImageList(today_hit);
+			switch (currentType) {
+			case R.id.today: {
+				if (today_hit_adapter != null) {
+					today_hit_adapter.notifyDataSetChanged();
+				}
+			}
+				break;
+			}
+		}
+	};
+
+	class ItemClickListener implements OnItemClickListener {
+		public void onItemClick(AdapterView<?> arg0,// The AdapterView where the
+													// click happened
+				View arg1,// The view within the AdapterView that was clicked
+				int arg2,// The position of the view in the adapter
+				long arg3// The row id of the item that was clicked
+		) {
+			Intent intent = new Intent(Homepage.this, Detail.class);
+			intent.putExtra("EpisodeNumber", 30);
+			Framework.switchActivity("Homepage2Detail", intent);
+		}
+	}
+
+}

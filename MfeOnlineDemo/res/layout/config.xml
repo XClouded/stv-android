@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+     
+    <PreferenceCategory
+     android:title="@string/title_set_httpconnect">
+
+     <EditTextPreference android:key="edittext_ip"
+	     android:title="@string/title_edittext_ip"
+	     android:summary="@string/summary_edittext_ip"
+	     android:dialogTitle="@string/dialog_title_ip" />
+            
+     <EditTextPreference android:key="edittext_username"
+	     android:title="@string/title_edittext_username"
+	     android:summary="@string/summary_edittext_username"
+	     android:dialogTitle="@string/dialog_title_username" />
+
+     <EditTextPreference android:key="edittext_oncepostlen"
+	     android:title="@string/title_edittext_oncepostlen"
+	     android:summary="@string/summary_edittext_oncepostlen"
+	     android:dialogTitle="@string/dialog_title_oncepostlen" />
+
+     <EditTextPreference android:key="edittext_timeout"
+	     android:title="@string/title_edittext_timeout"
+	     android:summary="@string/summary_edittext_timeout"
+	     android:dialogTitle="@string/dialog_title_timeout" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+     android:title="@string/title_set_debug">
+
+            <CheckBoxPreference
+             android:key="checkbox_sysdatakeep"
+             android:title="@string/title_check_datakeep"
+             android:summary="@string/summary_check_datakeep" />
+
+            <CheckBoxPreference
+             android:key="checkbox_processtrace"
+             android:title="@string/title_check_processtrace"
+             android:summary="@string/summary_check_processtrace" />
+            
+    </PreferenceCategory>
+
+</PreferenceScreen>
+

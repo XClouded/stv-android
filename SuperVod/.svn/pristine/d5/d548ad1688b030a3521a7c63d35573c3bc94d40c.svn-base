@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/listitem" 
+    style="@style/List_Layout" >
+
+    <ImageView android:id="@+id/item_img" 
+        style="@style/List_Image" 
+        android:layout_gravity="bottom|center_horizontal" 
+        android:layout_marginBottom="3dp"/>
+    
+    <LinearLayout style="@style/List_Layout1" 
+        android:layout_gravity="bottom" 
+        android:layout_marginBottom="3dp" android:layout_width="200dp">
+		<TextView android:id="@+id/item_name"
+		    style="@style/List_Movie_Name" android:layout_marginTop="10dp"/>
+		
+		<LinearLayout style="@style/item_list_edit_2_layout2" android:layout_marginTop="10dp">
+			<TextView android:id="@+id/widget11"
+			    style="@style/item_list_edit_2_text" />
+			<TextView android:id="@+id/item_type"
+			    style="@style/item_list_edit_2_type" />
+		</LinearLayout>
+		
+	</LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/frameLayout1"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" android:layout_gravity="bottom|right" android:layout_marginBottom="3dp">
+
+        <ImageView
+            android:id="@+id/item_iv_state"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            android:layout_gravity="bottom|center_horizontal" android:layout_marginLeft="3dp"/>
+
+    </FrameLayout>
+
+</LinearLayout>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" 
+    android:background="@drawable/background" >
+
+
+    <LinearLayout
+        android:id="@+id/tvback_ll_title"
+        android:layout_width="fill_parent"
+        android:layout_height="43dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/homepage_top"
+        android:gravity="center_vertical" >
+
+        <Button
+            android:id="@+id/tvback_btn_back"
+            android:layout_width="68dp"
+            android:layout_height="wrap_content"
+            android:text="@string/detail_btn_back"
+            style="@style/Button_Return" 
+            android:layout_marginLeft="5dp"/>
+
+        <TextView
+            android:id="@+id/tvback_textView"
+            style="@style/Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tvback_title"
+            android:layout_weight="1.0"/>
+
+    </LinearLayout>
+
+    <GridView
+        android:id="@+id/tvback_list"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/tvback_ll_title"
+        android:numColumns="2" 
+        android:layout_marginTop="10dp" android:layout_marginBottom="10dp">
+    </GridView>
+
+</RelativeLayout>

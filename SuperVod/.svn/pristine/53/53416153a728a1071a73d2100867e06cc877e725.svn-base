@@ -1,0 +1,180 @@
+package com.stv.supervod.activity;
+
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
+import android.widget.TextView;
+
+import com.stv.supervod.service.RegisterServiceImpl;
+import com.stv.supervod.utils.AlertUtils;
+import com.stv.supervod.utils.ValidateUtil;
+
+/**
+ * Description:1)去服务器验证用户信息有效性 2)如果信息合法保存，登录配置如记住密码，自动登录等.
+ * 3)登录成功到会员资料页面，用户可以注销（退出） Copyright (c) 永新视博 All Rights Reserved.
+ * 
+ * @version 1.0 2011-12-7 下午02:18:35 mustang created
+ */
+public class Login extends Activity {
+	private RegisterServiceImpl regService = new RegisterServiceImpl();
+
+	private ProgressDialog logDialog;
+	private Activity act = this;
+	private EditText userNameText;
+	private EditText passwordText;
+	private Spinner spinner;
+	private LinearLayout pwLayout;
+
+	private String loginResult = "";
+	private String pwd_type = 0 + "";
+	private String userName;
+	private String password;
+	private int cityIndex = 0;
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.login);
+		spinner = (Spinner) this.findViewById(R.id.citys);
+		pwLayout = (LinearLayout) this.findViewById(R.id.pw_type_bg);
+		userNameText = (EditText) this.findViewById(R.id.username);
+		passwordText = (EditText) this.findViewById(R.id.password);
+		// textview不支持 onclick事件方法设置在xml布局文件中？
+		TextView tel = (TextView) this.findViewById(R.id.pw_type_tel);
+		TextView other = (TextView) this.findViewById(R.id.pw_type_other);
+		tel.setOnClickListener(new TextView.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				pwLayout.setBackgroundResource(R.drawable.login_password_tel);
+				pwd_type = 0 + "";
+			}
+		});
+		other.setOnClickListener(new TextView.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				pwLayout.setBackgroundResource(R.drawable.login_password_other);
+				pwd_type = 1 + "";
+			}
+		});
+
+		ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(this, android.R.layout.simple_spinner_item);
+		adapter.add("山东青州");
+		adapter.add("福建漳州");
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		spinner.setAdapter(adapter);
+		spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+				cityIndex = position;
+			}
+
+			public void onNothingSelected(AdapterView<?> parent) {
+			}
+		});
+
+		// 初始显示值
+		SharedPreferences sp = regService.getLocalUserinfo(this);
+		if (sp != null) {
+			userNameText.setText(sp.getString(RegisterServiceImpl.KeyEnum.username.toString(), ""));
+			passwordText.setText(sp.getString(RegisterServiceImpl.KeyEnum.password.toString(), ""));
+			pwd_type = sp.getString(RegisterServiceImpl.KeyEnum.pwtype.toString(), "0");
+			if (pwd_type.equals("0")) {
+				pwLayout.setBackgroundResource(R.drawable.login_password_tel);
+			} else {
+				pwLayout.setBackgroundResource(R.drawable.login_password_other);
+			}
+			String mycity = sp.getString(RegisterServiceImpl.KeyEnum.mycity.toString(), "");
+			int cityIndex = 0;
+			if (!ValidateUtil.isBlank(mycity)) {
+				int index = adapter.getPosition(mycity);
+				if (index > -1) {
+					cityIndex = index;
+				}
+			}
+			spinner.setSelection(cityIndex);
+		}
+
+	}
+
+	/**
+	 * Description: 处理登录的业务逻辑
+	 * 
+	 * @Version1.0 2011-12-5 下午06:20:26 mustang created
+	 * @param view
+	 */
+	public void login(View view) {
+		userNameText = (EditText) this.findViewById(R.id.username);
+		passwordText = (EditText) this.findViewById(R.id.password);
+		userName = userNameText.getText().toString();
+		password = passwordText.getText().toString();
+		logDialog = (ProgressDialog) AlertUtils.createDialog(AlertUtils.HAVE_TITLE, this);
+		logDialog.show();
+		// TODO 真实情况时这里要判断用户名、密码是否为空，不空仍线程
+		new Thread() {
+			public void run() {
+				try {
+					RegisterServiceImpl regService = new RegisterServiceImpl();
+					String mycity = (String) spinner.getAdapter().getItem(cityIndex);
+					loginResult = regService.login(act, userName, password, mycity, pwd_type);
+					handler.sendEmptyMessage(0);
+				} catch (Exception e) {
+					e.printStackTrace();
+					AlertUtils.displayToast(act, "访问网络出现异常");
+				}
+			}
+		}.start();
+
+	}
+
+	/**
+	 * Description: 显示注册页面
+	 * 
+	 * @Version1.0 2011-12-6 下午01:26:34 mustang created
+	 * @param view
+	 */
+	public void showRegPage(View view) {
+		/*
+		 * Intent intent = new Intent(); intent.setClass(this, Register.class);
+		 * Framework.switchActivity("login2Register", intent);
+		 */
+	}
+
+	/**
+	 * 关闭滚动条
+	 */
+	private Handler handler = new Handler() {
+		@Override
+		public void handleMessage(Message msg) {
+			logDialog.dismiss();
+			loginResult();
+		}
+	};
+
+	/**
+	 * Description: 如果成功登录进入首页，否则告诉失败原因
+	 * 
+	 * @Version1.0 2012-1-13 上午09:54:55 mustang created
+	 */
+	public void loginResult() {
+		if (loginResult == "") {
+			// 登录成功
+			Intent intent = new Intent();
+			intent.setClass(this, Framework.class);
+			startActivity(intent);
+			finish();
+		} else {
+			// TODO这里要解析错误码，暂不解析
+			AlertUtils.displayToast(this, "错误信息：" + loginResult);
+		}
+	}
+}

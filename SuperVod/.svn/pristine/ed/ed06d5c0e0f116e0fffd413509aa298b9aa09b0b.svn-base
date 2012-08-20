@@ -1,0 +1,1042 @@
+package com.stv.supervod.service;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpParams;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.app.Activity;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Environment;
+import android.widget.BaseAdapter;
+
+import com.stv.supervod.activity.Homepage;
+import com.stv.supervod.activity.R;
+import com.stv.supervod.utils.Constant;
+import com.stv.supervod.utils.ValidateUtil;
+
+public class HttpDownloadImpl {
+
+	/**
+	 * 所有需要下载海报的列表都需要在此定义，便于下载完毕后刷新页面
+	 */
+	public static final int homepage_adapter_today_hit = 100;
+	public static final int homepage_adapter_latest_online = 101;
+	public static final int homepage_adapter_home_theater = 102;
+	public static final int homepage_adapter_tv_playhouse = 103;
+	public static final int homepage_adapter_top_singer = 104;
+
+	/**
+	 * 海报下载队列，长度为5
+	 */
+	public static List<String> nowDownloadList = Collections.synchronizedList(new ArrayList<String>());
+	/**
+	 * 当前是否正在下载图片，如果正在下载则需要待下载完才能够再次下载队尾图片
+	 */
+	private static boolean runFlag = false;
+
+	/**
+	 * Description: 首页列表数据下载
+	 * 
+	 * @Version1.0 2011-12-13 下午02:03:59 mustang created
+	 * @param act
+	 * @return
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 * @throws JSONException
+	 */
+	public static Map<String, List<Map<String, Object>>> downloadHomePageList(Activity act) throws ClientProtocolException, IOException,
+			JSONException {
+		HttpParams params = new BasicHttpParams();
+		params.setParameter("r_num", 9);
+		params.setParameter("p_num", 20);
+		params.setParameter("l_num", 5);
+		StringBuilder sb = HttpRequestServiceImpl.requestByHttpGet(params, Constant.HOMEPAGE_DATA_URL);
+		System.out.println(sb.toString());
+		Map<String, List<Map<String, Object>>> map = new HashMap<String, List<Map<String, Object>>>();
+		List<Map<String, Object>> posters = parsePosterJson(sb, "recommand", "Offerings", act);
+		List<Map<String, Object>> todaylist = parseHomePageListJson(sb, "list", "今日热播", "Offerings", act);
+		map.put("today_hit", todaylist);
+		map.put("posters", posters);
+		return map;
+	}
+
+	/**
+	 * Description: 获取影片、电视剧基本列表信息
+	 * 
+	 * @Version1.0 2011-12-21 下午02:54:20 mustang created
+	 * @param o_type排序类型
+	 * @param order
+	 *            排序方式 （0升序，1降序）
+	 * @param num
+	 *            每页条目数
+	 * @param page
+	 *            当前页码
+	 * @param url
+	 *            需要包含:category 影片分类参数
+	 * @return
+	 * @throws IOException
+	 * @throws ClientProtocolException
+	 * @throws JSONException
+	 */
+	public static Map<String, Object> downloadCommonList(String o_type, int order, int num, int page, String url, Context act)
+			throws ClientProtocolException, IOException, JSONException {
+		HttpParams params = new BasicHttpParams();
+		params.setParameter("o_type", o_type);
+		params.setParameter("order", order);
+		params.setParameter("num", num);
+		params.setParameter("page", page);
+		StringBuilder sb = HttpRequestServiceImpl.requestByHttpGet(params, url);
+		return parseCommonListJson(sb, act);
+	}
+
+	/**
+	 * Description: 获得offering相关信息
+	 * 
+	 * @Version1.0 2011-12-21 下午03:50:10 mustang created
+	 * @param offeringId
+	 * @param act
+	 * @return
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 * @throws JSONException
+	 */
+	public static Map<String, Object> downloadOfferingInfo(String offeringId, Context act) throws ClientProtocolException, IOException, JSONException {
+		if (ValidateUtil.isBlank(offeringId)) {
+			String offeringurl = Constant.offering_detail_url + offeringId;
+			StringBuilder sb = HttpRequestServiceImpl.requestByHttpGet(null, offeringurl);
+			return parseOfferingDetailJson(sb, act);
+		}
+		return null;
+	}
+
+	/**
+	 * Description: 获取歌手列表
+	 * 
+	 * @Version1.0 2011-12-21 下午04:09:05 mustang created
+	 * @param order
+	 *            排序方式 Int （0：a~z，1：z~a）
+	 * @param num
+	 * @param page
+	 * @param act
+	 * @return
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 * @throws JSONException
+	 */
+	public static Map<String, Object> downloadSingerList(int order, int num, int page, Context act) throws ClientProtocolException, IOException,
+			JSONException {
+		HttpParams params = new BasicHttpParams();
+		if (order != 0 || order != 1) {
+			order = 0;
+		}
+		if (Integer.valueOf(num) == null) {
+			num = 20;
+		}
+		if (Integer.valueOf(page) == null) {
+			page = 1;
+		}
+		params.setParameter("order", order);
+		params.setParameter("num", num);
+		params.setParameter("page", page);
+		StringBuilder sb = HttpRequestServiceImpl.requestByHttpGet(params, Constant.supervod_singer_url);
+		return parseSingerListJson(sb, act);
+	}
+
+	public static Map<String, Object> downloadSongsBySinger(int num, int page, String url, Context act) throws ClientProtocolException, IOException,
+			JSONException {
+		HttpParams params = new BasicHttpParams();
+
+		if (Integer.valueOf(num) == null) {
+			num = 20;
+		}
+		if (Integer.valueOf(page) == null) {
+			page = 1;
+		}
+		params.setParameter("num", num);
+		params.setParameter("page", page);
+		StringBuilder sb = HttpRequestServiceImpl.requestByHttpGet(params, url);
+		return parseSongsListBySingerJson(sb, act);
+	}
+
+	/**
+	 * Description: 下载会看频道列表
+	 * 
+	 * @Version1.0 2011-12-21 下午04:47:56 mustang created
+	 * @param num
+	 * @param page
+	 * @param url
+	 * @param act
+	 * @return
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 * @throws JSONException
+	 */
+	public static Map<String, Object> downloadChannelList(int num, int page, Context act) throws ClientProtocolException, IOException, JSONException {
+		HttpParams params = new BasicHttpParams();
+
+		if (Integer.valueOf(num) == null) {
+			num = 20;
+		}
+		if (Integer.valueOf(page) == null) {
+			page = 1;
+		}
+		params.setParameter("num", num);
+		params.setParameter("page", page);
+		StringBuilder sb = HttpRequestServiceImpl.requestByHttpGet(params, Constant.supervod_channel_url);
+		return parseChannelListJson(sb, act);
+	}
+
+	/**
+	 * Description: 下载会看节目列表
+	 * 
+	 * @Version1.0 2011-12-21 下午04:57:32 mustang created
+	 * @param num
+	 * @param page
+	 * @param url
+	 * @param act
+	 * @return
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 * @throws JSONException
+	 */
+	public static Map<String, Object> downloadProgramList(int num, int page, String url, Context act) throws ClientProtocolException, IOException,
+			JSONException {
+		HttpParams params = new BasicHttpParams();
+
+		if (Integer.valueOf(num) == null) {
+			num = 20;
+		}
+		if (Integer.valueOf(page) == null) {
+			page = 1;
+		}
+		params.setParameter("num", num);
+		params.setParameter("page", page);
+		StringBuilder sb = HttpRequestServiceImpl.requestByHttpGet(params, Constant.supervod_channel_url);
+		return parseProgramslListJson(sb, act);
+	}
+
+	/**
+	 * Description: 下载书签列表
+	 * 
+	 * @Version1.0 2011-12-21 下午05:02:40 mustang created
+	 * @param num
+	 * @param page
+	 * @param url
+	 * @param act
+	 * @return
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 * @throws JSONException
+	 */
+	public static Map<String, Object> downloadBookmarkList(String url, Context act) throws ClientProtocolException, IOException, JSONException {
+		StringBuilder sb = HttpRequestServiceImpl.requestByHttpGet(null, Constant.supervod_channel_url);
+		return parseBookmarkListJson(sb, act);
+	}
+
+	/**
+	 * Description: 下载关键字
+	 * 
+	 * @Version1.0 2011-12-21 下午05:09:19 mustang created
+	 * @param num
+	 * @return
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 * @throws JSONException 
+	 */
+	public static List<String> downloadKeysList(int num) throws ClientProtocolException, IOException, JSONException {
+		HttpParams params = new BasicHttpParams();
+		if (Integer.valueOf(num) == null) {
+			num = 10;
+		}
+		params.setParameter("num", num);
+		StringBuilder sb = HttpRequestServiceImpl.requestByHttpGet(params, Constant.supervod_channel_url);
+		return parseKeysListJson(sb);
+	}
+
+
+	/**
+	 * Description: 下载搜索节目列表
+	 * @Version1.0 2011-12-21 下午05:35:02 mustang created
+	 * @param type
+	 * @param num
+	 * @param url
+	 * @param act
+	 * @return
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 * @throws JSONException
+	 */
+	public static Map<String, Object> downloadSearchProgramsList(int type, int num, String url, Context act) throws ClientProtocolException,
+			IOException, JSONException {
+		HttpParams params = new BasicHttpParams();
+		if (Integer.valueOf(type) == null) {
+			type = 1;
+		}
+		if (Integer.valueOf(num) == null) {
+			num = 10;
+		}
+		params.setParameter("num", num);
+		params.setParameter("type", type);
+		StringBuilder sb = HttpRequestServiceImpl.requestByHttpGet(params, Constant.supervod_channel_url);
+		return parseSearchProgramsListJson(sb, act);
+	}
+	
+	
+	
+	/**
+	 * Description: 解析分类列表
+	 * @Version1.0 2011-12-21 下午06:35:26 mustang created
+	 * @param treeIndex
+	 * @return
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 * @throws JSONException
+	 */
+	public static List<Map<String, Object>> downloadCategorysList(String treeIndex) throws ClientProtocolException, IOException,
+			JSONException {
+		if(!ValidateUtil.isBlank(treeIndex)){
+			HttpParams params = new BasicHttpParams();
+			params.setParameter("treeIndex", treeIndex);
+			StringBuilder sb = HttpRequestServiceImpl.requestByHttpGet(params, Constant.supervod_channel_url);
+			return parseCatagorysListJson(sb);
+		}
+		return null;
+		
+	}
+	
+	
+	/**
+	 * Description: 解析首页海报列表
+	 * 
+	 * @Version1.0 2011-12-13 下午01:11:12 mustang created
+	 * @param sb
+	 * @param rootName
+	 * @param listName
+	 * @param act
+	 * @return
+	 * @throws JSONException
+	 * @throws IOException
+	 */
+	public static List<Map<String, Object>> parsePosterJson(StringBuilder sb, String rootName, String listName, Activity act) throws JSONException,
+			IOException {
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		JSONObject root = new JSONObject(sb.toString());
+		JSONArray rootArray = null;
+		if (root != null) {
+			rootArray = root.getJSONArray(rootName);
+		}
+		if (rootArray != null && rootArray.length() > 0) {
+			JSONObject objroot = (JSONObject) rootArray.get(0);
+			JSONArray listArray = objroot.getJSONArray(listName);
+			for (int i = 0; i < listArray.length(); i++) {
+				Map<String, Object> map = new HashMap<String, Object>();
+				JSONObject obj = (JSONObject) listArray.opt(i);
+				// ID
+				map.put("id", obj.getString("id"));
+				// 标题
+				map.put("Title", obj.getString("Title"));
+				// 海报大图片,解析海报
+				String url = "";
+				if (rootName.equals("recommand")) {
+					url = obj.getString("Poster");
+				}
+				Bitmap bp = null;
+				if (url != "") {
+					bp = downloadImageByUrl(act, url);
+				}
+				if (bp != null) {
+					map.put("img", bp);
+				}
+				// 类别
+				map.put("type", obj.getString("Category"));
+				// 解析评分
+				String ratingBar = obj.getString("Rating");
+				if (!ValidateUtil.isBlank(ratingBar)) {
+					float vr = Float.parseFloat(ratingBar);
+					if (vr > -1) {
+						map.put("ratingBar", vr);
+					}
+					String[] rs = ratingBar.split(".");
+					if (rs != null && rs.length > 1) {
+						map.put("ratingScore1", rs[0] + ".");
+						map.put("ratingScore2", rs[1]);
+					}
+				}
+				list.add(map);
+			}
+		}
+		return list;
+	}
+
+	/**
+	 * Description: 解析首页数据列表
+	 * 
+	 * @Version1.0 2011-12-20 上午11:24:11 mustang created
+	 * @param sb
+	 *            sb 从服务器下载的JSON串
+	 * @param rootName
+	 *            一级根节点
+	 * @param listName
+	 *            二级节点名字
+	 * @param listRoot
+	 *            二级节点名称
+	 * @param act
+	 * @return
+	 * @throws JSONException
+	 */
+	public static List<Map<String, Object>> parseHomePageListJson(StringBuilder sb, String rootName, String listName, String listRoot, Activity act)
+			throws JSONException {
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		// 通过根名字获得整个JSON对象
+		JSONArray typeArray = null;
+		JSONObject root = new JSONObject(sb.toString());
+		if (root != null) {
+			typeArray = root.getJSONArray(rootName);
+		}
+		if (typeArray != null && typeArray.length() > 0) {
+			for (int i = 0; i < typeArray.length(); i++) {
+				JSONObject jsonObject = (JSONObject) typeArray.get(i);
+				String title = "";
+				if (jsonObject != null) {
+					title = (String) jsonObject.get("Name");
+				}
+
+				if (title != "" && title.equals(listName)) {
+					JSONArray listArray = jsonObject.getJSONArray(listRoot);
+					if (listArray != null && listArray.length() > 0) {
+						for (int j = 0; j < listArray.length(); j++) {
+							Map<String, Object> map = new HashMap<String, Object>();
+							JSONObject obj = (JSONObject) listArray.opt(j);
+							// ID
+							map.put("id", obj.getString("id"));
+							// 标题
+							map.put("Title", obj.getString("Title"));
+							// 海报大图片,解析海报
+							String url = "";
+							if (rootName.equals("recommand")) {
+								url = obj.getString("Poster");
+							} else {
+								url = obj.getString("Thumbnail");
+							}
+							// 类别
+							map.put("type", obj.getString("Category"));
+							if (!ValidateUtil.isBlank(url)) {
+								String[] urls = url.split("/");
+								if (urls != null && urls.length > 0) {
+									String imgname = urls[urls.length - 1];
+									Drawable da = ImageServiceImpl.getImageDrawable(imgname, act);
+									if (da != null) {
+										map.put("img", da);
+									} else {
+										Drawable defalut = act.getResources().getDrawable(R.drawable.video_cover_default);
+										// 设置为默认图片，同时记录要下载的图片名称，带下载完毕后及时刷新列表
+										map.put("img", defalut);
+										map.put("imgurl", url);
+									}
+								}
+							}
+							// 解析评分
+							String ratingBar = obj.getString("Rating");
+							if (!ValidateUtil.isBlank(ratingBar)) {
+								float vr = Float.parseFloat(ratingBar);
+								if (vr > -1) {
+									map.put("ratingBar", vr);
+								}
+								String[] rs = ratingBar.split(".");
+								if (rs != null && rs.length > 1) {
+									map.put("ratingScore1", rs[0] + ".");
+									map.put("ratingScore2", rs[1]);
+								}
+							}
+							list.add(map);
+						}
+					}
+				}
+
+			}
+		}
+		return list;
+	}
+
+	/**
+	 * Description: 解析非首页的列表【其他公共列表】
+	 * 
+	 * @Version1.0 2011-12-21 下午03:02:11 mustang created
+	 * @param sb
+	 * @param rootName
+	 * @param listName
+	 * @param listRoot
+	 * @param act
+	 * @return
+	 * @throws JSONException
+	 */
+	public static Map<String, Object> parseCommonListJson(StringBuilder sb, Context act) throws JSONException {
+		Map<String, Object> result = new HashMap<String, Object>();
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		// 通过根名字获得整个JSON对象
+		JSONArray listArray = null;
+		int total_num = 0;
+		JSONObject root = new JSONObject(sb.toString());
+		if (root != null) {
+			listArray = root.getJSONArray("offerings");
+			total_num = root.getInt("total_num");
+			result.put("total_num", total_num);
+		}
+
+		if (listArray != null && listArray.length() > 0) {
+			for (int j = 0; j < listArray.length(); j++) {
+				Map<String, Object> map = new HashMap<String, Object>();
+				JSONObject obj = (JSONObject) listArray.opt(j);
+				// ID
+				map.put("id", obj.getString("id"));
+				// 标题
+				map.put("Title", obj.getString("Title"));
+				// 海报大图片,解析海报
+				String url = obj.getString("Poster");
+				// 类别
+				map.put("type", obj.getString("Category"));
+				if (!ValidateUtil.isBlank(url)) {
+					String[] urls = url.split("/");
+					if (urls != null && urls.length > 0) {
+						String imgname = urls[urls.length - 1];
+						Drawable da = ImageServiceImpl.getImageDrawable(imgname, act);
+						if (da != null) {
+							map.put("img", da);
+						} else {
+							Drawable defalut = act.getResources().getDrawable(R.drawable.video_cover_default);
+							// 设置为默认图片，同时记录要下载的图片名称，带下载完毕后及时刷新列表
+							map.put("img", defalut);
+							map.put("imgurl", url);
+						}
+					}
+				}
+				// 解析评分
+				String ratingBar = obj.getString("Rating");
+				if (!ValidateUtil.isBlank(ratingBar)) {
+					float vr = Float.parseFloat(ratingBar);
+					if (vr > -1) {
+						map.put("ratingBar", vr);
+					}
+					String[] rs = ratingBar.split(".");
+					if (rs != null && rs.length > 1) {
+						map.put("ratingScore1", rs[0] + ".");
+						map.put("ratingScore2", rs[1]);
+					}
+				}
+				list.add(map);
+			}
+		}
+		result.put("list", list);
+		return result;
+	}
+
+	/**
+	 * Description: 解析offering
+	 * 
+	 * @Version1.0 2011-12-21 下午03:56:54 mustang created
+	 * @param sb
+	 * @param act
+	 * @return
+	 * @throws JSONException
+	 */
+	public static Map<String, Object> parseOfferingDetailJson(StringBuilder sb, Context act) throws JSONException {
+		Map<String, Object> result = new HashMap<String, Object>();
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		// 通过根名字获得整个JSON对象
+		JSONArray listArray = null;
+		JSONObject root = new JSONObject(sb.toString());
+		if (root != null) {
+			listArray = root.getJSONArray("episode");
+			String director = root.getString("director");
+			String actor = root.getString("actor");
+			String descrip = root.getString("descrip");
+			result.put("director", director);
+			result.put("actor", actor);
+			result.put("descrip", descrip);
+		}
+
+		if (listArray != null && listArray.length() > 0) {
+			for (int j = 0; j < listArray.length(); j++) {
+				Map<String, Object> map = new HashMap<String, Object>();
+				JSONObject obj = (JSONObject) listArray.opt(j);
+				map.put("offering_id", obj.getString("offering_id"));
+				map.put("episode", obj.getString("episode"));
+				list.add(map);
+			}
+		}
+		result.put("list", list);
+		return result;
+	}
+
+	/**
+	 * Description: 解析歌手列表
+	 * 
+	 * @Version1.0 2011-12-21 下午04:19:12 mustang created
+	 * @param sb
+	 * @param act
+	 * @return
+	 * @throws JSONException
+	 */
+	public static Map<String, Object> parseSingerListJson(StringBuilder sb, Context act) throws JSONException {
+		Map<String, Object> result = new HashMap<String, Object>();
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		// 通过根名字获得整个JSON对象
+		JSONArray listArray = null;
+		JSONObject root = new JSONObject(sb.toString());
+		if (root != null) {
+			listArray = root.getJSONArray("singer");
+			int total_num = root.getInt("total_num");
+			result.put("total_num", total_num);
+		}
+
+		if (listArray != null && listArray.length() > 0) {
+			for (int j = 0; j < listArray.length(); j++) {
+				Map<String, Object> map = new HashMap<String, Object>();
+				JSONObject obj = (JSONObject) listArray.opt(j);
+				map.put("actor", obj.getString("actor"));
+				map.put("poster", obj.getString("poster"));
+				list.add(map);
+			}
+		}
+		result.put("list", list);
+		return result;
+	}
+
+	/**
+	 * Description: 解析某歌手的歌曲列表
+	 * 
+	 * @Version1.0 2011-12-21 下午04:33:19 mustang created
+	 * @param sb
+	 * @param act
+	 * @return
+	 * @throws JSONException
+	 */
+	public static Map<String, Object> parseSongsListBySingerJson(StringBuilder sb, Context act) throws JSONException {
+		Map<String, Object> result = new HashMap<String, Object>();
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		// 通过根名字获得整个JSON对象
+		JSONArray listArray = null;
+		JSONObject root = new JSONObject(sb.toString());
+		if (root != null) {
+			listArray = root.getJSONArray("songs");
+			int total_num = root.getInt("total_num");
+			result.put("total_num", total_num);
+		}
+
+		if (listArray != null && listArray.length() > 0) {
+			for (int j = 0; j < listArray.length(); j++) {
+				Map<String, Object> map = new HashMap<String, Object>();
+				JSONObject obj = (JSONObject) listArray.opt(j);
+				map.put("director", obj.getString("director"));
+				map.put("title", obj.getString("title"));
+				map.put("offering_id", obj.getString("offering_id"));
+				map.put("service_name", obj.getString("service_name"));
+				list.add(map);
+			}
+		}
+		result.put("list", list);
+		return result;
+	}
+
+	/**
+	 * Description: 解析回看列表
+	 * 
+	 * @Version1.0 2011-12-21 下午04:50:33 mustang created
+	 * @param sb
+	 * @param act
+	 * @return
+	 * @throws JSONException
+	 */
+	public static Map<String, Object> parseChannelListJson(StringBuilder sb, Context act) throws JSONException {
+		Map<String, Object> result = new HashMap<String, Object>();
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		// 通过根名字获得整个JSON对象
+		JSONArray listArray = null;
+		JSONObject root = new JSONObject(sb.toString());
+		if (root != null) {
+			listArray = root.getJSONArray("channel");
+			int total_num = root.getInt("total_num");
+			result.put("total_num", total_num);
+		}
+
+		if (listArray != null && listArray.length() > 0) {
+			for (int j = 0; j < listArray.length(); j++) {
+				Map<String, Object> map = new HashMap<String, Object>();
+				JSONObject obj = (JSONObject) listArray.opt(j);
+				map.put("name", obj.getString("name"));
+				map.put("poster", obj.getString("poster"));
+				map.put("id", obj.getString("id"));
+				list.add(map);
+			}
+		}
+		result.put("list", list);
+		return result;
+	}
+
+	/**
+	 * Description: 解析回看节目列表
+	 * 
+	 * @Version1.0 2011-12-21 下午05:00:19 mustang created
+	 * @param sb
+	 * @param act
+	 * @return
+	 * @throws JSONException
+	 */
+	public static Map<String, Object> parseProgramslListJson(StringBuilder sb, Context act) throws JSONException {
+		Map<String, Object> result = new HashMap<String, Object>();
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		// 通过根名字获得整个JSON对象
+		JSONArray listArray = null;
+		JSONObject root = new JSONObject(sb.toString());
+		if (root != null) {
+			listArray = root.getJSONArray("program");
+			int total_num = root.getInt("total_num");
+			result.put("total_num", total_num);
+		}
+
+		if (listArray != null && listArray.length() > 0) {
+			for (int j = 0; j < listArray.length(); j++) {
+				Map<String, Object> map = new HashMap<String, Object>();
+				JSONObject obj = (JSONObject) listArray.opt(j);
+				map.put("title", obj.getString("title"));
+				map.put("start_time", obj.getString("start_time"));
+				map.put("offering_id", obj.getString("offering_id"));
+				map.put("service_name", obj.getString("service_name"));
+				list.add(map);
+			}
+		}
+		result.put("list", list);
+		return result;
+	}
+
+	/**
+	 * Description: 解析搜索节目列表，区分电影电视、MTV等
+	 * 
+	 * @Version1.0 2011-12-21 下午05:05:33 mustang created
+	 * @param sb
+	 * @param act
+	 * @return
+	 * @throws JSONException
+	 */
+	public static Map<String, Object> parseSearchProgramsListJson(StringBuilder sb, Context act) throws JSONException {
+		Map<String, Object> result = new HashMap<String, Object>();
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		// 通过根名字获得整个JSON对象
+		JSONArray offeringsArray = null;
+		JSONArray mtvsArray = null;
+		JSONObject root = new JSONObject(sb.toString());
+		if (root != null) {
+			offeringsArray = root.getJSONArray("offerings");
+			mtvsArray = root.getJSONArray("songs");
+			int success = root.getInt("success");
+			result.put("success", success);
+		}
+
+		if (offeringsArray != null && offeringsArray.length() > 0) {
+			for (int j = 0; j < offeringsArray.length(); j++) {
+				Map<String, Object> map = new HashMap<String, Object>();
+				JSONObject obj = (JSONObject) offeringsArray.opt(j);
+				map.put("title", obj.getString("title"));
+				map.put("poster", obj.getString("type"));
+				map.put("offering_id", obj.getString("offering_id"));
+				map.put("category", obj.getString("category"));
+				map.put("recommend_rank", obj.getString("recommend_rank"));
+				map.put("service_name", obj.getString("service_name"));
+				list.add(map);
+			}
+		}
+		if (mtvsArray != null && mtvsArray.length() > 0) {
+			for (int j = 0; j < mtvsArray.length(); j++) {
+				Map<String, Object> map = new HashMap<String, Object>();
+				JSONObject obj = (JSONObject) offeringsArray.opt(j);
+				map.put("director", obj.getString("director"));
+				map.put("actor", obj.getString("actor"));
+				map.put("poster", obj.getString("poster"));
+				map.put("title", obj.getString("title"));
+				map.put("offering_id", obj.getString("offering_id"));
+				map.put("service_name", obj.getString("service_name"));
+				list.add(map);
+			}
+		}
+		result.put("list", list);
+		return result;
+	}
+
+	
+	/**
+	 * Description: 解析书签列表
+	 * @Version1.0 2011-12-21 下午05:39:48 mustang created
+	 * @param sb
+	 * @param act
+	 * @return
+	 * @throws JSONException
+	 */
+	public static Map<String, Object> parseBookmarkListJson(StringBuilder sb, Context act) throws JSONException {
+		Map<String, Object> result = new HashMap<String, Object>();
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		// 通过根名字获得整个JSON对象
+		JSONArray listArray = null;
+		JSONObject root = new JSONObject(sb.toString());
+		if (root != null) {
+			listArray = root.getJSONArray("offerings");
+			int total_num = root.getInt("total_num");
+			result.put("total_num", total_num);
+		}
+
+		if (listArray != null && listArray.length() > 0) {
+			for (int j = 0; j < listArray.length(); j++) {
+				Map<String, Object> map = new HashMap<String, Object>();
+				JSONObject obj = (JSONObject) listArray.opt(j);
+				map.put("title", obj.getString("title"));
+				map.put("type", obj.getString("type"));
+				map.put("offering_id", obj.getString("offering_id"));
+				map.put("npt", obj.getString("npt"));
+				map.put("run_time", obj.getString("run_time"));
+				list.add(map);
+			}
+		}
+		result.put("list", list);
+		return result;
+	}
+	
+	
+	/**
+	 * Description: 解析关键字列表
+	 * 
+	 * @Version1.0 2011-12-21 下午05:12:28 mustang created
+	 * @param sb
+	 * @return
+	 * @throws JSONException
+	 */
+	public static List<String> parseKeysListJson(StringBuilder sb) throws JSONException {
+		List<String> list = new ArrayList<String>();
+		// 通过根名字获得整个JSON对象
+		JSONArray listArray = null;
+		JSONObject root = new JSONObject(sb.toString());
+		if (root != null) {
+			listArray = root.getJSONArray("");
+		}
+
+		if (listArray != null && listArray.length() > 0) {
+			for (int j = 0; j < listArray.length(); j++) {
+				list.add((String) listArray.get(j));
+			}
+		}
+		return list;
+	}
+
+	/**
+	 * Description: 解析分类列表
+	 * @Version1.0 2011-12-21 下午06:33:40 mustang created
+	 * @param sb
+	 * @return
+	 * @throws JSONException
+	 */
+	public static List<Map<String, Object>> parseCatagorysListJson(StringBuilder sb) throws JSONException {
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		// 通过根名字获得整个JSON对象
+		JSONArray listArray = null;
+		JSONObject root = new JSONObject(sb.toString());
+		if (root != null) {
+			listArray = root.getJSONArray("");
+		}
+
+		if (listArray != null && listArray.length() > 0) {
+			for (int j = 0; j < listArray.length(); j++) {
+				JSONObject obj = (JSONObject) listArray.opt(j);
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("treeIndex", obj.getString("treeIndex"));
+				map.put("name", obj.getString("name"));
+				list.add(map);
+			}
+		}
+		return list;
+	}
+	
+	/**
+	 * Description:下载列表中的海报，并及时刷新页面 
+	 * 保存文件 文件夹路径格式：有sdcard情况
+	 * /mnt/sdcard/com.com.stv.supervod.activity/files
+	 * 无sdcard情况是：/date/date/com.com.stv.supervod.activity/files
+	 * 1、维护一个固定长度为5的FIFO的队列 2、如果当前正在下载，并且更换了队列则等下载完再次下载最新的更新
+	 * 
+	 * @Version1.0 2011-12-12 上午11:01:53 mustang created
+	 * @param bp
+	 * @param listViewId
+	 *            需要指定下载哪个listview数据
+	 * @param position
+	 *            需要指定下载哪个位置的数据
+	 * @param activity
+	 * @throws IOException
+	 */
+	public static void downloadImageList(Context activity, int adapterId, int postrion) throws IOException {
+
+		File dir = null;
+		// 外置存储卡需要配置权限
+		if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+			dir = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + activity.getPackageName() + "/files");
+			if (!dir.exists()) {
+				dir.mkdirs();
+			}
+		} else {
+			dir = activity.getFilesDir();
+		}
+		String dpath = dir.getAbsolutePath();
+		while (runFlag == false && nowDownloadList.get(nowDownloadList.size() - 1) != null) {
+			runFlag = true;
+			String url = nowDownloadList.get(nowDownloadList.size() - 1);
+			URL imageurl = new URL(url);
+			HttpURLConnection conn = (HttpURLConnection) imageurl.openConnection();
+			conn.setDoInput(true);
+			conn.connect();
+			InputStream is = conn.getInputStream();
+			Bitmap bp = BitmapFactory.decodeStream(is);
+			is.close();
+			String[] names = url.split("/");
+			String filename = "";
+			if (names.length > 0) {
+				filename = names[names.length - 1];
+			}
+			if (bp != null && !ValidateUtil.isBlank(filename)) {
+				Uri uri = Uri.fromFile(new File(dpath, filename));
+				OutputStream os = activity.getContentResolver().openOutputStream(uri);
+				bp.compress(Bitmap.CompressFormat.PNG, 100, os);
+				os.close();
+			}
+			// 刷新listview
+			notifyDataSetChanged(adapterId, postrion, activity);
+			// 从队列中主动删除已经下载的URL
+			nowDownloadList.remove(nowDownloadList.size() - 1);
+			runFlag = false;
+		}
+
+	}
+
+	/**
+	 * Description:下载一张图片
+	 * 
+	 * @Version1.0 2011-12-20 下午03:05:57 mustang created
+	 * @param activity
+	 * @throws IOException
+	 */
+	public static Bitmap downloadImageByUrl(Activity activity, String url) throws IOException {
+		Bitmap bp = null;
+		if (!ValidateUtil.isBlank(url)) {
+			URL imageurl = new URL(url);
+			HttpURLConnection conn = (HttpURLConnection) imageurl.openConnection();
+			conn.setDoInput(true);
+			conn.connect();
+			InputStream is = conn.getInputStream();
+			bp = BitmapFactory.decodeStream(is);
+			is.close();
+		}
+		return bp;
+
+	}
+
+	/**
+	 * Description: 刷新列表，这里为了方便,需要activity中定义静态的Adapeter
+	 * 
+	 * @Version1.0 2011-12-21 上午10:08:27 mustang created
+	 * @param adapterId
+	 * @param postrion
+	 */
+	public static void notifyDataSetChanged(int adapterId, int postrion, Context act) {
+		if (adapterId > 0) {
+			BaseAdapter adapter = null;
+			switch (adapterId) {
+			case homepage_adapter_today_hit: {
+				adapter = Homepage.today_hit_adapter;
+				if (adapter != null) {
+					adapter.getItem(postrion);
+					updateListItemImage((Map<String, Object>) adapter.getItem(postrion), act);
+				}
+			}
+				break;
+			case homepage_adapter_latest_online: {
+				adapter = Homepage.today_hit_adapter;
+				if (adapter != null) {
+					adapter.getItem(postrion);
+					updateListItemImage((Map<String, Object>) adapter.getItem(postrion), act);
+				}
+			}
+				break;
+			case homepage_adapter_home_theater: {
+				adapter = Homepage.today_hit_adapter;
+				if (adapter != null) {
+					adapter.getItem(postrion);
+					updateListItemImage((Map<String, Object>) adapter.getItem(postrion), act);
+				}
+			}
+				break;
+			case homepage_adapter_tv_playhouse: {
+				adapter = Homepage.today_hit_adapter;
+				if (adapter != null) {
+					adapter.getItem(postrion);
+					updateListItemImage((Map<String, Object>) adapter.getItem(postrion), act);
+				}
+			}
+				break;
+			case homepage_adapter_top_singer: {
+				adapter = Homepage.today_hit_adapter;
+				if (adapter != null) {
+					adapter.getItem(postrion);
+					updateListItemImage((Map<String, Object>) adapter.getItem(postrion), act);
+				}
+			}
+				break;
+			default:
+				break;
+
+			}
+		}
+	}
+
+	/**
+	 * Description: 更新某条数据海报，同时清空海报url
+	 * 
+	 * @Version1.0 2011-12-21 上午10:36:12 mustang created
+	 * @param url
+	 * @param map
+	 * @param act
+	 */
+	public static void updateListItemImage(Map<String, Object> map, Context act) {
+
+		if (map != null) {
+			String url = (String) map.get("imaurl");
+			String[] urls = null;
+			if (ValidateUtil.isBlank(url)) {
+				urls = url.split("/");
+			}
+			if (urls != null && urls.length > 0) {
+				String imgname = urls[urls.length - 1];
+				Drawable da = ImageServiceImpl.getImageDrawable(imgname, act);
+				if (da != null) {
+					map.put("img", da);
+					// 下载完毕清空，imgurl
+					map.put("imgurl", "");
+				}
+			}
+		}
+	}
+
+}

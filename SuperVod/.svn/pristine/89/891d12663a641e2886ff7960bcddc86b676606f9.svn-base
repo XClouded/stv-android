@@ -1,0 +1,56 @@
+package com.stv.supervod.utils;
+
+import android.app.Activity;
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.view.Gravity;
+import android.widget.Toast;
+
+/**
+ * Description: 各种提示信息控件
+ * Copyright (c) 永新视博
+ * All Rights Reserved.
+ * @version 1.0  2011-12-6 下午01:15:27 mustang created
+ */
+public class AlertUtils {
+	public static final int HAVE_TITLE = 0;
+	public static final int NO_TITLE = 1;
+	
+	public static void displayToast(Activity act ,String str) {
+		Toast tt = Toast.makeText(act, str, Toast.LENGTH_LONG);
+		tt.setGravity(Gravity.CENTER, 0, 220);
+		tt.show();
+	}
+	
+	
+	/**
+	 * Description: 滚动条提示信息
+	 * @Version1.0 2011-12-7 下午01:49:13 mustang created
+	 * @param id
+	 * @param act
+	 * @return
+	 */
+	public static Dialog createDialog(int id,Activity act) {
+		switch (id) {
+		case HAVE_TITLE: {
+			ProgressDialog dialog = new ProgressDialog(act);
+			dialog.setTitle("请稍后");
+			dialog.setMessage("数据加载中......");
+			dialog.setIndeterminate(true);
+			dialog.setCancelable(true);
+			return dialog;
+		}
+		case NO_TITLE: {
+			ProgressDialog dialog = new ProgressDialog(act);
+			dialog.setMessage("数据加载中...");
+			dialog.setIndeterminate(true);
+			dialog.setCancelable(true);
+			return dialog;
+		}
+		}
+		return null;
+	}
+	
+	
+	
+}

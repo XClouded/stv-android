@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/light_gray"
+    android:padding="0.0dip" >
+
+    <ImageView
+        android:id="@+id/help_myepg_iv_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="56dp"
+        android:src="@drawable/tutorial_image1" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/help_myepg_iv_edit"
+        android:layout_centerHorizontal="true"
+        android:text="按住图片上下拖动改变顺序"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+</RelativeLayout>

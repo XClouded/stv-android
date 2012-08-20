@@ -1,0 +1,17 @@
+package com.stv.supervod.utils;
+
+
+/**
+ * Description: 验证信息有效性
+ * Copyright (c) 永新视博
+ * All Rights Reserved.
+ * @version 1.0  2011-12-6 下午01:15:27 mustang created
+ */
+public class ValidateUtil {
+	public static boolean isBlank(String str){
+		if(str!=null&&!str.trim().equals("")&&!str.trim().equals(" ")){
+			return false;
+		}
+		return true;
+	}
+}

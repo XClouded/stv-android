@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/background">
+
+
+    <LinearLayout
+        android:id="@+id/bookmark_ll_title"
+        android:layout_width="fill_parent"
+        android:layout_height="43dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/homepage_top"
+        android:gravity="center_vertical|center_horizontal" >
+
+        <Button
+            android:id="@+id/bookmark_btn_back"
+            android:layout_width="68dp"
+            android:layout_height="wrap_content"
+            android:text="@string/detail_btn_back" 
+            style="@style/Button_Return"  
+            android:layout_marginLeft="5dp"/>
+
+        <TextView
+            android:id="@+id/bookmark_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/further_bookmark_title"
+            android:layout_weight="1.0"
+            style="@style/Title" />
+
+        <Button
+            android:id="@+id/bookmark_btn_edit"
+            style="@style/further_title_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp" 
+            android:text="@string/further_btn_edit" 
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/bookmark_btn_clear"
+            style="@style/further_title_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="9dp"
+            android:text="@string/further_btn_clear" 
+            android:visibility="gone"/>
+
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/bookmark_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:cacheColorHint="#00000000" android:layout_below="@id/bookmark_ll_title"/>
+
+</RelativeLayout>

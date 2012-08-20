@@ -1,0 +1,157 @@
+package com.stv.supervod.activity;
+
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.RadioGroup;
+
+import com.stv.supervod.service.RegisterServiceImpl;
+import com.stv.supervod.utils.AlertUtils;
+
+/**
+ * Description:1)去服务器验证用户信息有效性 2)如果信息合法保存，登录配置如记住密码，自动登录等.
+ * 3)登录成功到会员资料页面，用户可以注销（退出） Copyright (c) 永新视博 All Rights Reserved.
+ * 
+ * @version 1.0 2011-12-7 下午02:18:35 mustang created
+ */
+public class Login extends BaseActivity implements RadioGroup.OnCheckedChangeListener {
+	ProgressDialog logDialog;
+	Activity act = this;
+	private EditText username;
+	private EditText password;
+	private CheckBox remember_password;
+	private CheckBox auto_login;
+	private boolean auto_login_flag = false;
+	private boolean remember_password_flag = false;
+	private static String loginResult = "";
+	private String vusername = "";
+	private String vpassword = "";
+	private int pwd_type = 0;
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.login);
+		username = (EditText) this.findViewById(R.id.username);
+		Bundle bd = this.getIntent().getExtras();
+		if (bd != null) {
+			vusername = bd.getString("username");
+			username.setText(vusername);
+		}
+		auto_login = (CheckBox) this.findViewById(R.id.auto_login);
+		auto_login.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				if (isChecked) {
+					remember_password.setChecked(true);
+					auto_login_flag = true;
+					remember_password_flag = true;
+				} else {
+					auto_login_flag = false;
+				}
+			}
+
+		});
+		remember_password = (CheckBox) this.findViewById(R.id.remember_password);
+		remember_password.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				if (isChecked) {
+					remember_password_flag = true;
+				} else {
+					remember_password_flag = false;
+					if (auto_login_flag == true) {
+						auto_login_flag = false;
+						auto_login.setChecked(false);
+					}
+				}
+			}
+
+		});
+
+	}
+
+	/**
+	 * Description: 处理登录的业务逻辑
+	 * 
+	 * @Version1.0 2011-12-5 下午06:20:26 mustang created
+	 * @param view
+	 */
+	public void login(View view) {
+		username = (EditText) this.findViewById(R.id.username);
+		password = (EditText) this.findViewById(R.id.password);
+		vusername = username.getText().toString();
+		vpassword = password.getText().toString();
+		vpassword += pwd_type;
+		logDialog = (ProgressDialog) AlertUtils.createDialog(AlertUtils.HAVE_TITLE, this);
+		logDialog.show();
+		new Thread() {
+			public void run() {
+				try {
+					sleep(1500);// TODO 这个要去掉，正式环境
+					loginResult = RegisterServiceImpl.saveUserLoginInfo(act, vusername, vpassword, auto_login_flag, remember_password_flag);
+					handler.sendEmptyMessage(0);
+				} catch (Exception e) {
+					e.printStackTrace();
+					AlertUtils.displayToast(act, "访问网络出现异常");
+				}
+			}
+		}.start();
+
+	}
+
+	public void loginResult() {
+		if (loginResult == "") {
+			Intent intent = new Intent();
+			intent.setClass(this, LoginSuccess.class);
+			Bundle bd = new Bundle();
+			bd.putString("username", vusername);
+			intent.putExtras(bd);
+
+			Framework.switchActivity("login2loginsucess", intent);
+		} else {
+			// TODO这里要解析错误码，暂不解析
+			AlertUtils.displayToast(this, "错误信息：" + loginResult);
+		}
+	}
+
+	/**
+	 * Description: 显示注册页面
+	 * 
+	 * @Version1.0 2011-12-6 下午01:26:34 mustang created
+	 * @param view
+	 */
+	public void showRegPage(View view) {
+		Intent intent = new Intent();
+		intent.setClass(this, Register.class);
+		Framework.switchActivity("login2Register", intent);
+	}
+
+	/**
+	 * 关闭滚动条
+	 */
+	private Handler handler = new Handler() {
+		@Override
+		public void handleMessage(Message msg) {
+			logDialog.dismiss();
+			loginResult();
+		}
+	};
+
+	@Override
+	public void onCheckedChanged(RadioGroup group, int checkedId) {
+		if (checkedId == R.id.pwd_password) {
+			pwd_type = 1;
+		} else {
+			pwd_type = 0;
+		}
+	}
+
+}

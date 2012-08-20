@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="gray">#262626</color>
+    <color name="light_gray">#494949</color>
+    <color name="transparent">#10000000</color>
+    <color name="blue">#c1d2f0</color>
+    <color name="week_focus">#e2a90e</color>
+</resources>

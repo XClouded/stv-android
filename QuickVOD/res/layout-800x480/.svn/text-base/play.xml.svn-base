@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AbsoluteLayout
+	android:id="@+id/widget62"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:background="@drawable/background"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	>
+<TextView 
+	android:gravity="center" 
+	android:text="" 
+	android:textSize="25sp" 
+	android:textStyle="bold"
+	android:id="@+id/display" 
+	android:layout_width="480px" 
+	android:layout_height="wrap_content" 
+	android:layout_x="0dp" 
+	android:layout_y="28dp" 
+	/>
+<ImageView
+	android:id="@+id/widget57"
+	android:layout_width="480px"
+	android:layout_height="167px"
+	android:src="@drawable/bottom"
+	android:layout_x="0dp"
+	android:layout_y="383dp"
+	/>
+<ImageView
+	android:id="@+id/widget64"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:src="@drawable/middle_back"
+	android:layout_x="15px"
+	android:layout_y="110px"/>
+<ImageView
+	android:id="@+id/circle"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:layout_x="125px"
+	android:layout_y="220px" />
+<ImageView
+	android:id="@+id/widget66"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:src="@drawable/middle"
+	android:layout_x="127px"
+	android:layout_y="146dp"
+	/>
+<ImageView
+	android:id="@+id/key_play"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:src="@drawable/pause"
+	android:layout_x="142dp"
+	android:layout_y="188dp"
+	android:background="#00000000"
+	/>
+<ImageView
+	android:id="@+id/widget97"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:src="@drawable/right_state"
+	android:layout_x="109px"
+	android:layout_y="139dp"
+	/>
+<ImageView android:layout_width="wrap_content" android:id="@+id/key_backword" android:background="#00000000" android:src="@drawable/backword" android:layout_height="wrap_content" android:layout_x="7dp" android:layout_y="196dp" />
+<ImageView android:layout_width="wrap_content" android:id="@+id/key_forward" android:background="#00000000" android:src="@drawable/forward" android:layout_height="wrap_content" android:layout_x="250dp" android:layout_y="196dp" />
+<TextView android:text="" android:id="@+id/speed" android:layout_y="362dp" android:layout_height="33dp" android:layout_width="100dp" android:layout_x="202dp" android:textSize="25sp" android:textStyle="bold"></TextView>
+
+<ImageView
+    android:id="@+id/key_return"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_x="134dp"
+    android:layout_y="402dp"
+    android:background="#00000000"
+    android:src="@drawable/revert" />
+
+<ImageView
+    android:id="@+id/flower"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_x="28dp"
+    android:layout_y="402dp"
+    android:background="#00000000"
+    android:src="@drawable/flower" />
+
+</AbsoluteLayout>
+

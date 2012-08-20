@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/listitem" 
+    style="@style/List_Layout" >"
+
+    <ImageView 
+        android:id="@+id/item_img"
+		style="@style/List_Image" />
+    
+    <LinearLayout 
+        style="@style/List_Layout1" >
+        
+		<TextView 
+		    android:id="@+id/item_name"
+		    style="@style/List_Movie_Name" />
+		
+		<LinearLayout style="@style/List_Layout2" >
+			<TextView android:id="@+id/widget11"
+			    style="@style/List_Movie_Text" />
+			<TextView android:id="@+id/item_type"
+			    style="@style/List_Movie_Type" />
+		</LinearLayout>
+		
+		<LinearLayout 
+		    android:orientation="horizontal"
+			android:layout_width="wrap_content"
+			android:layout_height="fill_parent">
+			
+		    <RatingBar   
+				android:id="@+id/ratingBar"   
+				style="@style/List_RatingBar" 
+				android:rating="2.0" />
+
+		    <TextView
+		        android:id="@+id/ratingScore1"
+		        android:text="9."
+		        style="@style/Int_Score" />
+		    <TextView 
+		        android:id="@+id/ratingScore2"
+		        android:text="2"
+		        style="@style/Float_Score" />
+		    <TextView style="@style/Text_Score" />
+		</LinearLayout>
+		
+	</LinearLayout>
+
+</LinearLayout>

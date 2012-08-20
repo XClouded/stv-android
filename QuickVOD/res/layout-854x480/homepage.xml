@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AbsoluteLayout
+	android:id="@+id/widget62"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:background="@drawable/background_new"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	>
+<ProgressBar 
+	android:visibility="invisible" 
+	android:layout_width="24px" 
+	android:id="@+id/homepage_progress" 
+	android:layout_height="24px" 
+	android:layout_x="216dp" 
+	android:layout_y="458dp" />
+<TextView 
+	android:visibility="invisible" 
+	android:layout_width="200px" 
+	android:text="检测网络连接中..." 
+	android:textSize="14sp" 
+	android:gravity="center" 
+	android:id="@+id/homepage_info" 
+	android:layout_height="35px" 
+	android:layout_x="94dp" 
+	android:layout_y="456dp" />
+<Button 
+	android:textSize="15sp" 
+	android:id="@+id/login_button" 
+	android:layout_width="61dp" 
+	android:text="确定" 
+	android:layout_height="wrap_content" 
+	android:layout_x="130dp" 
+	android:layout_y="400dp" />
+<EditText 
+	android:maxLength="11" 
+	android:inputType="phone" 
+	android:layout_width="272dp" 
+	android:id="@+id/PhoneNum" 
+	android:layout_height="50dp" 
+	android:hint="请输入11位手机号码" 
+	android:layout_x="25dp" 
+	android:layout_y="214dp" />
+<TextView 
+	android:textStyle="bold" 
+	android:layout_width="272dp" 
+	android:text="本机号码:" 
+	android:textSize="25sp" 
+	android:id="@+id/textView1" 
+	android:layout_height="wrap_content" 
+	android:layout_x="25dp" 
+	android:layout_y="182dp" />
+<TextView 
+	android:textStyle="bold" 
+	android:layout_width="272dp" 
+	android:text="智能卡号:" 
+	android:textSize="25sp" 
+	android:id="@+id/textView2" 
+	android:layout_height="wrap_content" 
+	android:layout_x="25dp" 
+	android:layout_y="282dp" />
+<EditText 
+	android:numeric="integer" 
+	android:maxLength="16" 
+	android:layout_width="272dp" 
+	android:id="@+id/SmartCard" 
+	android:password="true" 
+	android:layout_height="50dp" 
+	android:hint="请输入16位机顶盒智能卡卡号" 
+	android:layout_x="25dp" 
+	android:layout_y="314dp">
+    <requestFocus></requestFocus>
+</EditText>
+<ImageView 
+	android:layout_width="wrap_content" 
+	android:src="@drawable/logo" 
+	android:id="@+id/widget57" 
+	android:layout_height="wrap_content" 
+	android:layout_x="42dp" 
+	android:layout_y="82dp" />
+</AbsoluteLayout>

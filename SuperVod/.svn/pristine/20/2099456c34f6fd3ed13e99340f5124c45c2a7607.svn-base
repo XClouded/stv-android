@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="tvback_text_week">
+    	<item>星期日</item>
+    	<item>星期一</item>
+    	<item>星期二</item>
+    	<item>星期三</item>
+    	<item>星期四</item>
+    	<item>星期五</item>
+    	<item>星期六</item>
+    	<item>今天</item>
+    </string-array>
+    
+    <string-array name="dlg_tvback_dlg_option">
+    	<item>播放</item>
+    	<item>加入收藏</item>
+    	<item>加入我的Vod</item>
+    </string-array>
+</resources>

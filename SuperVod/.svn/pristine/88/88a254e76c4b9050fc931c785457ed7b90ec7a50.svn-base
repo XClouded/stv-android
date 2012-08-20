@@ -1,0 +1,232 @@
+/**
+ * 
+ */
+package com.stv.supervod.activity;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.stv.supervod.adapter.CategoryGridItemAdapter;
+import com.stv.supervod.adapter.ListItemSimpleAdapter;
+import com.stv.supervod.service.HttpDownloadImpl.KeyEnum;
+import com.stv.supervod.utils.AlertUtils;
+import com.stv.supervod.utils.ListUtil;
+
+import android.app.Dialog;
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.view.Window;
+import android.view.View.OnClickListener;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.GridView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.AbsListView.OnScrollListener;
+import android.widget.AdapterView.OnItemClickListener;
+
+/**
+ * @author Administrator
+ *
+ */
+public class CategoryMtv extends BaseActivity implements OnScrollListener{
+	
+	private ListView listView; 
+	private View loadMoreView;  
+	private TextView loadingTextView;
+	private ProgressBar progressBar;
+	private Button collectButton;
+	private Button channelButton;
+	private ListItemSimpleAdapter adapter;
+	private LinearLayout default_Layout;
+	
+    private int visibleLastIndex = 0;   //最后的可视项索引   
+    private int visibleItemCount;       //当前窗口可见项总数
+    private final int STATE_FINISH = 0; //数据下载完成
+    private final int STATE_EXCEPTION = 1;  //数据下载错误
+    private int itemsLastIndex = 0;
+    private boolean alreadyDownload = false;
+    
+    private ArrayList<Map<String, Object>> listItem = new ArrayList<Map<String, Object>>();
+	private String[] songsStrings = { "新贵妃醉酒", "高飞", "雨花石", "你是我的眼", "离不开你",
+			"新贵妃醉酒", "高飞", "雨花石", "你是我的眼", "离不开你","新贵妃醉酒", "高飞", "雨花石", "你是我的眼", "离不开你",
+			"新贵妃醉酒", "高飞", "雨花石", "你是我的眼", "离不开你", "新贵妃醉酒", "高飞", "雨花石", "你是我的眼", "离不开你"};
+	
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+        setContentView(R.layout.category_list);
+        
+        initGui();
+	}
+	
+	public void initGui() {
+        loadingTextView = (TextView)findViewById(R.id.loadingText);
+        progressBar = (ProgressBar)findViewById(R.id.loadingBar);
+        TextView categoryTextView = (TextView)findViewById(R.id.category_name);
+        TextView actsTextView = (TextView)findViewById(R.id.category_mtv);
+        Button returnButton = (Button)findViewById(R.id.category_btn_back);
+        Button catergoryButton = (Button)findViewById(R.id.btn_category);
+        Button sortButton = (Button)findViewById(R.id.btn_sort);
+        collectButton = (Button)findViewById(R.id.btn_collect);
+        channelButton = (Button)findViewById(R.id.btn_channel);
+        
+        categoryTextView.setVisibility(View.GONE);
+        sortButton.setVisibility(View.GONE);
+        catergoryButton.setVisibility(View.GONE);
+        categoryTextView.setVisibility(View.GONE);
+        actsTextView.setVisibility(View.VISIBLE);
+        actsTextView.setText("歌曲");
+        
+        default_Layout = (LinearLayout)findViewById(R.id.default_item);
+        listView = (ListView)findViewById(R.id.category_list);
+        loadMoreView = getLayoutInflater().inflate(R.layout.list_load_more, null);
+        
+        listView.setVisibility(View.GONE);
+        listView.setFastScrollEnabled(true);
+		default_Layout.setVisibility(View.VISIBLE);
+		listView.addFooterView(loadMoreView);
+		listView.setOnScrollListener(this);
+		new ProgressTask().execute();
+		
+		listView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+					long arg3) {			
+				// TODO Auto-generated method stub
+				// must invoke the super.showDetail function
+			}
+		});
+        
+        returnButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Framework.switchActivityBack();
+			}
+		});
+        
+        collectButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				//收藏代码
+			}
+		});
+        
+        channelButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				//加入我的频道
+			}
+		});
+	}
+	
+	@SuppressWarnings("unchecked")
+	private List<Map<String, Object>> getData() {
+		//生成动态数组，并且转入数据  
+        for(int i=0; i < songsStrings.length; i++)  
+        {  
+          Map<String, Object> map = new HashMap<String, Object>();  
+          map.put(KeyEnum.title.toString(), songsStrings[i]);
+          map.put(KeyEnum.categories.toString(), "歌曲");
+          map.put(KeyEnum.ratingBar.toString(), Float.parseFloat("9.0"));
+          map.put(KeyEnum.ratingScore1.toString(), "9.");
+          map.put(KeyEnum.ratingScore2.toString(), "2");
+          listItem.add(map);  
+        }
+
+        return listItem;
+	}
+	
+	@Override
+	public void onScroll(AbsListView view, int firstVisibleItem,
+			int visibleItemCount, int totalItemCount) {
+		// TODO Auto-generated method stub
+		Log.d("---onScroll:firstVisibleItem---", String.valueOf(firstVisibleItem));
+		Log.d("---onScroll:visibleItemCount---", String.valueOf(visibleItemCount));
+		
+		this.visibleItemCount = visibleItemCount;  
+        visibleLastIndex = firstVisibleItem + visibleItemCount - 1;
+        Log.d("---onScroll:visibleLastIndex---", String.valueOf(visibleLastIndex));
+	}
+
+	@Override
+	public void onScrollStateChanged(AbsListView view, int scrollState) {
+		// TODO Auto-generated method stub
+		if (adapter != null) {
+			itemsLastIndex = adapter.getCount() - 1;    //数据集最后一项的索引   
+		}
+        int lastIndex = itemsLastIndex + 1;             //加上底部的loadMoreView项   
+        if (scrollState == OnScrollListener.SCROLL_STATE_IDLE
+    		&& visibleLastIndex == lastIndex) {  
+            //如果是自动加载,可以在这里放置异步加载数据的代码   
+        	new ProgressTask().execute();	
+            Log.d("LOADMORE", "loading..."); 
+        } 
+	}
+	
+	private class ProgressTask extends AsyncTask<Void, Void, Integer> {  
+		
+		/* 该方法将在执行实际的后台操作前被UI thread调用。可以在该方法中做一些准备工作，如在界面上显示一个进度条。*/ 
+		@Override 
+		protected void onPreExecute() {     
+			// 首先加载默认listItem
+		}
+		
+		/* 执行那些很耗时的后台计算工作。可以调用publishProgress方法来更新实时的任务进度。 */ 
+		@Override 
+		protected Integer doInBackground(Void... voids) { 
+			/*下载具体分类列表数据*/
+			 
+			return STATE_FINISH; 
+		} 
+		
+		/* 在doInBackground 执行完成后，onPostExecute 方法将被UI thread调用，  
+		 * 后台的计算结果将通过该方法传递到UI thread.  
+		 */ 
+		@Override 
+		protected void onPostExecute(Integer result) {     
+			int state = result.intValue(); 
+			switch (state) {
+			case STATE_FINISH:
+				default_Layout.setVisibility(View.GONE);
+				listView.setVisibility(View.VISIBLE);
+				if (adapter == null) {
+					adapter = new ListItemSimpleAdapter(CategoryMtv.this,
+							getData(),
+							R.layout.category_list_item_mtv,
+							new String[]{KeyEnum.title.toString(), KeyEnum.categories.toString(), KeyEnum.ratingBar.toString(),
+										KeyEnum.ratingScore1.toString(), KeyEnum.ratingScore2.toString()},
+							new int[]{ R.id.item_name, R.id.item_type, R.id.ratingBar, R.id.ratingScore1, R.id.ratingScore2 });
+				} else {
+					adapter.setmData(getData());
+					adapter.notifyDataSetChanged();
+				}
+				
+				listView.setAdapter(adapter);
+				listView.setSelection(itemsLastIndex); //设置选中项
+				break;
+			case STATE_EXCEPTION:
+				loadingTextView.setText("加载数据失败！");
+				progressBar.setVisibility(View.INVISIBLE);
+			default:
+				break;
+			}
+		}
+	}
+}

@@ -1,0 +1,352 @@
+package com.stv.supervod.activity;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
+import android.widget.ListView;
+
+import com.stv.supervod.adapter.ListItemSimpleAdapter;
+import com.stv.supervod.adapter.PosterSimpleAdapter;
+import com.stv.supervod.service.RegisterServiceImpl;
+import com.stv.supervod.utils.AlertUtils;
+import com.stv.supervod.utils.DpPxUtil;
+import com.stv.supervod.utils.ListUtil;
+import com.stv.supervod.widget_extended.PosterGallery;
+
+/**
+ * @author Administrator
+ * @description 首页
+ * @authority 所有用户
+ * @function 1、向服务器请求推荐影片（6部，实时更新），以及各个分类中的推荐影片（20部），并展示
+ *           2、用户点击推荐区、分类推荐区的影片后，进入到详细页面:Detail 3、用户点击会员按钮，进入用户登录页面：Login
+ */
+public class Homepage extends BaseActivity {
+
+	ProgressDialog dialog;
+	Activity act = this;
+	PosterGallery pge;
+	Button regbutton;
+	boolean online = false;
+	int poster_select = PosterSimpleAdapter.POSTER_LENGTH * 1000;
+	/**
+	 * 首页要分类显示的列表,首页只刷新一次
+	 */
+	Map<String, List<Map<String, Object>>> map;
+	public static ListItemSimpleAdapter today_hit_adapter;
+	public static ListItemSimpleAdapter latest_online_adapter;
+	public static ListItemSimpleAdapter home_theater_adapter;
+	public static ListItemSimpleAdapter tv_playhouse_adapter;
+	public static ListItemSimpleAdapter top_singer_adapter;
+	List<Map<String, Object>> today_hit_list;
+	List<Map<String, Object>> latest_online_list;
+	List<Map<String, Object>> home_theater_list;
+	List<Map<String, Object>> tv_playhouse_list;
+	List<Map<String, Object>> top_singer_list;
+	List<Map<String, Object>> posters;
+	boolean today_hit_flag = false;
+	boolean latest_online_flag = false;
+	boolean home_theater_flag = false;
+	boolean tv_playhouse_flag = false;
+	boolean top_singer_flag = false;
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.homepage);
+		// 只刷新一次页面
+		if (map == null) {
+			dialog = (ProgressDialog) AlertUtils.createDialog(AlertUtils.NO_TITLE, this);
+			dialog.show();
+			new Thread() {
+				public void run() {
+					try {
+						// TODO 1、准备显示数据的
+						sleep(1500);
+						// 这里已经把数据下载到相应的列表中了，等到下载完毕后，对应的分类去列表中显示数据即可
+						/*
+						 * map = HttpDownloadImpl.dowaloadHomePageData(act);
+						 * today_hit = map.get("today_hit"); posters =
+						 * map.get("posters");
+						 */
+						hpDateListHandler.sendEmptyMessage(0);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}.start();
+		}
+
+		// 如果用户选择过记住密码并自动登录，这里会员图片有区别
+		regbutton = (Button) this.findViewById(R.id.regbutton);
+		online = (Boolean) RegisterServiceImpl.getUserinfo(this).get("online");
+
+		Drawable img = null;
+		if (online) {
+			img = getResources().getDrawable(R.drawable.viplogo_login);
+		} else {
+			img = getResources().getDrawable(R.drawable.viplogo_logout);
+		}
+		img.setBounds(0, 0, img.getMinimumWidth(), img.getMinimumHeight());
+		regbutton.setCompoundDrawables(img, null, null, null);
+
+		PosterSimpleAdapter adp = new PosterSimpleAdapter(act, PosterSimpleAdapter.getData(), R.layout.homepage_poster, new String[] { "name" },
+				new int[] { R.id.name });
+		pge = (PosterGallery) act.findViewById(R.id.gallery);
+		pge.setAdapter(adp);
+		pge.setSelection(poster_select);
+		pge.setOnItemClickListener(new ItemClickListener());
+	}
+
+	/**
+	 * Description: 根据ID显示（隐藏）不同不同列表
+	 * 
+	 * @Version1.0 2011-12-5 下午01:06:58 mustang created
+	 * @param view
+	 */
+	public void showtype(View view) {
+		Drawable shrink = getResources().getDrawable(R.drawable.homepage_group_button_shrink);
+		shrink.setBounds(0, 0, shrink.getMinimumWidth(), shrink.getMinimumHeight());
+		Drawable expand = getResources().getDrawable(R.drawable.homepage_group_button_expand);
+		expand.setBounds(0, 0, shrink.getMinimumWidth(), shrink.getMinimumHeight());
+		Integer titleheight = DpPxUtil.dp2px(this, 0);
+		Button button;
+		int vid = view.getId();
+		switch (vid) {
+		case R.id.today_hit_button: {
+			if (today_hit_list == null || today_hit_list.isEmpty()) {
+				today_hit_list = getData();
+			}
+			ListView listView = (ListView) this.findViewById(R.id.today_hit_view);
+			button = (Button) this.findViewById(R.id.today_hit_button);
+			if (today_hit_adapter == null && today_hit_list != null && !today_hit_list.isEmpty()) {
+				// TODO 需要验证today_hit_adapter不重建时是否能够检测到数据变化
+				if (today_hit_adapter == null) {
+					today_hit_adapter = new ListItemSimpleAdapter(this, today_hit_list, R.layout.homepage_list_item, new String[] { "name", "type",
+							"img", "ratingBar", "ratingScore1", "ratingScore2" }, new int[] { R.id.name, R.id.type, R.id.img, R.id.ratingBar,
+							R.id.ratingScore1, R.id.ratingScore2 });
+					listView.setAdapter(today_hit_adapter);
+					ListUtil.setListViewHeightBasedOnChildren(listView, titleheight);
+					listView.setOnItemClickListener(new ItemClickListener());
+				}
+
+			}
+			if (today_hit_adapter != null) {
+				if (today_hit_flag == false) {
+					today_hit_flag = true;
+					listView.setVisibility(View.VISIBLE);
+					button.setCompoundDrawables(null, null, expand, null);
+				} else {
+					today_hit_flag = false;
+					listView.setVisibility(View.GONE);
+					button.setCompoundDrawables(null, null, shrink, null);
+				}
+			}
+
+		}
+			break;
+		case R.id.latest_online_button: {
+			if (latest_online_list == null || latest_online_list.isEmpty()) {
+				latest_online_list = getData();
+			}
+			ListView listView = (ListView) this.findViewById(R.id.latest_online_view);
+			button = (Button) this.findViewById(R.id.latest_online_button);
+
+			if (latest_online_adapter == null && latest_online_list != null && !latest_online_list.isEmpty()) {
+
+				latest_online_adapter = new ListItemSimpleAdapter(this, latest_online_list, R.layout.homepage_list_item, new String[] { "name",
+						"type", "img", "ratingBar", "ratingScore1", "ratingScore2" }, new int[] { R.id.name, R.id.type, R.id.img, R.id.ratingBar,
+						R.id.ratingScore1, R.id.ratingScore2 });
+				listView.setAdapter(latest_online_adapter);
+				ListUtil.setListViewHeightBasedOnChildren(listView, titleheight);
+				listView.setOnItemClickListener(new ItemClickListener());
+
+			}
+			if (latest_online_adapter != null) {
+				if (latest_online_flag == false) {
+					latest_online_flag = true;
+					listView.setVisibility(View.VISIBLE);
+					button.setCompoundDrawables(null, null, expand, null);
+				} else {
+					latest_online_flag = false;
+					listView.setVisibility(View.GONE);
+					button.setCompoundDrawables(null, null, shrink, null);
+				}
+			}
+
+		}
+			break;
+		case R.id.home_theater_button: {
+			if (home_theater_list == null || home_theater_list.isEmpty()) {
+				home_theater_list = getData();
+			}
+			ListView listView = (ListView) this.findViewById(R.id.home_theater_view);
+			button = (Button) this.findViewById(R.id.home_theater_button);
+			if (home_theater_adapter == null && home_theater_list != null && !home_theater_list.isEmpty()) {
+
+				home_theater_adapter = new ListItemSimpleAdapter(this, home_theater_list, R.layout.homepage_list_item, new String[] { "name", "type",
+						"img", "ratingBar", "ratingScore1", "ratingScore2" }, new int[] { R.id.name, R.id.type, R.id.img, R.id.ratingBar,
+						R.id.ratingScore1, R.id.ratingScore2 });
+				listView.setAdapter(home_theater_adapter);
+				ListUtil.setListViewHeightBasedOnChildren(listView, titleheight);
+				listView.setOnItemClickListener(new ItemClickListener());
+
+			}
+			if (home_theater_adapter != null) {
+				if (home_theater_flag == false) {
+					home_theater_flag = true;
+					listView.setVisibility(View.VISIBLE);
+					button.setCompoundDrawables(null, null, expand, null);
+				} else {
+					home_theater_flag = false;
+					listView.setVisibility(View.GONE);
+					button.setCompoundDrawables(null, null, shrink, null);
+				}
+			}
+
+		}
+			break;
+		case R.id.tv_playhouse_button: {
+			if (tv_playhouse_list == null || tv_playhouse_list.isEmpty()) {
+				tv_playhouse_list = getData();
+			}
+			ListView listView = (ListView) this.findViewById(R.id.tv_playhouse_view);
+			button = (Button) this.findViewById(R.id.tv_playhouse_button);
+			if (tv_playhouse_adapter == null && tv_playhouse_list != null && !tv_playhouse_list.isEmpty()) {
+				tv_playhouse_adapter = new ListItemSimpleAdapter(this, tv_playhouse_list, R.layout.homepage_list_item, new String[] { "name", "type",
+						"img", "ratingBar", "ratingScore1", "ratingScore2" }, new int[] { R.id.name, R.id.type, R.id.img, R.id.ratingBar,
+						R.id.ratingScore1, R.id.ratingScore2 });
+				listView.setAdapter(tv_playhouse_adapter);
+				ListUtil.setListViewHeightBasedOnChildren(listView, titleheight);
+				listView.setOnItemClickListener(new ItemClickListener());
+			}
+			if (tv_playhouse_adapter != null) {
+				if (tv_playhouse_flag == false) {
+					tv_playhouse_flag = true;
+					listView.setVisibility(View.VISIBLE);
+					button.setCompoundDrawables(null, null, expand, null);
+				} else {
+					tv_playhouse_flag = false;
+					listView.setVisibility(View.GONE);
+					button.setCompoundDrawables(null, null, shrink, null);
+				}
+			}
+
+		}
+			break;
+		case R.id.top_singer_button: {
+
+			if (top_singer_list == null || top_singer_list.isEmpty()) {
+				top_singer_list = getData();
+			}
+			ListView listView = (ListView) this.findViewById(R.id.top_singer_view);
+			button = (Button) this.findViewById(R.id.top_singer_button);
+			if (top_singer_adapter == null && top_singer_list != null && !top_singer_list.isEmpty()) {
+				top_singer_adapter = new ListItemSimpleAdapter(this, tv_playhouse_list, R.layout.homepage_list_item, new String[] { "name", "type",
+						"img", "ratingBar", "ratingScore1", "ratingScore2" }, new int[] { R.id.name, R.id.type, R.id.img, R.id.ratingBar,
+						R.id.ratingScore1, R.id.ratingScore2 });
+				listView.setAdapter(top_singer_adapter);
+				ListUtil.setListViewHeightBasedOnChildren(listView, titleheight);
+				listView.setOnItemClickListener(new ItemClickListener());
+			}
+			if (top_singer_adapter != null) {
+				if (top_singer_flag == false) {
+					top_singer_flag = true;
+					listView.setVisibility(View.VISIBLE);
+					button.setCompoundDrawables(null, null, expand, null);
+				} else {
+					top_singer_flag = false;
+					listView.setVisibility(View.GONE);
+					button.setCompoundDrawables(null, null, shrink, null);
+				}
+			}
+
+		}
+			break;
+		default:
+			break;
+		}
+
+	}
+
+	/**
+	 * Description: 列表显示假数据
+	 * 
+	 * @Version1.0 2011-12-5 下午12:58:10 mustang created
+	 * @return
+	 */
+	public List<Map<String, Object>> getData() {
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		for (int i = 0; i < 5; i++) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("id", i);
+			map.put("name", "影子写手");
+			map.put("type", "悬疑，惊悚，剧情");
+			map.put("img", R.drawable.video_cover_default);
+			map.put("ratingBar", 8.0f);
+			map.put("ratingScore1", "8.");
+			map.put("ratingScore2", "0");
+			list.add(map);
+		}
+		return list;
+	}
+
+	/**
+	 * Description: 显示登录页面
+	 * 
+	 * @Version1.0 2011-12-5 下午02:51:26 mustang created
+	 * @param view
+	 */
+	public void showLoginPage(View view) {
+		if (online) {
+			String username = (String) RegisterServiceImpl.getUserinfo(this).get("username");
+			Intent intent = new Intent();
+			intent.setClass(this, LoginSuccess.class);
+			Bundle bd = new Bundle();
+			bd.putString("username", username);
+			intent.putExtras(bd);
+			Framework.switchActivity("home2loginsucess", intent);
+		} else {
+			Intent intent = new Intent();
+			intent.setClass(this, Login.class);
+			Framework.switchActivity("homepage2login", intent);
+		}
+
+	}
+
+	/**
+	 * 关闭滚动条
+	 */
+	private Handler hpDateListHandler = new Handler() {
+		@Override
+		public void handleMessage(Message msg) {
+			dialog.dismiss();
+		}
+	};
+
+	class ItemClickListener implements OnItemClickListener {
+		public void onItemClick(AdapterView<?> arg0,// The AdapterView where the
+													// click happened
+				View arg1,// The view within the AdapterView that was clicked
+				int arg2,// The position of the view in the adapter
+				long arg3// The row id of the item that was clicked
+		) {
+			Intent intent = new Intent(Homepage.this, Detail.class);
+			intent.putExtra("EpisodeNumber", 30);
+			Framework.switchActivity("Homepage2Detail", intent);
+		}
+	}
+
+}

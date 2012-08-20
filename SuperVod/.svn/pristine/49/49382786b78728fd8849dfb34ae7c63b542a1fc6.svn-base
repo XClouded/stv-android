@@ -1,0 +1,333 @@
+package com.stv.supervod.activity;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.stv.supervod.adapter.ListItemSimpleAdapter;
+import com.stv.supervod.service.HttpDownloadImpl;
+import com.stv.supervod.widget_extended.ExGridViewTvList;
+
+import android.app.Dialog;
+import android.app.ListActivity;
+import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.Window;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
+import android.widget.GridView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
+import android.widget.TextView;
+
+public class CategoryItem extends ListActivity implements OnScrollListener{
+	
+	private Bundle myBundle;
+	private HttpDownloadImpl downloadImpl = HttpDownloadImpl.getHttpDownloader();
+	
+	private ArrayList<HashMap<String, Object>> listItem = new ArrayList<HashMap<String, Object>>();
+	private String[] types = { "剧情", "动作，剧情", "惊悚，剧情", "动作", "剧情", 
+							"喜剧，剧情", "悬疑，惊悚，剧情", "动作", "剧情", "喜剧，爱情"};
+	private String[] names = { "斗魂", "战狼传说", "玩尽杀绝IV", "小镇反面", "逃亡乐队", 
+							"情寻色香味", "影子写手", "半身缘", "东京十一罗汉", "埃及艳后"};
+	
+	private ArrayList<HashMap<String, Object>> sortTextItem = new ArrayList<HashMap<String, Object>>();
+	private ArrayList<HashMap<String, Object>> orderTextItem = new ArrayList<HashMap<String, Object>>();
+	private ArrayList<HashMap<String, Object>> sequenceTextItem = new ArrayList<HashMap<String, Object>>();
+	private String[] typeStrings = { "全部", "喜剧", "爱情", "剧情", "惊悚",
+						"动画", "警匪", "恐怖", "科幻", "动作"};
+	private String[] orderStrings = { "默认", "最新", "最热", "评分", "字母" };
+	private String[] sequenceStrings = { "升序", "降序" };
+	
+	private Map<String, List<Map<String, Object>>> map;
+	private List<Map<String, Object>> today_hit_list;
+	
+	private Dialog dlg;
+	private ListView listView; 
+	private View loadMoreView;  
+    private LinearLayout default_Layout;
+	private ListItemSimpleAdapter adapter;
+	
+	private String titleString;
+    private int visibleLastIndex = 0;   //最后的可视项索引   
+    private int visibleItemCount;       //当前窗口可见项总数
+    private final int STATE_FINISH = 0; //数据下载完成
+    private final int STATE_ERROR = 1;  //数据下载错误
+    private int itemsLastIndex = 0;
+	
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+        setContentView(R.layout.category_item);
+        
+        TextView categoryTextView = (TextView)findViewById(R.id.category_name);
+        Button catergoryButton = (Button)findViewById(R.id.btn_category);
+        Button sortButton = (Button)findViewById(R.id.btn_sort);
+        Button returnButton = (Button)findViewById(R.id.category_btn_back);
+        
+        default_Layout = (LinearLayout)findViewById(R.id.default_item);
+        
+        listView = getListView();
+        loadMoreView = getLayoutInflater().inflate(R.layout.list_load_more, null);  
+        
+        myBundle = this.getIntent().getExtras();
+        titleString = myBundle.getString("category_name");
+        categoryTextView.setText(titleString);
+      
+        listView.setVisibility(View.GONE);
+		default_Layout.setVisibility(View.VISIBLE);
+		listView.addFooterView(loadMoreView);
+        
+		new ProgressTask().execute();
+        
+        //生成动态数组，并且转入数据  
+        for(int i=0; i < typeStrings.length; i++)  
+        {  
+          HashMap<String, Object> map = new HashMap<String, Object>();  
+          map.put("SortItem", typeStrings[i]);
+          sortTextItem.add(map);  
+        }
+        
+        for(int i=0; i < orderStrings.length; i++)  
+        {  
+          HashMap<String, Object> map = new HashMap<String, Object>();  
+          map.put("SortItem", orderStrings[i]);
+          orderTextItem.add(map);  
+        }
+        
+        for(int i=0; i < sequenceStrings.length; i++)  
+        {  
+          HashMap<String, Object> map = new HashMap<String, Object>();  
+          map.put("SortItem", sequenceStrings[i]);
+          sequenceTextItem.add(map);  
+        }
+        
+        listView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+					long arg3) {			
+				// TODO Auto-generated method stub
+				Intent intent = new Intent( CategoryItem.this, Detail.class);
+				intent.putExtra("EpisodeNumber", 30);
+				Framework.switchActivity("Detail", intent);			
+			}
+        	
+		});
+        
+        listView.setOnScrollListener(this);
+        
+        catergoryButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				showAlertDialog(R.layout.category_sort, sortTextItem, sortTextItem);
+			}
+		});
+        
+        sortButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				showAlertDialog(R.layout.category_order, orderTextItem, sequenceTextItem);
+			}
+		});
+        
+        returnButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Framework.switchActivityBack();
+			}
+		});
+	}
+
+	private ArrayList<HashMap<String, Object>> getData(String category_type) {
+		
+		for(int i=0;i<10;i++) {  
+          HashMap<String, Object> map = new HashMap<String, Object>();  
+          map.put("ItemName", names[i]);
+          map.put("ItemType", types[i]);
+          map.put("ItemImage", R.drawable.video_cover_default);
+          map.put("ItemRatingBar", 8.7f);
+          map.put("ItemRatingScore1", "8.");
+          map.put("ItemRatingScore2", "7");
+          listItem.add(map);  
+        }
+		
+		return listItem;
+	}
+	
+	private void showAlertDialog(int resId, ArrayList<HashMap<String, Object>> exgridview1, 
+					ArrayList<HashMap<String, Object>> exgridview2) {
+		dlg = new Dialog(CategoryItem.this, R.style.Dialog);
+		dlg.setContentView(resId);
+		dlg.setCanceledOnTouchOutside(true);//设置点击Dialog外部任意区域关闭Dialog
+		Window window = dlg.getWindow();
+		window.setWindowAnimations(R.style.DialogWindowAnim);
+		
+		ExGridViewTvList exGridView1 = (ExGridViewTvList)dlg.findViewById(R.id.exgridview1);
+		ExGridViewTvList exGridView2 = (ExGridViewTvList)dlg.findViewById(R.id.exgridview2);
+		Button cancleButton = (Button)dlg.findViewById(R.id.btn_cancle);
+		Button okButton = (Button)dlg.findViewById(R.id.btn_ok);
+		TextView textView = (TextView)dlg.findViewById(R.id.sort_title);
+		
+		SimpleAdapter simpleAdapter1 = new SimpleAdapter(dlg.getContext(),
+														exgridview1,
+														R.layout.category_sort_grid,
+														new String[] {"SortItem"},
+														new int[] {R.id.sort_item});
+		SimpleAdapter simpleAdapter2 = new SimpleAdapter(dlg.getContext(),
+														exgridview2,
+														R.layout.category_sort_grid,
+														new String[] {"SortItem"},
+														new int[] {R.id.sort_item});
+		
+		textView.setText(titleString);
+		exGridView1.setDrawSelectorOnTop(true);
+		exGridView1.setAdapter(simpleAdapter1);
+		exGridView1.setOnItemClickListener(new ItemClickListener());
+		
+		exGridView2.setDrawSelectorOnTop(true);
+		exGridView2.setAdapter(simpleAdapter2);
+		exGridView2.setOnItemClickListener(new ItemClickListener());
+		
+		cancleButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				dlg.cancel();
+			}
+		});
+		okButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				adapter.notifyDataSetChanged();
+			}
+		});
+		//gridView.setOnItemClickListener(new ItemClickListener());
+		dlg.show();
+	}
+	
+	/* (non-Javadoc)
+	 * @see android.widget.AbsListView.OnScrollListener#onScroll(android.widget.AbsListView, int, int, int)
+	 */
+	@Override
+	public void onScroll(AbsListView view, int firstVisibleItem,
+			int visibleItemCount, int totalItemCount) {
+		// TODO Auto-generated method stub
+		Log.d("---onScroll:firstVisibleItem---", String.valueOf(firstVisibleItem));
+		Log.d("---onScroll:visibleItemCount---", String.valueOf(visibleItemCount));
+		
+		this.visibleItemCount = visibleItemCount;  
+        visibleLastIndex = firstVisibleItem + visibleItemCount - 1;
+        Log.d("---onScroll:visibleLastIndex---", String.valueOf(visibleLastIndex));
+	}
+
+	/* (non-Javadoc)
+	 * @see android.widget.AbsListView.OnScrollListener#onScrollStateChanged(android.widget.AbsListView, int)
+	 */
+	@Override
+	public void onScrollStateChanged(AbsListView view, int scrollState) {
+		// TODO Auto-generated method stub
+		if (adapter != null) {
+			itemsLastIndex = adapter.getCount() - 1;    //数据集最后一项的索引   
+		}
+        int lastIndex = itemsLastIndex + 1;             //加上底部的loadMoreView项   
+        if (scrollState == OnScrollListener.SCROLL_STATE_IDLE
+    		&& visibleLastIndex == lastIndex) {  
+            //如果是自动加载,可以在这里放置异步加载数据的代码   
+        	new ProgressTask().execute();	
+            Log.d("LOADMORE", "loading..."); 
+        } 
+	}
+	
+	class  ItemClickListener implements OnItemClickListener {  
+		public void onItemClick(AdapterView<?> arg0,//The AdapterView where the click happened   
+                              View arg1,//The view within the AdapterView that was clicked  
+                              int arg2,//The position of the view in the adapter  
+                              long arg3//The row id of the item that was clicked  
+                              ) {  
+		    //在本例中arg2=arg3  
+			
+			if (((GridView)arg0).getTag() != null) {
+				((View)((GridView)arg0).getTag()).setBackgroundDrawable(null);
+			}
+
+			((GridView)arg0).setTag(arg1);
+			
+			arg1.setBackgroundResource(R.drawable.channelsecondtextchoose_bg);
+		}
+	}
+	
+	private class ProgressTask extends AsyncTask<Void, Void, Integer> {  
+		
+		/* 该方法将在执行实际的后台操作前被UI thread调用。可以在该方法中做一些准备工作，如在界面上显示一个进度条。*/ 
+		@Override 
+		protected void onPreExecute() {     
+			// 首先加载默认listItem
+		}
+		
+		/* 执行那些很耗时的后台计算工作。可以调用publishProgress方法来更新实时的任务进度。 */ 
+		@Override 
+		protected Integer doInBackground(Void... voids) { 
+			try {
+				HttpDownloadImpl.getHttpDownloader().downloadHomePageList();
+			} catch (Exception e) {
+				// TODO: handle exception
+				return STATE_ERROR; 
+			}
+			
+			today_hit_list = map.get("today_hit_list");
+			/* 下载数据 、解析ArrayList<String> data = datas[0];     
+			for (int i=0; i<8; i++) {         
+				data.add("ListItem");     
+			} */
+			return STATE_FINISH; 
+		} 
+		
+		/* 在doInBackground 执行完成后，onPostExecute 方法将被UI thread调用，  
+		 * 后台的计算结果将通过该方法传递到UI thread.  
+		 */ 
+		@Override 
+		protected void onPostExecute(Integer result) {     
+			int state = result.intValue(); 
+			switch (state) {
+			case STATE_FINISH:
+				default_Layout.setVisibility(View.GONE);
+				listView.setVisibility(View.VISIBLE);
+				if (adapter == null) {
+					adapter = new ListItemSimpleAdapter(CategoryItem.this, 
+							getData(myBundle.getString("category_name")),
+							R.layout.category_item_list,
+							new String[]{"ItemName","ItemType","ItemImage", "ItemRatingBar", "ItemRatingScore1", "ItemRatingScore2"},
+							new int[]{ R.id.item_name, R.id.item_type, R.id.item_img, R.id.ratingBar, R.id.ratingScore1, R.id.ratingScore2 });
+				}else {
+					getData(myBundle.getString("category_name"));
+					adapter.notifyDataSetChanged();
+				}
+				setListAdapter(adapter);
+				listView.setSelection(itemsLastIndex); //设置选中项
+				break;
+
+			default:
+				break;
+			}
+			
+		}
+	}
+}

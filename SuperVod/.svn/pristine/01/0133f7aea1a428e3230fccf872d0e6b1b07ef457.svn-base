@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" 
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/search_title"
+        android:layout_width="fill_parent"
+        android:layout_height="43dp"
+        android:background="@drawable/homepage_top" >
+
+		<com.stv.supervod.widget_extended.SearchBarWidget 
+		    android:id="@+id/search_bar"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content" 
+			android:gravity="center_vertical" 
+			android:layout_gravity="center" />
+    </LinearLayout>
+	<LinearLayout
+        android:id="@+id/hot_text"
+        android:layout_width="fill_parent"
+        android:layout_height="29dp"
+        android:background="@drawable/btn_title" >
+    	<TextView 
+	        android:id="@+id/result_text"
+	        android:layout_width="fill_parent"
+	        android:layout_height="fill_parent" 
+	        style="@style/Title"
+	        android:text="热门搜索词"
+	        android:textSize="18sp"
+	        android:gravity="center_vertical" 
+	        android:layout_marginLeft="10dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_grid"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@drawable/search_bg"
+        android:orientation="vertical"
+        android:visibility="visible" >
+
+        <GridView
+            android:id="@+id/search_grid"
+            android:layout_width="wrap_content"
+            android:layout_height="250dp"
+            android:gravity="center"
+            android:numColumns="2"
+            android:stackFromBottom="false"
+            android:verticalSpacing="10dp" />
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp"
+            android:paddingLeft="160dp"
+            android:src="@drawable/search_bg_bar" />
+    </LinearLayout>
+	
+    <LinearLayout 
+	    android:id="@+id/default_item" 
+	    style="@style/List_Layout" 
+	    android:visibility="gone"
+	    android:background="@drawable/list_bg" >
+
+	    <ProgressBar
+		    android:id="@+id/loadingBar"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content" 
+		    android:layout_centerHorizontal="true"
+		    android:layout_gravity="center" 
+		    android:layout_marginLeft="10dp"/>
+    
+		<TextView 
+		    android:id="@+id/loadingText"
+		    android:text="正在载入数据..."
+		    android:textSize="18sp"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_gravity="center" 
+		    android:layout_marginLeft="20dp">
+		</TextView>
+
+	</LinearLayout>
+    
+    <ListView 
+			android:id="@+id/search_list"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content" 
+	        android:cacheColorHint="#00000000"
+	        android:listSelector="@drawable/btn_bg_select"
+	        android:visibility="gone" />
+    
+</LinearLayout>

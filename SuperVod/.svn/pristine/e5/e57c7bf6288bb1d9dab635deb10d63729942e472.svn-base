@@ -1,0 +1,20 @@
+package com.stv.supervod.activity;
+
+import android.os.Bundle;
+
+/**
+ * @author      Administrator
+ * @description 搜索
+ * @authority   所有用户
+ * @function    1、初始化页面向服务器请求热门搜索关键字，并展示搜索栏和热门关键字
+ *              2、用户输入关键字后，向服务器请求数据，并以列表形式展现，如搜索未成功，则展示推荐影片
+ *              3、用户根据搜索到的影片，点击后向服务器请求影片数据，进入影片详细页：Detail
+ */
+public class Search extends BaseActivity{
+
+	@Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.search);
+    }
+}

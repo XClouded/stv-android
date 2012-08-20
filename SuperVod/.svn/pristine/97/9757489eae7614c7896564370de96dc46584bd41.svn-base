@@ -1,0 +1,19 @@
+package com.stv.supervod.activity;
+
+import android.app.Activity;
+import android.os.Bundle;
+
+/**
+ * @author      Administrator
+ * @description 更多
+ * @authority   激活用户
+ * @function    显示下一级功能列表，包括：收藏、书签、我的频道、电视回看、城市
+ */
+public class Further extends Activity{
+	
+	@Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.further);
+    }
+}

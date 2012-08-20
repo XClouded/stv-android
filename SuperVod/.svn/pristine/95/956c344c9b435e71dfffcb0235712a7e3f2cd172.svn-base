@@ -1,0 +1,81 @@
+package com.stv.supervod.activity;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import com.stv.supervod.activity.Category.ItemClickListener;
+import com.stv.supervod.widget_extended.SearchBarWidget;
+import com.stv.supervod.widget_extended.SearchBarWidget.onSearchListener;
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.GridView;
+import android.widget.SimpleAdapter;
+import android.widget.AdapterView.OnItemClickListener;
+
+/**
+ * @author      Administrator
+ * @description 搜索
+ * @authority   所有用户
+ * @function    1、初始化页面向服务器请求热门搜索关键字，并展示搜索栏和热门关键字
+ *              2、用户输入关键字后，向服务器请求数据，并以列表形式展现，如搜索未成功，则展示推荐影片
+ *              3、用户根据搜索到的影片，点击后向服务器请求影片数据，进入影片详细页：Detail
+ */
+public class Search extends BaseActivity {
+
+	private SearchBarWidget mSearchBarWidget;
+	private GridView searchGridView;
+	
+	private ArrayList<HashMap<String, Object>> hotTextItem = new ArrayList<HashMap<String, Object>>();
+	private String[] textStrings = { "唐宫·美人天下", "美人心计", "男人帮", "天天向上", "快乐大本营",
+						"钱多多嫁人记", "中国达人秀", "刀尖上行走", "藏心术", "倾世皇妃"};
+	
+	
+	@Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.search);
+        
+        mSearchBarWidget = (SearchBarWidget)findViewById(R.id.search_bar);
+        searchGridView = (GridView)findViewById(R.id.search_grid);
+        
+        //生成动态数组，并且转入数据  
+        for(int i=0; i<textStrings.length; i++)  
+        {  
+          HashMap<String, Object> map = new HashMap<String, Object>();  
+          map.put("HotText", textStrings[i]);
+          hotTextItem.add(map);  
+        }
+        
+        SimpleAdapter simpleAdapter = new SimpleAdapter(this,
+        												hotTextItem,
+        												R.layout.search_grid,
+        												new String[] {"HotText"},
+        												new int[] {R.id.HotItemText} );
+        searchGridView.setDrawSelectorOnTop(true);
+        searchGridView.setAdapter(simpleAdapter);
+        searchGridView.setOnItemClickListener(new ItemClickListener());
+        
+        
+        mSearchBarWidget.setOnSearchListener(new onSearchListener() {
+			
+			@Override
+			public void onSearchChange(String search) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+    }
+	
+	class  ItemClickListener implements OnItemClickListener {  
+		public void onItemClick(AdapterView<?> arg0,//The AdapterView where the click happened   
+                              View arg1,//The view within the AdapterView that was clicked  
+                              int arg2,//The position of the view in the adapter  
+                              long arg3//The row id of the item that was clicked  
+                              ) {  
+		    //在本例中arg2=arg3  
+		    HashMap<String, Object> item = (HashMap<String, Object>)arg0.getItemAtPosition(arg2);
+		}
+	}  
+}

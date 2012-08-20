@@ -1,0 +1,563 @@
+package com.stv.supervod.activity;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.Window;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
+import android.widget.GridView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.SimpleAdapter;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.stv.supervod.adapter.ListItemSimpleAdapter;
+import com.stv.supervod.service.HttpDownloadImpl;
+import com.stv.supervod.service.HttpDownloadImpl.KeyEnum;
+import com.stv.supervod.service.HttpDownloadImpl.TypeEnum;
+import com.stv.supervod.service.MyVodServiceImpl.MyVodAddResult;
+import com.stv.supervod.utils.CacheUtils;
+import com.stv.supervod.utils.ErrorCode;
+import com.stv.supervod.utils.Constant.PlayerType;
+import com.stv.supervod.utils.Constant.ServiceTypeEnum;
+import com.stv.supervod.widget_extended.SearchBarWidget;
+import com.stv.supervod.widget_extended.SearchBarWidget.OnClearBtnClickListener;
+import com.stv.supervod.widget_extended.SearchBarWidget.onSearchListener;
+
+/**
+ * @author      Administrator
+ * @description 搜索
+ * @authority   所有用户
+ * @function    1、初始化页面向服务器请求热门搜索关键字，并展示搜索栏和热门关键字
+ *              2、用户输入关键字后，向服务器请求数据，并以列表形式展现，如搜索未成功，则展示推荐影片
+ *              3、用户根据搜索到的影片，点击后向服务器请求影片数据，进入影片详细页：Detail
+ */
+public class Search extends BaseActivity implements OnScrollListener {
+
+	private HttpDownloadImpl downloadImpl = new HttpDownloadImpl();
+	private CacheUtils instance = CacheUtils.getInstance();
+	
+	private LinearLayout loadingLayout;
+	private LinearLayout gridLayout;
+	private SearchBarWidget mSearchBarWidget;
+	private GridView searchGridView;
+	private Button dialogButton;
+	private TextView loadingTextView;
+	private TextView resultTextView;
+	private ProgressBar progressBar;
+	private ListView searchListView;
+	private Dialog dlg;
+	private ProgressDialog progressDlg;
+	
+	private ListItemSimpleAdapter adapter;
+	
+	private List<Map<String, Object>> searchResultMap = new ArrayList<Map<String, Object>>();
+	private ArrayList<HashMap<String, Object>> hotTextItem = new ArrayList<HashMap<String, Object>>();
+	private Map<String, Object> offeringInfo = null;
+
+	private String[] strs = { "播放", "收藏", "加入我的频道" };
+	
+	private final int num = 20;             //每次显示最多条目数
+	private int page = 1;                   //当前分页数
+
+	private final int STATE_FINISH = 0;     //数据下载完成
+    private final int STATE_EXCEPTION = 1;  //数据下载错误
+    private final int STATE_NONEDATA = 2;   //没有下载到数据
+    private int visibleLastIndex = 0;       //最后的可视项索引   
+    private int itemsLastIndex = 0;
+    private String type = "";
+    private int success;
+    private int resultNum;
+    private int selectItem = 0;
+    private final int OP_PLAY = 1;     //播放操作
+    private final int OP_ADDMYVOD = 2; //加入我的频道操作
+   
+	@Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.search);
+        
+        mSearchBarWidget = (SearchBarWidget)findViewById(R.id.search_bar);
+        searchGridView = (GridView)findViewById(R.id.search_grid);
+        dialogButton = (Button)findViewById(R.id.dialogBtn);
+        loadingTextView = (TextView)findViewById(R.id.loadingText);
+        resultTextView = (TextView)findViewById(R.id.result_text);
+        progressBar = (ProgressBar)findViewById(R.id.loadingBar);
+        searchListView = (ListView)findViewById(R.id.search_list);
+        loadingLayout = (LinearLayout)findViewById(R.id.default_item);
+        gridLayout = (LinearLayout)findViewById(R.id.layout_grid);
+        
+        dlg = new Dialog(Search.this, R.style.Search_Dialog);
+        dlg.setContentView(R.layout.search_dialog);
+		dlg.setCanceledOnTouchOutside(true);//设置点击Dialog外部任意区域关闭Dialog
+		
+		Window window = dlg.getWindow(); //得到对话框
+        WindowManager.LayoutParams wl = window.getAttributes();
+		wl.y = -400;//居中的时候wl.x = wl.y = 0
+		wl.gravity = Gravity.LEFT;
+		wl.dimAmount = 0.0f; // 去背景遮盖
+		window.setAttributes(wl); 
+        
+        //生成动态数组，并且转入数据  
+        for(int i=0; i < instance.keywordsList.size(); i++)  
+        {  
+          HashMap<String, Object> map = new HashMap<String, Object>();  
+          map.put("HotText", instance.keywordsList.get(i).get(KeyEnum.keyword.toString()).toString());
+          hotTextItem.add(map);  
+        }
+		
+        SimpleAdapter simpleAdapter = new SimpleAdapter(this,
+        												hotTextItem,
+        												R.layout.search_grid,
+        												new String[] {"HotText"},
+        												new int[] {R.id.HotItemText} ); 
+        searchGridView.setAdapter(simpleAdapter);
+        searchGridView.setOnItemClickListener(new ItemClickListener());
+        
+        searchListView.setFastScrollEnabled(true);
+        searchListView.setOnScrollListener(this);
+        searchListView.setOnItemClickListener(itemClickListener);
+        
+        mSearchBarWidget.setOnSearchListener(searchListener);
+        mSearchBarWidget.setOnClearBtnClickListener(clearBtnClickListener);
+        
+        type = TypeEnum.MOVIE.toString();
+        dialogButton.setOnClickListener(dlgBtnClickListener);
+        dlg.setOnCancelListener(cancelListener);
+        
+        progressDlg = new ProgressDialog(this);
+    }
+	
+	private class  ItemClickListener implements OnItemClickListener {
+		public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) { 
+			//传递给EditText
+			String itemString = instance.keywordsList.get(arg2).get(KeyEnum.keyword.toString()).toString();
+			mSearchBarWidget.setEditText(itemString);
+			
+			if (gridLayout.getVisibility() == View.VISIBLE) {
+				gridLayout.setVisibility(View.GONE);
+			}
+			if (loadingLayout.getVisibility() == View.GONE) {
+				loadingLayout.setVisibility(View.VISIBLE);
+			}
+			
+			type = instance.keywordsList.get(arg2).get(KeyEnum.type.toString()).toString();
+			if (type.equals(TypeEnum.MOVIE.toString())) {
+				dialogButton.setText(getResources().getStringArray(R.array.category_type)[0]);
+			} else if(type.equals(TypeEnum.TV.toString())) {
+				dialogButton.setText(getResources().getStringArray(R.array.category_type)[1]);
+			} else if(type.equals(TypeEnum.KTV.toString())) {
+				dialogButton.setText(getResources().getStringArray(R.array.category_type)[2]);
+			}
+			new SearchTask().execute(itemString);
+		}
+	}
+	
+	private OnItemClickListener itemClickListener = new OnItemClickListener() {
+
+		@Override
+		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+			// TODO Auto-generated method stub
+			if(type.equals(TypeEnum.MOVIE.toString()) || type.equals(TypeEnum.TV.toString())) {
+				showDetail(type, searchResultMap.get(position).get(KeyEnum.assetId.toString()).toString());
+			} else if (type.equals(TypeEnum.KTV.toString())){
+				selectItem = position;
+
+				Log.d("-------selectItem----------", String.valueOf(selectItem));
+				AlertDialog dialog = new AlertDialog.Builder(Search.this)   
+					                .setTitle("视频选项")
+					                .setItems(strs, onselect).create();
+				dialog.show();
+				dialog.setCanceledOnTouchOutside(true);
+			}
+		}
+	};
+	
+	/** 
+	 * 选项的事件监听器 
+	 */  
+	DialogInterface.OnClickListener onselect = new DialogInterface.OnClickListener() {  
+	    @Override  
+	    public void onClick(DialogInterface dialog, int which) {  
+	        // TODO Auto-generated method stub  
+	        switch (which) {  
+	        case 0:  
+	        	//判断是否收费
+	        	String[] params_play = new String[]{searchResultMap.get(selectItem).get(KeyEnum.assetId.toString()) + "", 
+	        									TypeEnum.KTV.toString(), String.valueOf(OP_PLAY)};
+	        	new GetOffingInfoTask().execute(params_play);
+	            break;  
+	        case 1:  
+	        	boolean isSuccess = addMyfav("(" + searchResultMap.get(selectItem).get(KeyEnum.title.toString()) + ")", 
+						        			TypeEnum.KTV.toString(), 
+						        			searchResultMap.get(selectItem).get(KeyEnum.categories.toString()) + "", 
+						        			searchResultMap.get(selectItem).get(KeyEnum.poster.toString()) + "", 
+						        			searchResultMap.get(selectItem).get(KeyEnum.assetId.toString()) + "");
+	            if (isSuccess) {
+	            	Toast.makeText(Search.this, "收藏歌曲成功",Toast.LENGTH_SHORT).show();
+				} else {
+					Toast.makeText(Search.this, "收藏失败",Toast.LENGTH_SHORT).show();
+				}
+	            break;  
+	        case 2:
+            	//判断是否收费
+	        	String[] params_addvod = new String[]{searchResultMap.get(selectItem).get(KeyEnum.assetId.toString()) + "", 
+	        									TypeEnum.KTV.toString(), String.valueOf(OP_ADDMYVOD)};
+	        	new GetOffingInfoTask().execute(params_addvod);
+	            break;  
+	        }  
+	    }  
+	};
+	
+	private onSearchListener searchListener = new onSearchListener() {
+		
+		@Override
+		public void onSearchChange(String search) {
+			// TODO Auto-generated method stub
+			if (gridLayout.getVisibility() == View.VISIBLE) {
+				gridLayout.setVisibility(View.GONE);
+			}
+			if (searchListView.getVisibility() == View.VISIBLE) {
+				searchResultMap.clear();
+				searchListView.setVisibility(View.GONE);
+			}
+			if (loadingLayout.getVisibility() == View.GONE) {
+				loadingLayout.setVisibility(View.VISIBLE);
+				loadingTextView.setText(getResources().getString(R.string.loading));
+				progressBar.setVisibility(View.VISIBLE);
+			}
+			
+			new SearchTask().execute(search);
+		}
+	};
+	
+	private OnClearBtnClickListener clearBtnClickListener = new OnClearBtnClickListener() {
+		
+		@Override
+		public void onClearBtnClick() {
+			// TODO Auto-generated method stub
+			if (loadingLayout.getVisibility() == View.VISIBLE) {
+				loadingLayout.setVisibility(View.GONE);
+			}
+			if (searchListView.getVisibility() == View.VISIBLE) {
+				searchResultMap.clear();
+				searchListView.setVisibility(View.GONE);
+			}
+			
+			if (gridLayout.getVisibility() == View.GONE) {
+				gridLayout.setVisibility(View.VISIBLE);
+			}
+			
+			//dialogButton.setText(getResources().getStringArray(R.array.category_type)[0]);
+			//type = TypeEnum.MOVIE.toString();
+			resultTextView.setText("热门搜索词");
+		}
+	};
+	
+	/**
+	 * Description: 显示收费对话框 
+	 * @Version1.0 2012-3-8 上午10:36:51 zhaojunfeng created
+	 */
+	private void showServiceDialog(String price, final int op){
+		AlertDialog.Builder bd = new AlertDialog.Builder(this);
+		bd.setTitle(R.string.further_dlg_title);
+		
+		String msg = String.format(getString(R.string.detail_txt_price), price);
+		
+		bd.setMessage(msg);
+		bd.setPositiveButton(getString(R.string.framework_dlg_btn_ok), new DialogInterface.OnClickListener() {
+			
+			public void onClick(DialogInterface dialog, int which) {
+				// TODO Auto-generated method stub
+				if (op == OP_ADDMYVOD) {
+					addMyVod();
+				} else if (op == OP_PLAY) {
+					//做相关播放处理
+					showPlayer(offeringInfo.get(KeyEnum.offeringId.toString()).toString(), 
+								searchResultMap.get(selectItem).get(KeyEnum.title.toString()).toString(),
+								false,
+								PlayerType.common);
+				}
+			}
+		});
+		
+		bd.setNegativeButton(getString(R.string.framework_dlg_btn_cancel)
+				, new DialogInterface.OnClickListener() {
+			
+			public void onClick(DialogInterface dialog, int which) {
+				// TODO Auto-generated method stub
+			}
+		});
+		
+		bd.setCancelable(false);
+		bd.show();
+	}
+	
+	private void addMyVod() {
+		try {
+			MyVodAddResult ret = addMyVod( "1", searchResultMap.get(selectItem).get(KeyEnum.assetId.toString()) + "", TypeEnum.KTV.toString() );
+			if (ret == MyVodAddResult.channel_exsit) {
+				Toast.makeText(Search.this, "加入我的频道失败：节目已经存在于我的频道中，请勿重复添加",
+						Toast.LENGTH_SHORT).show();
+			} else if (ret == MyVodAddResult.count_overflow) {
+				Toast.makeText(Search.this, "加入我的频道失败：我的频道允许添加的数量达到上限",
+						Toast.LENGTH_SHORT).show();
+			} else if (ret == MyVodAddResult.duration_overflow) {
+				Toast.makeText(Search.this, "加入我的频道失败：我的频道允许添加的节目总时长达到上限",
+						Toast.LENGTH_SHORT).show();
+			} else if (ret == MyVodAddResult.success) {
+				Toast.makeText(Search.this, "加入我的频道成功",
+						Toast.LENGTH_SHORT).show();
+			}				
+		} catch (Exception e) {
+			// TODO: handle exception
+			Toast.makeText(Search.this, "加入我的频道错误：" + e.getMessage(),
+					Toast.LENGTH_SHORT).show();  
+		}
+	}
+	
+	private OnClickListener dlgBtnClickListener = new OnClickListener() {
+		
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			dialogButton.setCompoundDrawablesWithIntrinsicBounds(
+					null, null, getResources().getDrawable(R.drawable.search_category_up), null);
+			dlg.show();
+			final Button item1Button = (Button)dlg.findViewById(R.id.item1);
+			final Button item2Button = (Button)dlg.findViewById(R.id.item2);
+			final Button item3Button = (Button)dlg.findViewById(R.id.item3);
+			item1Button.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					dialogButton.setText(item1Button.getText());
+					dlg.cancel();
+					type = TypeEnum.MOVIE.toString();
+				}
+			});
+			
+			item2Button.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					dialogButton.setText(item2Button.getText());
+					dlg.cancel();
+					type = TypeEnum.TV.toString();
+				}
+			});
+			
+			item3Button.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					dialogButton.setText(item3Button.getText());
+					dlg.cancel();
+					type = TypeEnum.KTV.toString();
+				}
+			});
+		}
+	}; 
+	
+	private OnCancelListener cancelListener = new OnCancelListener() {
+		
+		@Override
+		public void onCancel(DialogInterface dialog) {
+			// TODO Auto-generated method stub
+			dialogButton.setCompoundDrawablesWithIntrinsicBounds(
+					null, null, getResources().getDrawable(R.drawable.search_category_down), null);
+		}
+	};
+	
+	private class SearchTask extends AsyncTask<String, Void, Integer> {  
+		@Override 
+		protected void onPreExecute() {     
+			// 首先加载默认listItem
+		}
+		
+		@SuppressWarnings("unchecked")
+		@Override 
+		protected Integer doInBackground(String... keyword) { 
+			/*下载具体分类列表数据*/
+			try {
+				Map<String, Object> data = downloadImpl.downloadSearchProgramsList(keyword[0], type, num, page);
+				List<Map<String, Object>> list = (List<Map<String, Object>>) data.get(KeyEnum.list.toString());
+				success = (Integer)data.get(KeyEnum.success.toString());
+				resultNum = list.size();
+				
+				searchResultMap.clear();
+				for (int i = 0; i < list.size(); i++) {
+					searchResultMap.add(list.get(i));
+				}
+				
+			} catch (Exception e) {
+				// TODO: handle exception
+				e.printStackTrace();
+				ErrorCode.getErrorInfo(e);
+				return STATE_EXCEPTION; 
+			}
+			
+			return STATE_FINISH; 
+		} 
+	
+		@Override 
+		protected void onPostExecute(Integer result) {     
+			int state = result.intValue(); 
+			switch (state) {
+			case STATE_FINISH:
+				loadingLayout.setVisibility(View.GONE);
+				searchListView.setVisibility(View.VISIBLE);
+				if (adapter == null) {
+					adapter = new ListItemSimpleAdapter(Search.this,
+							true,
+							searchResultMap,
+							R.layout.category_list_item,
+							new String[]{KeyEnum.title.toString(), KeyEnum.categories.toString(), KeyEnum.ratingBar.toString(),
+										 KeyEnum.ratingScore1.toString(), KeyEnum.ratingScore2.toString()},
+							new int[]{ R.id.item_name, R.id.item_type, R.id.ratingBar, R.id.ratingScore1, R.id.ratingScore2 });
+				}else {
+					searchListView.setAdapter(adapter);
+					adapter.setmData(searchResultMap);
+					adapter.notifyDataSetChanged();
+				}
+				
+				if (success == 0) {
+					resultTextView.setText("搜索到" + String.valueOf(resultNum) + "个结果");
+				} else {
+					resultTextView.setText("抱歉，没有搜索到！我们推荐以下内容");
+				}
+				
+				searchListView.setAdapter(adapter);
+				break;
+			case STATE_EXCEPTION:
+				loadingTextView.setText("加载数据失败！");
+				progressBar.setVisibility(View.INVISIBLE);
+				break;
+			default:
+				break;
+			}
+		}
+	}
+	
+	private class GetOffingInfoTask extends AsyncTask<String, Void, Integer[]> {  
+		
+		/* 该方法将在执行实际的后台操作前被UI thread调用。可以在该方法中做一些准备工作，如在界面上显示一个进度条。*/ 
+		@Override 
+		protected void onPreExecute() {
+			progressDlg.setMessage("请耐心等待...");
+			progressDlg.setIndeterminate(true);
+			progressDlg.setCancelable(false);
+		}
+		
+		/* 执行那些很耗时的后台计算工作。可以调用publishProgress方法来更新实时的任务进度。 */ 
+		@SuppressWarnings("unchecked")
+		@Override 
+		protected Integer[] doInBackground(String... params) { 
+			Integer[] ret = new Integer[2];
+			ret[1] = Integer.parseInt(params[2]);
+			try {
+				offeringInfo = downloadImpl.downloadOffingId(params[0], params[1]);
+				if (offeringInfo.isEmpty()) {
+					ret[0] = STATE_NONEDATA;
+				}
+			} catch (Exception e) {
+				// TODO: handle exception
+				e.printStackTrace();
+				ErrorCode.getErrorInfo(e);
+				ret[0] = STATE_EXCEPTION; 
+			}
+			ret[0] = STATE_FINISH;
+			return ret; 
+		} 
+		
+		/* 在doInBackground 执行完成后，onPostExecute 方法将被UI thread调用，  
+		 * 后台的计算结果将通过该方法传递到UI thread.  
+		 */ 
+		@Override 
+		protected void onPostExecute(Integer[] result) {     
+			int state = result[0].intValue();
+			progressDlg.cancel();
+			switch (state) {
+			case STATE_FINISH:
+				// 显示收费提示框
+				if (offeringInfo.get(KeyEnum.serviceType.toString()).equals(ServiceTypeEnum.MOD.toString())) {
+					float price = Integer.parseInt(offeringInfo.get(KeyEnum.price.toString()).toString()) / 100;
+					showServiceDialog(Float.toString(price), result[1].intValue());
+				} else {
+					if (result[1].intValue() == OP_ADDMYVOD) {
+						//做加入我的频道处理
+						addMyVod();
+					} else if (result[1].intValue() == OP_PLAY) {
+						//做相关播放处理
+						showPlayer(offeringInfo.get(KeyEnum.offeringId.toString()).toString(), 
+									searchResultMap.get(selectItem).get(KeyEnum.name.toString()).toString(),
+									false,
+									PlayerType.common);
+					}
+				}
+				break;
+			case STATE_NONEDATA:
+				if (result[1].intValue() == OP_ADDMYVOD) {
+					Toast.makeText(Search.this, "加入我的频道失败：该节目的订购信息不存在",
+							Toast.LENGTH_SHORT).show();
+				} else if (result[1].intValue() == OP_PLAY) {
+					Toast.makeText(Search.this, "播放节目失败：该节目的订购信息不存在",
+							Toast.LENGTH_SHORT).show();
+				}
+				break;
+			case STATE_EXCEPTION:
+				if (result[1].intValue() == OP_ADDMYVOD) {
+					Toast.makeText(Search.this, "加入我的频道发生异常错误",
+							Toast.LENGTH_SHORT).show();
+				} else if (result[1].intValue() == OP_PLAY) {
+					Toast.makeText(Search.this, "播放节目发生异常错误",
+							Toast.LENGTH_SHORT).show();
+				}
+				break;
+			default:
+				break;
+			}
+		}
+	}
+
+	@Override
+	public void onScroll(AbsListView view, int firstVisibleItem,
+			int visibleItemCount, int totalItemCount) {
+		// TODO Auto-generated method stub 
+        visibleLastIndex = firstVisibleItem + visibleItemCount - 1;
+	}
+
+	@Override
+	public void onScrollStateChanged(AbsListView view, int scrollState) {
+		// TODO Auto-generated method stub
+		itemsLastIndex = adapter != null ? adapter.getCount() - 1 : itemsLastIndex;//数据集最后一项的索引   
+        if (scrollState == OnScrollListener.SCROLL_STATE_IDLE
+    		&& visibleLastIndex == itemsLastIndex) {  
+        	Toast.makeText(Search.this, "数据加载完毕",Toast.LENGTH_SHORT).show();
+        } 
+	}
+}

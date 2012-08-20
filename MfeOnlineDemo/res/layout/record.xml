@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	android:layout_width="208dip"
+	android:layout_height="184dip"
+	android:background="@drawable/record_back"
+	android:gravity="center_horizontal" >
+
+	<TextView  
+		android:id="@+id/TextViewPrompt" 
+		android:layout_width="wrap_content" 
+		android:layout_height="wrap_content"
+		android:textStyle="bold"
+		android:textSize="18dip"
+		android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dip"	
+		/>
+
+	<ImageView android:id="@+id/ImageViewVolume"
+		android:layout_below="@id/TextViewPrompt"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="10dip"
+		android:src="@drawable/mic_level0"
+		android:gravity="center"
+		android:layout_centerHorizontal="true"		
+		/>
+			
+	<waveform.WaveFormView android:id="@+id/SurfaceViewWaveForm"
+		android:layout_width="208dip"
+		android:layout_height="184dip"
+		android:layout_alignBottom="@id/ImageViewVolume"
+		android:layout_alignTop="@id/ImageViewVolume"
+		android:layout_marginLeft="5dip"
+		android:layout_marginRight="5dip"
+	/>			
+			
+	<ProgressBar android:id="@+id/ProgressBarParse"
+		android:layout_below="@id/TextViewPrompt"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignBottom="@id/ImageViewVolume"
+		android:layout_alignTop="@id/ImageViewVolume"
+		style="?android:attr/progressBarStyleLarge"
+		android:layout_centerInParent="true" 
+		/>
+		
+	<TextView  
+		android:id="@+id/TextViewLogo" 
+		android:layout_below="@id/ImageViewVolume"
+		android:layout_width="wrap_content" 
+		android:layout_height="wrap_content"
+		android:layout_marginTop="10dip"
+		android:textStyle="bold"
+		android:textSize="12dip"
+		android:text="@string/text_logo"
+		android:gravity="center"
+		android:layout_centerHorizontal="true"
+		/>
+
+	<Button
+		android:id="@+id/btn_stop"
+		android:layout_below="@id/TextViewLogo"
+		android:layout_width="120dip"
+		android:layout_height="wrap_content"
+		android:layout_alignParentBottom="true"
+		android:layout_centerHorizontal="true"
+		android:layout_marginBottom="5dip"	
+		android:text="@string/button_stop"
+		android:gravity="center"
+		/>  
+		
+	<RelativeLayout  
+		android:id="@+id/btn_stop_and_retry"
+		android:visibility="gone"
+		android:orientation = "horizontal"
+		android:layout_below="@id/TextViewLogo"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_alignParentBottom="true"
+		android:layout_centerHorizontal="true"
+		>
+		
+		<Button
+		android:id="@+id/btn_nospeech_retry"
+		android:layout_marginLeft="5dip"
+		android:layout_alignParentLeft="true"
+		android:layout_marginBottom="5dip"
+		android:layout_width="95dip"
+		android:layout_height="wrap_content"
+		android:visibility="gone"
+		android:text="@string/button_retry"
+		android:gravity="center"	
+		/>  
+		
+		<Button
+		android:id="@+id/btn_nospeech_stop"
+		android:layout_toRightOf="@id/btn_nospeech_retry"
+		android:layout_alignParentRight="true"
+		android:layout_marginRight="5dip"
+		android:layout_marginBottom="5dip"		
+		android:layout_width="95dip"
+		android:layout_height="wrap_content"
+		android:visibility="gone"
+		android:text="@string/button_stop"
+		android:gravity="center"
+		
+		/>
+	</RelativeLayout>  
+
+</RelativeLayout>

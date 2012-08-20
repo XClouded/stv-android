@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center_horizontal"
+    android:background="@drawable/play_bg" >
+    
+  <RelativeLayout
+	android:id="@+id/detail_rl_title"
+	android:layout_width="fill_parent"
+	android:layout_height="43dp" 
+	android:layout_alignParentTop="true"
+	android:background="@drawable/homepage_top" >
+
+	<Button
+	    android:id="@+id/play_btn_back"
+	    android:layout_width="68dp"
+	    android:layout_height="wrap_content"
+	    android:layout_alignParentLeft="true"
+	    android:text="@string/detail_btn_back" 
+	    android:layout_centerVertical="true" 
+	    style="@style/Button_Return" 
+	    android:layout_marginLeft="10dp"/>
+	
+	<TextView
+       	android:id="@+id/video_name_view"
+       	android:layout_width="wrap_content"
+       	android:layout_height="wrap_content"
+       	android:text="蒲公英" 
+       	android:layout_centerInParent="true"/>
+			
+    <Button
+        android:id="@+id/play_stop"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:text="@string/stopPlay" 
+        style="@style/Button"  
+        android:gravity="center"    
+        android:layout_centerVertical="true" />
+  </RelativeLayout> 
+  
+  <ImageView 
+    android:id="@+id/img"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/detail_rl_title"
+    android:layout_alignParentRight="true" 
+	android:layout_marginTop="40dp"
+	android:layout_marginRight="50dp"
+    android:src="@drawable/play_bg_image" />
+  
+           
+  <LinearLayout
+    android:id="@+id/playcontrol"
+  	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:layout_alignParentBottom="true"
+	
+	android:orientation="horizontal"	
+	android:layout_marginBottom="40dp" >  
+	   
+  	<ImageButton
+  		android:id="@+id/backwordBtn"
+  		android:layout_width="wrap_content"
+  		android:layout_height="wrap_content"  		
+  		android:scaleType="fitCenter" 
+  		android:layout_marginLeft="80dp"
+  		android:background="@drawable/rewind_selecor" />
+  	
+  	<ImageButton
+		android:id="@+id/playBtn"
+		android:layout_width="15dp"
+		android:layout_height="wrap_content"
+		android:layout_marginLeft="40dp"
+		android:scaleType="fitCenter" 
+		android:background="@drawable/play_selecor" />
+  	
+  	<ImageButton
+  		android:id="@+id/forwardBtn"
+  		android:layout_width="wrap_content"
+  		android:layout_height="wrap_content"
+  		android:scaleType="fitCenter" 
+  		android:layout_marginLeft="40dp"	
+  		android:background="@drawable/forward_selecor" />
+  	
+  </LinearLayout>
+  
+  <RelativeLayout 
+    android:id="@+id/playstatus"
+  	android:layout_width="fill_parent"
+  	android:layout_height="wrap_content"
+  	android:layout_marginBottom="20dp"
+	android:layout_alignParentBottom="true"
+      >
+     <TextView
+  		android:id="@+id/playtime"
+  		android:layout_width="wrap_content"
+  		android:layout_height="wrap_content"
+  		android:layout_alignParentLeft="true"
+  		android:layout_centerVertical="true"
+  		android:text="00:00"
+  		/>
+  	<TextView
+  		android:id="@+id/duration"
+  		android:layout_width="wrap_content"
+  		android:layout_height="wrap_content"
+  		android:layout_alignParentRight="true"
+  		android:layout_centerVertical="true"
+  		android:text="04:53"
+  		/> 
+    <SeekBar 
+		android:id="@+id/seekbar"  		
+		android:layout_marginLeft="35dp" 
+		android:layout_marginRight="30dp"		
+		android:layout_centerVertical="true"
+		android:layout_width="fill_parent"
+		android:layout_height="10dp"
+		android:paddingLeft="14dp"	
+		android:paddingRight="14dp"		
+		android:max="100"		
+		android:progressDrawable="@drawable/seekbar_img" 
+		android:thumb="@drawable/play_controlbar" /> 
+  </RelativeLayout>
+  
+  
+</RelativeLayout>

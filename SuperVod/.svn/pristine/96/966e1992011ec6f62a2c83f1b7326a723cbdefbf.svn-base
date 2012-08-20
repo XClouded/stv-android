@@ -1,0 +1,21 @@
+package com.stv.supervod.activity;
+
+import android.app.Activity;
+import android.os.Bundle;
+
+/**
+ * @author      Administrator
+ * @description 欢迎页面
+ * @authority   所有用户
+ * @function    1、建立网络连接，选择服务器
+ *              2、用户身份判断，记住登录信息用户自动登录到服务器
+ *              3、遍历存放图片文件夹，删除最后访问时间大于本地时间3天的图片，同步数据库
+ */
+public class Welcome extends Activity{
+
+	@Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.welcome);
+    }
+}

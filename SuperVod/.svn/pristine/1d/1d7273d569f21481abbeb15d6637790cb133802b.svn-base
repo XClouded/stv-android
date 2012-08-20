@@ -1,0 +1,115 @@
+package com.stv.supervod.adapter;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.RatingBar;
+import android.widget.TextView;
+
+import com.stv.supervod.activity.Bookmark;
+import com.stv.supervod.activity.R;
+
+public class FurtherListViewAdapter extends BaseAdapter{
+	private Context mCon;
+	private ArrayList<HashMap<String, Object>> mListItem;
+	private boolean mIsDelete;
+	
+	public FurtherListViewAdapter( Context c, ArrayList<HashMap<String, Object>> list, 
+			boolean isShowDelete)
+	{
+		mCon = c;
+		mListItem = list;
+		mIsDelete = isShowDelete;
+	}
+	
+	public void updateAdapter( ArrayList<HashMap<String, Object>> list,
+			boolean isShowDelete )
+	{
+		boolean doNotify = false;
+		if( list != null ){
+			mListItem = list;
+			doNotify = true;
+		}
+		if( mIsDelete != isShowDelete ){
+			mIsDelete = isShowDelete;
+			doNotify = true;
+		}
+		if(doNotify){
+			notifyDataSetChanged();
+		}
+	}
+	
+	@Override
+	public int getCount() {
+		// TODO Auto-generated method stub
+		return mListItem.size();
+	}
+
+	@Override
+	public Object getItem(int arg0) {
+		// TODO Auto-generated method stub
+		return arg0;
+	}
+
+	@Override
+	public long getItemId(int arg0) {
+		// TODO Auto-generated method stub
+		return arg0;
+	}
+
+	@Override
+	public View getView(int position, View convertView, ViewGroup parent) {
+		// TODO Auto-generated method stub
+//		View view;
+//		if( convertView == null ){
+//			LayoutInflater mInflater = (LayoutInflater) mCon.getSystemService(
+//					Context.LAYOUT_INFLATER_SERVICE);
+//			view = mInflater.inflate(R.layout.interest_item_list_edit, parent, false);
+//	        ImageView itemImg = (ImageView) view.findViewById(R.id.item_img);
+//	        TextView itemName = (TextView) view.findViewById(R.id.item_name);
+//	        TextView itemType = (TextView) view.findViewById(R.id.item_type);
+//	        RatingBar itemRating = (RatingBar) view.findViewById(R.id.ratingBar);
+//	 
+//	        int resId = (Integer) mListItem.get(position).get("ItemImage");
+//	        itemImg.setBackgroundResource(resId);
+//	        itemName.setText(mListItem.get(position).get("ItemName").toString());
+//	        itemType.setText(mListItem.get(position).get("ItemType").toString());
+//	        itemRating.setRating((float) 1.2);			
+//		} else {
+//			view = convertView;
+//		}
+//		
+//		ImageView delImg = (ImageView) view.findViewById(R.id.item_imageView_delete);
+		
+		LayoutInflater mInflater = (LayoutInflater) mCon.getSystemService(
+				Context.LAYOUT_INFLATER_SERVICE);
+		View view = mInflater.inflate(R.layout.interest_item_list_edit, parent, false);
+        //View view=LayoutInflater.from(mCon).inflate(R.layout.interest_item_list_edit, parent);
+        ImageView itemImg = (ImageView) view.findViewById(R.id.item_img);
+        TextView itemName = (TextView) view.findViewById(R.id.item_name);
+        TextView itemType = (TextView) view.findViewById(R.id.item_type);
+        RatingBar itemRating = (RatingBar) view.findViewById(R.id.ratingBar);
+        ImageView delImg = (ImageView) view.findViewById(R.id.item_imageView_delete);
+        
+        int resId = (Integer) mListItem.get(position).get("ItemImage");
+        itemImg.setBackgroundResource(resId);
+        itemName.setText(mListItem.get(position).get("ItemName").toString());
+        itemType.setText(mListItem.get(position).get("ItemType").toString());
+        itemRating.setRating((float) 1.2);
+        
+        if( mIsDelete ){
+        	delImg.setVisibility(View.VISIBLE);
+        } else {
+        	delImg.setVisibility(View.GONE);
+        }
+        
+        return view;
+	}
+	
+}

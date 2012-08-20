@@ -1,0 +1,388 @@
+package com.stv.supervod.activity;
+
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.nio.channels.SelectionKey;
+import java.nio.channels.Selector;
+import java.nio.channels.SocketChannel;
+
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnTouchListener;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.stv.supervod.service.VideoService;
+import com.stv.supervod.utils.ChangeGestureDetector;
+import com.stv.supervod.utils.VideoConstant;
+import com.stv.supervod.utils.VodModel;
+
+/**
+ * @author      Administrator
+ * @description 播放控制页面
+ * @authority   激活用户
+ * @function    用户点击播放、暂停、快进、快退、上一个，下一个、进度条、停止播放进行相应功能操作
+ */
+public class Play extends BaseActivity{
+	private ImageButton playBtn = null;//播放、暂停	
+	private ImageButton forwardBtn = null;//快进
+	private ImageButton rewindBtn = null;//快退
+	private TextView playtime = null;//已播放时间
+	private TextView durationTime = null;//视频时间
+	public SeekBar seekbar = null;//视频进度	
+	private Handler fHandler = null;//用于快进
+	private Handler conhandler=null;//处理连接vod服务器
+	private int currentPosition;//当前播放位置
+	private int duration;//视频时长
+	
+	private static VideoService service;	
+	private static final int STATE_PLAY = 1;
+	private static final int STATE_PAUSE = 2;
+	
+	private int flag=1;
+	private TextView name = null;
+	private final int timeout = 100; //100ms延时处理
+	private final String RcServerIp = "192.168.14.208";
+	private final String RcServerPort = "5008";
+
+	public static Selector selector;
+	public static SocketChannel channel;
+	private GestureDetector gestureDetector;
+	private ProgressDialog conDialog;//连接vod服务器对话框
+
+	@Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.play); 
+        service=new VideoService(this);
+        conDialog = new ProgressDialog(this);
+        showConInfo(conDialog);//提示登录信息
+               
+        //跟vod服务器建立连接   
+        conhandler=new Handler();
+        conhandler.postDelayed(conn, timeout);
+		gestureDetector=new GestureDetector(new ChangeGestureDetector(this));	//手势识别
+
+
+        //响应返回事件
+        Button btn=(Button) this.findViewById(R.id.play_btn_back);
+        btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Play.this.finish();
+			}
+		});
+        //响应播放、暂停事件
+        playBtn = (ImageButton)findViewById(R.id.playBtn);
+		playBtn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				switch (flag) {
+				case STATE_PLAY:
+					play();
+					break;
+
+				case STATE_PAUSE:
+					pause();
+					break;
+				}
+			}
+		});
+		
+		
+		//响应快退事件
+		rewindBtn = (ImageButton)findViewById(R.id.backwordBtn);
+		rewindBtn.setOnTouchListener(new OnTouchListener() {
+			
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				switch (event.getAction()) {
+				case MotionEvent.ACTION_DOWN:				
+					rewind();
+					break;
+				case MotionEvent.ACTION_UP:
+					play();
+					break;
+				}
+				return true;
+			}
+		});
+		//响应快进事件
+		forwardBtn = (ImageButton)findViewById(R.id.forwardBtn);
+		forwardBtn.setOnTouchListener(new OnTouchListener() {
+			
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				switch (event.getAction()){
+				case MotionEvent.ACTION_DOWN:					
+					forward();
+					break;
+				case MotionEvent.ACTION_UP:
+					play();
+					break;
+				}
+				return true;
+			}
+		});
+		//响应拖动滚动条事件
+		seekbar = (SeekBar)findViewById(R.id.seekbar);
+		seekbar.setMax(duration);
+		seekbar.setProgress(currentPosition);
+		seekbar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+			
+			@Override
+			public void onStopTrackingTouch(SeekBar seekBar) {
+//				play();
+			}
+			
+			@Override
+			public void onStartTrackingTouch(SeekBar seekBar) {
+//				pause();
+			}
+			
+			@Override
+			public void onProgressChanged(SeekBar seekBar, int progress,
+					boolean fromUser) {
+				if (fromUser){
+					seekbar_change(progress);
+				}
+			}
+		});
+		
+    }
+	
+     private void showConInfo(ProgressDialog  conDialog) {
+		// TODO Auto-generated method stub
+    	 conDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+         conDialog.setTitle(R.string.tip);
+         conDialog.setMessage("正在与VOD服务器建立连接，请稍候...");
+         conDialog.setCancelable(true);
+         conDialog.show();
+	}
+   
+	@Override
+	protected void onStart() {
+		// TODO Auto-generated method stub
+		super.onStart();
+//		IntentFilter filter = new IntentFilter();
+//		filter.addAction(VideoConstant.VIDEO_CURRENT);
+//		filter.addAction(VideoConstant.VIDEO_DURATION);
+//		filter.addAction(VideoConstant.VIDEO_NEXT);	
+//		filter.addAction(VideoConstant.VIDEO_UPDATE);	
+//		registerReceiver(videoReceiver, filter);
+	}
+
+	private void rewind() {
+		// TODO Auto-generated method stub
+		showInfo("rewind");
+	}
+
+	private void forward() {
+		// TODO Auto-generated method stub
+		showInfo("forward");
+	}
+
+	public void nextOne() {
+		// TODO Auto-generated method stub
+		showInfo("next one");
+	}
+
+	public void latestOne() {
+		// TODO Auto-generated method stub
+		showInfo("latestOne");
+	}
+
+	//播放
+	private void play() {
+		// TODO Auto-generated method stub		
+		flag = STATE_PAUSE;
+		playBtn.setBackgroundResource(R.drawable.pause_selecor);
+		Intent intent=new Intent();
+		intent.putExtra("op", VideoConstant.VIDEO_PLAY);
+		intent.setAction(VideoConstant.FILTER_ACTION);		                
+		startService(intent);		
+	}
+  @Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		
+	}
+
+	//暂停
+	private void pause() {
+		// TODO Auto-generated method stub
+		flag = STATE_PLAY;
+		playBtn.setBackgroundResource(R.drawable.play_selecor);
+		Intent intent=new Intent();
+		intent.putExtra("op", VideoConstant.VIDEO_PAUSE);
+		intent.setAction(VideoConstant.FILTER_ACTION);
+		startService(intent);	
+	}
+	/**
+	 * 用户拖动进度条
+	 */
+	private void seekbar_change(int progress){
+//		Toast.makeText(this, "改变进度条"+progress, Toast.LENGTH_LONG).show();
+		Intent intent = new Intent();		
+		intent.setAction(VideoConstant.FILTER_ACTION);
+		intent.putExtra("op", VideoConstant.PROGRESS_CHANGE);
+		intent.putExtra("progress", progress);
+		startService(intent);
+	}
+	
+	private void showInfo(String text){
+		Toast.makeText(this, text, Toast.LENGTH_LONG).show();
+		
+	}
+	
+	private Runnable conn = new Runnable() {
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			try {
+				//定义一个记录套接字通道事件的对象
+				selector = Selector.open();
+				//定义异步客户端
+				channel = SocketChannel.open(); 
+				//将客户端设定为异步
+				channel.configureBlocking (false);  
+				//建立连接，此方法是异步
+				channel.connect(new InetSocketAddress(
+						RcServerIp, Integer.parseInt(RcServerPort)));
+				//在轮讯对象中注册此客户端的读取事件
+				channel.register(selector, SelectionKey.OP_READ);
+				//我们通过持续调用finishConnect()方法来“轮询”连接状态，该方法在连接成功建立之前一直返回false
+				long firsttime = System.currentTimeMillis();
+				while(!channel.finishConnect()) {
+					if (System.currentTimeMillis() - firsttime >= 2000) {
+						throw new IOException("Connection Failure");
+					}
+				};
+												
+				conDialog.setMessage("网络连接成功,正在登陆VOD服务器...");
+				applyService();
+                
+			} catch (IOException e) {
+				// TODO: handle exception
+				Log.d("IOException", e.toString());				
+				conDialog.cancel();				
+				new AlertDialog.Builder(Play.this)
+				.setTitle(R.string.tip)
+				.setMessage(R.string.connectFail)
+				.setPositiveButton(R.string.reconnect, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						// TODO Auto-generated method stub	
+						    showConInfo(conDialog);
+							conhandler.postDelayed(conn, timeout);
+						
+					}
+				}).setNegativeButton(R.string.canle, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						// TODO Auto-generated method stub
+						
+						try{
+							Play.this.finish();
+							channel.close();
+						}catch(IOException e){
+							e.printStackTrace();
+						}						
+					}
+				}).show();
+			}
+		}		
+	};
+	//申请服务
+	private void applyService() {		
+//		Bundle bundle=getIntent().getExtras();
+//		String smartCardId=bundle.getString("smartCardId");
+//		String password=bundle.getString("password");
+//		byte isPassword=bundle.getByte("isPassword");		
+//		Bundle bundle =new Bundle();
+//		VodModel model=new VodModel();
+//		model.setSmartCardId("8000302100138125");
+//		model.setPassword("13100000000");
+//		model.setIsPassword((byte)1);
+//		bundle.putString("smartCardId", "8000302100138125");
+//		bundle.putString("password", "13100000000");
+//		bundle.putByte("isPassword", (byte)1);
+        
+        
+		Intent intent=new Intent();
+		intent.putExtra("op", VideoConstant.VIDEO_APPLY_SERVICE);
+		intent.setAction(VideoConstant.FILTER_ACTION);		                
+		startService(intent);
+		
+		
+	}
+	
+	//close socket
+	public static void closeSocket(){
+		if(channel.isConnected()){
+			try {
+				channel.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	
+	/**
+	 * 定义videoReceiver,接收VideoService发送的广播
+	 */
+	protected BroadcastReceiver videoReceiver = new BroadcastReceiver() {
+		
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			String action = intent.getAction();
+			if (action.equals(VideoConstant.VIDEO_CURRENT)){
+				currentPosition =  intent.getExtras().getInt("currentTime");//获得当前播放位置
+//				playtime.setText(toTime(currentPosition));
+				duration =intent.getExtras().getInt("duration");
+				seekbar.setProgress(currentPosition);//设置进度条
+				seekbar.setMax(duration);
+			} 
+		}
+	};
+	/**
+	 * 时间格式转换函数
+	 * @param time
+	 * @return
+	 */
+	public String toTime(int time) {
+
+		time /= 1000;
+		int minute = time / 60;
+		int hour = minute / 60;
+		int second = time % 60;
+		minute %= 60;
+		return String.format("%02d:%02d", minute, second);
+	}
+	public void cancleConDialog() {
+		conDialog.cancel();
+	}
+	
+	
+}

@@ -1,0 +1,208 @@
+package com.stv.supervod.service;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.protocol.ClientContext;
+import org.apache.http.cookie.Cookie;
+import org.apache.http.impl.client.BasicCookieStore;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.HttpParams;
+import org.apache.http.protocol.BasicHttpContext;
+import org.apache.http.protocol.HttpContext;
+import org.json.JSONException;
+
+import android.util.Log;
+
+import com.stv.supervod.exception.ErrorCodeException;
+import com.stv.supervod.service.RegisterServiceImpl.LoginInfoEnum;
+import com.stv.supervod.utils.Constant;
+import com.stv.supervod.utils.ValidateUtil;
+
+public class HttpRequestServiceImpl {
+
+	/**
+	 * Description: 提交json串到服务器，同时从服务器获取json串
+	 * 
+	 * @Version1.0 2011-12-12 下午06:09:47 mustang created
+	 * @param json
+	 * @return
+	 * @throws IOException
+	 * @throws ClientProtocolException
+	 * @throws ErrorCodeException
+	 * @throws Exception
+	 */
+	public void requestByHttpPost(Map<String, String> userinfos, String url) throws ClientProtocolException, IOException, ErrorCodeException {
+		BufferedReader reader = null;
+		try {
+			// 处理cookie
+			BasicCookieStore cookieStore = new BasicCookieStore();
+			HttpContext localContext = new BasicHttpContext();
+			localContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
+
+			HttpPost httprequest = new HttpPost(url);
+			List<NameValuePair> params = new ArrayList<NameValuePair>();
+			params.add(new BasicNameValuePair(LoginInfoEnum.user.toString(), userinfos.get(LoginInfoEnum.user.toString())));
+			params.add(new BasicNameValuePair(LoginInfoEnum.ispsd.toString(), userinfos.get(LoginInfoEnum.ispsd.toString())));
+			params.add(new BasicNameValuePair(LoginInfoEnum.psd.toString(), userinfos.get(LoginInfoEnum.psd.toString())));
+			HttpEntity httpentity = new UrlEncodedFormEntity(params, "utf-8");
+			httprequest.setEntity(httpentity);
+			HttpClient client = new DefaultHttpClient();
+			HttpResponse response = client.execute(httprequest, localContext);
+
+			// 保存cookie
+			List<Cookie> cookies = cookieStore.getCookies();
+			for (int i = 0; i < cookies.size(); i++) {
+				Cookie ck = cookies.get(i);
+				if (ck != null) {
+					Constant.http_session_id = ck.getValue();
+				}
+			}
+			HttpEntity responseEntity = response.getEntity();
+			reader = new BufferedReader(new InputStreamReader(responseEntity.getContent()));
+			String line = "";
+			StringBuilder sb = new StringBuilder();
+			while ((line = reader.readLine()) != null) {
+				sb.append(line);
+			}
+
+			if (sb.length() > 0 && sb.indexOf("error") > -1) {
+				String[] strs = sb.toString().split(":");
+				if (strs.length > 1 && strs[1].length() > 3) {
+					String code = strs[1].substring(1, strs[1].length() - 2);
+					throw new ErrorCodeException(code);
+				}
+			} else if (sb.length() == 0) {
+
+			}
+
+		} finally {
+			if (reader != null) {
+				reader.close();
+			}
+		}
+	}
+
+	/**
+	 * Description: 通过get方式取数据
+	 * 
+	 * @Version1.0 2011-12-21 下午02:44:25 mustang created
+	 * @param params
+	 * @param url
+	 * @return
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 * @throws JSONException
+	 * @throws ErrorCodeException
+	 */
+	public StringBuilder requestByHttpGet(Map<String, String> params, String url) throws ClientProtocolException, IOException, JSONException,
+			ErrorCodeException {
+		StringBuilder sb = new StringBuilder(url);
+		if (params != null) {
+			sb.append('?');
+			for (Map.Entry<String, String> entry : params.entrySet()) {
+				sb.append(entry.getKey()).append('=').append(URLEncoder.encode(entry.getValue(), "UTF-8")).append('&');
+			}
+			sb.deleteCharAt(sb.length() - 1);
+		}
+
+		Log.d("HttpRequestServiceImpl", "requestByHttpGet=" + sb.toString());
+
+		HttpGet httprequest = new HttpGet(sb.toString());
+		if (!ValidateUtil.isBlank(Constant.http_session_id)) {
+			httprequest.setHeader("Cookie", "JSESSIONID=" + Constant.http_session_id);
+		}
+		StringBuilder sbd = new StringBuilder();
+		BufferedReader reader = null;
+		try{
+			HttpClient client = new DefaultHttpClient();
+			HttpResponse response = client.execute(httprequest);
+			HttpEntity responseEntity = response.getEntity();
+			reader = new BufferedReader(new InputStreamReader(responseEntity.getContent()));
+			String line = "";
+			while ((line = reader.readLine()) != null) {
+				sbd.append(line);
+			}
+
+			// 解析错误码
+			if (sbd.length() > 0 && sbd.indexOf("error") > -1) {
+				String[] strs = sbd.toString().split(":");
+				if (strs.length > 1 && strs[1].length() > 3) {
+					String code = strs[1].substring(1, strs[1].length() - 2);
+					throw new ErrorCodeException(code);
+				}
+			}
+		}finally{
+			if (reader != null) {
+				reader.close();
+			}
+		}
+		
+		
+		return sbd;
+	}
+
+	/**
+	 * Description: post数据，返回json格式数据
+	 * 
+	 * @Version1.0 2012-2-24 下午4:40:17 zhaojunfeng created
+	 * @param params
+	 * @param url
+	 * @return
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 * @throws JSONException
+	 * @throws ErrorCodeException
+	 */
+	public StringBuilder requestByHttpPostMyVod(Map<String, String> params, String url) throws ClientProtocolException, IOException, JSONException,
+			ErrorCodeException {
+		HttpPost httprequest = new HttpPost(url);
+		if (!ValidateUtil.isBlank(Constant.http_session_id)) {
+			httprequest.setHeader("Cookie", "JSESSIONID=" + Constant.http_session_id);
+		}
+
+		if (params != null) {
+			List<NameValuePair> postData = new ArrayList<NameValuePair>();
+			for (Map.Entry<String, String> entry : params.entrySet()) {
+				postData.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
+			}
+			httprequest.setEntity(new UrlEncodedFormEntity(postData, "utf-8"));
+		}
+
+		HttpClient client = new DefaultHttpClient();
+		HttpResponse response = client.execute(httprequest);
+		HttpEntity responseEntity = response.getEntity();
+		InputStream is = responseEntity.getContent();
+		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+		String line = "";
+		StringBuilder sb = new StringBuilder();
+		while ((line = reader.readLine()) != null) {
+			sb.append(line);
+		}
+
+		// 解析错误码
+		if (sb.length() > 0 && sb.indexOf("error") > -1) {
+			String[] strs = sb.toString().split(":");
+			if (strs.length > 1 && strs[1].length() > 3) {
+				String code = strs[1].substring(1, strs[1].length() - 2);
+				throw new ErrorCodeException(code);
+			}
+		}
+		return sb;
+	}
+}

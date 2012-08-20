@@ -1,0 +1,84 @@
+package com.stv.supervod.adapter;
+
+import java.util.List;
+import java.util.Map;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.RatingBar;
+import android.widget.TextView;
+
+/**
+ * Description: 解析列表中每条数据，解决小星星不能赋值的问题 Copyright (c) 永新视博 All Rights Reserved.
+ * 
+ * @version 1.0 2011-12-5 上午11:30:52 mustang created
+ */
+public class ListItemSimpleAdapter extends BaseAdapter {
+
+	public List<? extends Map<String, ?>> list = null;
+	Context mycontext;
+	int layout;
+	String[] vfrom;
+	int[] vto;
+
+	public ListItemSimpleAdapter(Context context,
+			List<? extends Map<String, ?>> data, int resource, String[] from,
+			int[] to) {
+
+		list = data;
+		mycontext = context;
+		layout = resource;
+		vfrom = from;
+		vto = to;
+	}
+
+	@Override
+	public int getCount() {
+		return list.size();
+	}
+
+	@Override
+	public Object getItem(int position) {
+		return position;
+	}
+
+	@Override
+	public long getItemId(int position) {
+		return position;
+	}
+
+	@Override
+	public View getView(int position, View convertView, ViewGroup parent) {
+
+		LayoutInflater inflate = LayoutInflater.from(mycontext);
+		View view = inflate.inflate(layout, null);
+		Map<String, ?> map = list.get(position);
+		// name
+		TextView name = (TextView) view.findViewById(vto[0]);
+		name.setText((CharSequence) map.get(vfrom[0]));
+		// name
+		TextView type = (TextView) view.findViewById(vto[1]);
+		type.setText((CharSequence) map.get(vfrom[1]));
+
+		// img
+		ImageView img = (ImageView) view.findViewById(vto[2]);
+		img.setImageResource((Integer) map.get(vfrom[2]));
+		// ratingBar
+		RatingBar ratingBar = (RatingBar) view.findViewById(vto[3]);
+		ratingBar.setRating((Float) map.get(vfrom[3]));
+
+		// /ratingScore1
+		TextView ratingScore1 = (TextView) view.findViewById(vto[4]);
+		ratingScore1.setText((CharSequence) map.get(vfrom[4]));
+
+		// /ratingScore2
+		TextView ratingScore2 = (TextView) view.findViewById(vto[5]);
+		ratingScore2.setText((CharSequence) map.get(vfrom[5]));
+		return view;
+	}
+
+}

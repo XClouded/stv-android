@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/linearLayout1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" 
+        android:orientation="vertical" android:background="@drawable/background">
+
+		<RelativeLayout
+			android:id="@+id/detail_rl_title"
+			android:layout_width="fill_parent"
+			android:layout_height="43dp" 
+			android:background="@drawable/homepage_top" >
+
+			<Button
+			    android:id="@+id/detail_btn_back"
+			    android:layout_width="68dp"
+			    android:layout_height="wrap_content"
+			    android:layout_alignParentLeft="true"
+			    android:text="@string/detail_btn_back" 
+			    android:layout_centerVertical="true" 
+			    style="@style/Button_Return" 
+			    android:layout_marginLeft="10dp"/>
+
+	        <Button
+	            android:id="@+id/detail_btn_point"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_alignParentRight="true"
+	            android:text="@string/detail_btn_point" 
+	            android:layout_centerVertical="true" 
+	            android:visibility="invisible"/>
+
+		</RelativeLayout> 
+        
+        <ScrollView
+            android:id="@+id/scrollView1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+            
+			<LinearLayout
+	            android:id="@+id/linearLayout1"
+	            android:layout_width="fill_parent"
+	            android:layout_height="fill_parent"
+	            android:orientation="vertical" >                
+                
+				<LinearLayout
+				     android:id="@+id/detail_ll_info"
+				     android:layout_width="fill_parent"
+				     android:layout_height="wrap_content"
+				     android:layout_below="@+id/tableLayout_title"
+				     android:layout_margin="5dp" >
+
+					<ImageView
+					    android:id="@+id/imageView_poster"
+					    style="@style/Detail_Poster"
+					    android:src="@drawable/a1" />
+					<TableLayout
+					    android:id="@+id/tableLayout2"
+					    android:layout_width="fill_parent"
+					    android:layout_height="wrap_content"
+					    android:layout_marginTop="2dp" >
+					    
+						<TableRow
+						    android:id="@+id/tableRow2"
+						    android:layout_width="wrap_content"
+						    android:layout_height="wrap_content" >
+							<TextView
+							    android:id="@+id/textView_name"
+							    style="@style/Detail_Movie_Name"
+							    android:text="国境之南" />
+                		</TableRow>
+
+                		<TableRow
+			                 android:id="@+id/tableRow3"
+			                 android:layout_width="wrap_content"
+			                 android:layout_height="fill_parent"
+			                 android:baselineAligned="false" >
+		                    <RatingBar
+		                        android:id="@+id/ratingBar_point"
+		                        style="@style/List_RatingBar" 
+		                        android:rating="2.0" />
+		                    <TextView
+		                        android:id="@+id/textView_point"
+		                        android:layout_width="wrap_content"
+		                        android:layout_height="wrap_content"
+		                        android:layout_gravity="right|center_horizontal"
+		                        android:layout_marginLeft="10dp"
+		                        android:text="8.8"
+		                        android:textSize="16dp"
+		                        android:textStyle="bold" />
+                		</TableRow>
+
+                		<TableRow
+		                    android:id="@+id/tableRow4"
+		                    android:layout_width="wrap_content"
+		                    android:layout_height="wrap_content" >
+		                    <TextView
+		                        android:id="@+id/textView_type"
+		                        android:text="@string/detail_txt_type"
+		                        style="@style/Detail_Txt" />
+                		</TableRow>
+
+		                <TableRow
+		                    android:id="@+id/tableRow5"
+		                    android:layout_width="wrap_content"
+		                    android:layout_height="wrap_content" >
+		                    <TextView
+		                        android:id="@+id/textView_director"
+		                        android:text="@string/detail_txt_director"
+		                        style="@style/Detail_Txt" />
+		                </TableRow>
+
+	                	<TableRow
+		                    android:id="@+id/tableRow6"
+		                    android:layout_width="wrap_content"
+		                    android:layout_height="wrap_content" >
+		                    <TextView
+		                        android:id="@+id/textView_actor"
+		                        android:text="@string/detail_txt_actor"
+		                        style="@style/Detail_Txt" />
+		                </TableRow>
+		                
+            		</TableLayout>
+            		
+				</LinearLayout>
+				<LinearLayout 
+				    android:id="@+id/detail_ll_control" 
+				    android:layout_width="fill_parent" 
+				    android:layout_height="wrap_content" 
+				    android:layout_margin="5dp" >
+					
+					<Button 
+					    android:id="@+id/detail_btn_play" 
+					    android:layout_width="68dp" 
+					    android:layout_height="wrap_content" 
+					    android:text="@string/detail_btn_play" 
+					    android:drawableLeft="@drawable/poster_play" 
+					    android:background="@drawable/poster_bar_red" 
+					    style="@style/Button" 
+					    android:layout_margin="5dp" />
+					
+					<Button 
+					    android:id="@+id/detail_btn_fav" 
+					    android:layout_width="68dp" 
+					    android:layout_height="wrap_content" 
+					    android:text="@string/detail_btn_fav" 
+					    android:background="@drawable/poster_bar" 
+					    android:drawableLeft="@drawable/poster_collect" 
+					    style="@style/Button" 
+					    android:layout_margin="5dp" />
+					
+					<Button 
+					    android:id="@+id/detail_btn_add" 
+					    android:layout_width="130dp" 
+					    android:layout_height="wrap_content" 
+					    android:text="@string/detail_btn_add" 
+					    android:background="@drawable/poster_bar" 
+					    android:drawableLeft="@drawable/poster_share" 
+					    style="@style/Button" 
+					    android:layout_margin="5dp" />
+					
+				</LinearLayout>
+				<RelativeLayout 
+					android:layout_width="fill_parent" 
+					android:id="@+id/detail_rl_episode" 
+					android:layout_height="wrap_content">
+				
+					<TextView
+					    android:id="@+id/detail_tv_episode_number"
+					    style="@style/Detail_Movie_Name"
+					    android:layout_alignParentLeft="true"
+					    android:layout_marginLeft="10dp"
+					    android:layout_toLeftOf="@+id/detail_btn_episode_sort"
+					    android:text="@string/detail_txt_episode_number" />
+	
+					<Button 
+					    android:id="@+id/detail_btn_episode_sort" 
+					    android:layout_width="68dp" 
+					    android:layout_height="wrap_content" 
+					    android:text="@string/detail_btn_rsort" 
+					    android:layout_alignParentRight="true" 
+					    android:layout_alignParentTop="true" 
+						android:layout_marginRight="10dp" 
+					    style="@style/Button" 
+						android:drawableLeft="@drawable/poster_detail_fan" 
+						android:background="@drawable/setting_btn_bg_normal" 
+						android:drawablePadding="5dp" />
+					
+					<com.stv.supervod.widget_extended.ExGridViewTvList 
+					    android:layout_width="fill_parent" 
+					    android:numColumns="5" 
+					    android:id="@+id/detail_egv_episode_list" 
+					    android:layout_height="wrap_content"  
+					    android:layout_below="@id/detail_btn_episode_sort" 
+					    android:gravity="center" 
+						android:background="#202020" 
+						android:padding="10dp" 
+						android:layout_marginLeft="10dp" 
+						android:layout_marginRight="10dp" 
+						android:layout_marginTop="10dp"/>
+					<Button 
+					    android:id="@+id/detail_btn_expand" 
+					    android:layout_width="68dp" 
+					    android:layout_height="wrap_content" 
+					    android:layout_alignParentRight="true" 
+					    android:text="@string/detail_btn_expand" 
+						android:layout_below="@id/detail_egv_episode_list" 
+               android:layout_marginRight="10dp" 
+						style="@style/Button" 
+						android:drawableLeft="@drawable/poster_fenji_down" 
+						android:drawablePadding="5dp" 
+						android:background="#202020"/>
+				</RelativeLayout>
+				<LinearLayout 
+				    android:layout_width="wrap_content" 
+				    android:id="@+id/detail_ll_desc" 
+				    android:layout_height="wrap_content" 
+				    android:orientation="vertical" 
+				    android:layout_margin="5dp" >  
+				               
+					<TextView
+					    android:id="@+id/textView6"
+					    style="@style/Detail_Movie_Name"
+					    android:text="@string/detail_txt_desc" 
+					    android:layout_margin="5dp"/>
+
+					<TextView
+					    android:id="@+id/detail_textview_desc"
+					    style="@style/Detail_Info"
+					    android:layout_margin="5dp"
+					    android:text="据了解，《李雷的2012》是央视电影频道《爱电影》为迎接龙年推出的贺岁活动之一。不过，强大的制作班底并没能让网友买账。不仅是影片构思，连人物形象也遭到网友的诟病。“李雷这么挫也就算了，有见过那么浓妆艳抹的韩梅梅么？果然这是部搞笑片。”不少网友均表示，尽管之前关于李雷和韩梅梅的诸多版本里两人最终未能牵手颇让人遗憾，但相比如今这个版本打破所有人对李雷和韩梅梅青涩初恋的美好幻想，大家倒宁愿遗憾着"/>
+           
+				</LinearLayout>   
+                
+			</LinearLayout>       
+            
+		</ScrollView>
+
+    </LinearLayout>

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android" >
+      
+	<!-- 没有焦点时的背景图片 -->  
+  	<item android:state_window_focused="false"   
+         >  
+        <shape>               
+        <!-- 实心，即填充 -->               
+        <solid android:color="#333333"/>              
+         <!-- 描边 -->               
+         <stroke                   
+             android:width="2dp"                   
+             android:color="#333333"/>               
+             <!-- 圆角 -->               
+             <corners                   
+                 android:radius="5dp" />               
+                 <padding                   
+                     android:left="5dp"                   
+                     android:top="5dp"                   
+                     android:right="5dp"                   
+                     android:bottom="5dp" />           
+       	</shape>
+	</item> 
+	<!-- 非触摸模式下获得焦点并单击时的背景图片 -->  
+  	<item android:state_window_focused="true" android:state_pressed="true"   
+        android:drawable= "@drawable/btn_long_bg" >
+        <shape>               
+        <!-- 实心，即填充 -->               
+        <solid android:color="#333333"/>              
+         <!-- 描边 -->               
+         <stroke                   
+             android:width="2dp"                   
+             android:color="#333333"/>               
+             <!-- 圆角 -->               
+             <corners                   
+                 android:radius="5dp" />               
+                 <padding                   
+                     android:left="5dp"                   
+                     android:top="5dp"                   
+                     android:right="5dp"                   
+                     android:bottom="5dp" />           
+       	</shape> 
+	</item>  
+	<!-- 触摸模式下单击时的背景图片 -->  
+	<item android:state_focused="false" android:state_pressed="true"   
+	      android:drawable="@drawable/channel_main_press" >
+        <shape>               
+        <!-- 实心，即填充 -->               
+        <solid android:color="#333333"/>              
+         <!-- 描边 -->               
+         <stroke                   
+             android:width="2dp"                   
+             android:color="#333333"/>               
+             <!-- 圆角 -->               
+             <corners                   
+                 android:radius="5dp" />               
+                 <padding                   
+                     android:left="5dp"                   
+                     android:top="5dp"                   
+                     android:right="5dp"                   
+                     android:bottom="5dp" />           
+       	</shape> 
+	</item>   
+	<!--选中时的图片背景  -->  
+	<item android:state_selected="true"   
+	      android:drawable="@drawable/channel_main_press" >
+        <shape>               
+        <!-- 实心，即填充 -->               
+        <solid android:color="#333333"/>              
+         <!-- 描边 -->               
+         <stroke                   
+             android:width="2dp"                   
+             android:color="#333333"/>               
+             <!-- 圆角 -->               
+             <corners                   
+                 android:radius="5dp" />               
+                 <padding                   
+                     android:left="5dp"                   
+                     android:top="5dp"                   
+                     android:right="5dp"                   
+                     android:bottom="5dp" />           
+       	</shape> 
+    </item>   
+	<!--获得焦点时的图片背景  -->  
+	<item android:state_window_focused="true"   
+	      android:drawable="@drawable/channel_main_press" >
+        <shape>               
+        <!-- 实心，即填充 -->               
+        <solid android:color="#333333"/>              
+         <!-- 描边 -->               
+         <stroke                   
+             android:width="2dp"                   
+             android:color="#333333"/>               
+             <!-- 圆角 -->               
+             <corners                   
+                 android:radius="5dp" />               
+                 <padding                   
+                     android:left="5dp"                   
+                     android:top="5dp"                   
+                     android:right="5dp"                   
+                     android:bottom="5dp" />           
+       	</shape> 
+  	</item>   
+	             
+</selector>

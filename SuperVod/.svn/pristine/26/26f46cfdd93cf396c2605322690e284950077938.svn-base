@@ -1,0 +1,179 @@
+package com.stv.supervod.activity;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import com.stv.supervod.activity.Category.ItemClickListener;
+import com.stv.supervod.adapter.ListItemSimpleAdapter;
+import com.stv.supervod.widget_extended.ExGridViewTvList;
+import com.stv.supervod.widget_extended.SelectDialog;
+
+import android.app.Dialog;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
+import android.widget.GridView;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
+import android.widget.TextView;
+
+public class CategoryItem extends BaseActivity{
+	
+	private Bundle myBundle;
+	private ArrayList<HashMap<String, Object>> listItem = new ArrayList<HashMap<String, Object>>();
+	private String[] types = { "剧情", "动作，剧情", "惊悚，剧情", "动作", "剧情", 
+							"喜剧，剧情", "悬疑，惊悚，剧情", "动作", "剧情", "喜剧，爱情"};
+	private String[] names = { "斗魂", "战狼传说", "玩尽杀绝IV", "小镇反面", "逃亡乐队", 
+							"情寻色香味", "影子写手", "半身缘", "东京十一罗汉", "埃及艳后"};
+	
+	private ArrayList<HashMap<String, Object>> sortTextItem = new ArrayList<HashMap<String, Object>>();
+	private String[] typeStrings = { "全部", "喜剧", "爱情", "剧情", "惊悚",
+						"动画", "警匪", "恐怖", "科幻", "动作"};
+	
+	private Dialog dlg;
+	private ListItemSimpleAdapter adapter;
+	
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+        setContentView(R.layout.category_item);
+        TextView categoryTextView = (TextView)findViewById(R.id.category_name);
+        Button catergoryButton = (Button)findViewById(R.id.btn_category);
+        Button sortButton = (Button)findViewById(R.id.btn_sort);
+        Button returnButton = (Button)findViewById(R.id.category_btn_back);
+
+        ListView listView = (ListView)findViewById(R.id.category_list);
+        
+        myBundle = this.getIntent().getExtras();
+        categoryTextView.setText(myBundle.getString("category_name"));
+      
+        //生成动态数组，并且转入数据  
+        for(int i=0; i < typeStrings.length; i++)  
+        {  
+          HashMap<String, Object> map = new HashMap<String, Object>();  
+          map.put("SortItem", typeStrings[i]);
+          sortTextItem.add(map);  
+        }
+        
+        adapter = new ListItemSimpleAdapter(this, 
+        										  getData(myBundle.getString("category_name")),
+        										  R.layout.category_item_list,
+        										  new String[]{"ItemName","ItemType","ItemImage", "ItemRatingBar", "ItemRatingScore1", "ItemRatingScore2"},
+        										  new int[]{ R.id.item_name, R.id.item_type, R.id.item_img, R.id.ratingBar, R.id.ratingScore1, R.id.ratingScore2 });
+        listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+					long arg3) {			
+				// TODO Auto-generated method stub
+				Intent intent = new Intent( CategoryItem.this, Detail.class);
+				intent.putExtra("EpisodeNumber", 30);
+				Framework.switchActivity("Detail", intent);			
+			}
+        	
+		});
+        
+        catergoryButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				dlg = new Dialog(CategoryItem.this, R.style.Dialog);
+				/*Window win = dlg.getWindow();
+				WindowManager.LayoutParams params = new WindowManager.LayoutParams();
+				params.x = -160;//设置x坐标
+				params.y = -202;//设置y坐标
+				params.alpha = 1.0f;
+				win.setAttributes(params);*/
+				dlg.setContentView(R.layout.category_all);
+				dlg.setCanceledOnTouchOutside(true);//设置点击Dialog外部任意区域关闭Dialog
+				Window window = dlg.getWindow();
+				window.setWindowAnimations(R.style.DialogWindowAnim);
+				
+				ExGridViewTvList gridTypeView = (ExGridViewTvList)dlg.findViewById(R.id.category_type);
+				ExGridViewTvList gridAgeView = (ExGridViewTvList)dlg.findViewById(R.id.category_age);
+				ExGridViewTvList gridAreaView = (ExGridViewTvList)dlg.findViewById(R.id.category_area);
+				Button cancleButton = (Button)dlg.findViewById(R.id.btn_cancle);
+				Button okButton = (Button)dlg.findViewById(R.id.btn_ok);
+
+				SimpleAdapter simpleAdapter = new SimpleAdapter(dlg.getContext(),
+																sortTextItem,
+																R.layout.category_sort_grid,
+																new String[] {"SortItem"},
+																new int[] {R.id.sort_item});
+				
+				gridTypeView.setDrawSelectorOnTop(true);
+				gridTypeView.setAdapter(simpleAdapter);
+				gridAgeView.setDrawSelectorOnTop(true);
+				gridAgeView.setAdapter(simpleAdapter);
+				gridAreaView.setDrawSelectorOnTop(true);
+				gridAreaView.setAdapter(simpleAdapter);
+				cancleButton.setOnClickListener(new OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						dlg.cancel();
+					}
+				});
+				okButton.setOnClickListener(new OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						adapter.notifyDataSetChanged();
+					}
+				});
+				//gridView.setOnItemClickListener(new ItemClickListener());
+				dlg.show();
+			}
+		});
+        
+        sortButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				dlg = new SelectDialog(CategoryItem.this, R.style.Dialog);
+				dlg.setCanceledOnTouchOutside(true);//设置点击Dialog外部任意区域关闭Dialog
+				dlg.show();
+			}
+		});
+        
+        returnButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Framework.switchActivityBack();
+			}
+		});
+        
+	}
+
+	private ArrayList<HashMap<String, Object>> getData(String category_type) {
+		
+		for(int i=0;i<10;i++)  
+        {  
+          HashMap<String, Object> map = new HashMap<String, Object>();  
+          map.put("ItemName", names[i]);
+          map.put("ItemType", types[i]);
+          map.put("ItemImage", R.drawable.video_cover_default);
+          map.put("ItemRatingBar", 8.7f);
+          map.put("ItemRatingScore1", "8.");
+          map.put("ItemRatingScore2", "7");
+          listItem.add(map);  
+        }
+		
+		return listItem;
+	}
+}

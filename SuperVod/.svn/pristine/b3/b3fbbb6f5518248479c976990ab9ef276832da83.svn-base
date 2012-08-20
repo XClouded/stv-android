@@ -1,0 +1,103 @@
+package com.stv.supervod.adapter;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.RatingBar;
+import android.widget.TextView;
+
+import com.stv.supervod.activity.Bookmark;
+import com.stv.supervod.activity.R;
+
+public class FurtherListViewAdapter extends BaseAdapter{
+	private Context mCon;
+	private ArrayList<HashMap<String, Object>> mListItem;
+	private boolean mIsDelete;
+	
+	public FurtherListViewAdapter( Context c, ArrayList<HashMap<String, Object>> list, 
+			boolean isShowDelete)
+	{
+		mCon = c;
+		mListItem = list;
+		mIsDelete = isShowDelete;
+	}
+	
+	public void updateAdapter( boolean isShowDelete )
+	{
+		mIsDelete = isShowDelete;
+		notifyDataSetChanged();
+	}
+	
+	@Override
+	public int getCount() {
+		// TODO Auto-generated method stub
+		return mListItem.size();
+	}
+
+	@Override
+	public Object getItem(int arg0) {
+		// TODO Auto-generated method stub
+		return arg0;
+	}
+
+	@Override
+	public long getItemId(int arg0) {
+		// TODO Auto-generated method stub
+		return arg0;
+	}
+
+	@Override
+	public View getView(int position, View convertView, ViewGroup parent) {
+		// TODO Auto-generated method stub
+		ViewHolder holder = null;
+		if( convertView == null ){
+			LayoutInflater mInflater = (LayoutInflater) mCon.getSystemService(
+					Context.LAYOUT_INFLATER_SERVICE);
+			
+			convertView = mInflater.inflate(R.layout.interest_item_list_edit, parent, false);
+			
+			holder = new ViewHolder();
+			holder.itemImg = (ImageView) convertView.findViewById(R.id.item_img);
+			holder.itemName = (TextView) convertView.findViewById(R.id.item_name);
+			holder.itemType = (TextView) convertView.findViewById(R.id.item_type);
+			holder.itemRating = (RatingBar) convertView.findViewById(R.id.ratingBar);
+			holder.delImg = (ImageView) convertView.findViewById(R.id.item_imageView_delete);
+			holder.itemPoint1 = (TextView) convertView.findViewById(R.id.ratingScore1);
+			holder.itemPoint2 = (TextView) convertView.findViewById(R.id.ratingScore2);
+			convertView.setTag(holder);
+		} else {
+			holder = (ViewHolder)convertView.getTag();
+		}
+		
+		holder.itemImg.setBackgroundResource((Integer) mListItem.get(position).get("img"));
+		holder.itemName.setText(mListItem.get(position).get("name").toString());
+		holder.itemType.setText(mListItem.get(position).get("type").toString());
+		holder.itemRating.setRating((Float) mListItem.get(position).get("ratingBar"));
+		holder.itemPoint1.setText(mListItem.get(position).get("ratingScore1").toString());
+		holder.itemPoint2.setText(mListItem.get(position).get("ratingScore2").toString());
+		        
+        if( mIsDelete ){
+        	holder.delImg.setVisibility(View.VISIBLE);
+        } else {
+        	holder.delImg.setVisibility(View.GONE);
+        }
+        
+        return convertView;
+	}
+	
+	private class ViewHolder{
+        ImageView itemImg;
+        TextView itemName;
+        TextView itemType;
+        TextView itemPoint1;
+        TextView itemPoint2;
+        RatingBar itemRating;
+        ImageView delImg;
+	}
+}

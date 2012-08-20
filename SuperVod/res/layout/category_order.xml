@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <LinearLayout
+        android:id="@+id/widget_linear"
+        android:layout_width="fill_parent"
+        android:layout_height="43dp"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/homepage_top" >
+
+        <TextView
+            android:id="@+id/sort_title"
+            style="@style/Title"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:layout_marginRight="10dp"
+            android:gravity="center"
+            android:text="" />
+        
+    </LinearLayout>
+
+	<LinearLayout
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_above="@+id/widget_linear1"
+	    android:layout_below="@+id/widget_linear"
+	    android:background="@android:color/white"
+	    android:orientation="vertical" >
+
+	    <LinearLayout
+	        android:layout_width="fill_parent"
+	        android:layout_height="47dp"
+	        android:background="@drawable/channel_second_sort_image2"
+	        android:orientation="vertical" >
+
+	        <TextView
+	            android:layout_width="wrap_content"
+	            android:layout_height="fill_parent"
+	            android:layout_gravity="center_vertical"
+	            android:layout_marginLeft="5dp"
+	            android:gravity="center"
+	            android:paddingLeft="10dp"
+	            android:text="@string/category_order"
+	            android:textColor="@android:color/white"
+	            android:textSize="20sp" />
+	    </LinearLayout>
+
+	    <GridView
+	        android:id="@+id/exgridview1"
+	        style="@style/GridView"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_marginBottom="10dp"
+	        android:layout_marginTop="10dp"
+	        android:numColumns="5" >
+	    </GridView>
+
+	    <LinearLayout
+	        android:layout_width="fill_parent"
+	        android:layout_height="47dp"
+	        android:background="@drawable/channel_second_sort_image2"
+	        android:orientation="vertical" >
+
+	        <TextView
+	            android:layout_width="wrap_content"
+	            android:layout_height="fill_parent"
+	            android:layout_gravity="center_vertical"
+	            android:layout_marginLeft="5dp"
+	            android:gravity="center"
+	            android:paddingLeft="10dp"
+	            android:text="@string/category_sequence"
+	            android:textColor="@android:color/white"
+	            android:textSize="20sp" />
+	    </LinearLayout>
+
+	    <GridView
+	        android:id="@+id/exgridview2"
+	        style="@style/GridView"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_marginBottom="10dp"
+	        android:layout_marginTop="10dp" >
+	    </GridView>
+	</LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/widget_linear1"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:background="@color/category_bottom"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/btn_ok"
+            style="@style/Button"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1.0"
+            android:gravity="center"
+            android:text="@string/ok" />
+        
+        <Button
+            android:id="@+id/btn_cancle"
+            style="@style/Button"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1.0"
+            android:gravity="center"
+            android:text="@string/canle" />
+        
+    </LinearLayout>
+
+</RelativeLayout>

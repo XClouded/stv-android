@@ -1,0 +1,318 @@
+package com.stv.supervod.service;
+
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.Service;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.Message;
+import android.util.Log;
+
+import com.stv.supervod.activity.Play;
+import com.stv.supervod.activity.R;
+import com.stv.supervod.exception.ErrorCodeException;
+import com.stv.supervod.service.HttpDownloadImpl.KeyEnum;
+import com.stv.supervod.utils.Constant.PlayerType;
+import com.stv.supervod.utils.VideoConstant;
+
+
+public class VideoService extends Service{
+	private static final String TAG = "VideoService";	
+	private final int timeover = 10000;        //10s登陆超时
+	private int currentTime;
+
+	private Handler timer;
+    private VideoServiceImpl service;
+
+	
+	private NotificationManager notificationMrg;
+	
+	public VideoService(){
+		
+	}
+	
+	@Override
+	public IBinder onBind(Intent intent) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void onCreate() {	
+		Log.d(TAG, "enter into oncreate method.");
+		super.onCreate();
+		timer=new Handler();
+        service=VideoServiceImpl.getInstance();
+       	notificationMrg=(NotificationManager) this.getSystemService(NOTIFICATION_SERVICE);
+		displayNotificationMessage("supervod is running");
+		Thread thr=new Thread(null,new ServiceWorker(),"SuperVodService");
+		thr.start();
+	}
+	
+	private void displayNotificationMessage(String message) {		
+		Notification notification=new Notification(R.drawable.icon,message,System.currentTimeMillis());
+		PendingIntent contentIntent=PendingIntent.getActivity(this, 0, new Intent(this,Play.class), 0);
+		notification.setLatestEventInfo(this, "SuperVod", message, contentIntent);
+		notificationMrg.notify(R.id.app_notification_id,notification);
+	}
+	//处理接收的数据
+	class ServiceWorker implements Runnable{
+		
+		public void run(){
+			//do something
+		}
+	}
+	    	
+	
+	
+	@Override
+	public void onStart(Intent intent, int startId) {
+		Log.d(TAG, "enter into onstart method.");
+		super.onStart(intent, startId);
+		int op = intent.getIntExtra("op", -1);
+		if (op!=-1){
+			switch (op) {
+			case VideoConstant.VIDEO_PLAY:
+                try {
+					play(0);
+				} catch (ErrorCodeException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				}
+				break;
+			case VideoConstant.VIDEO_PAUSE:
+                try {
+					pause();
+				} catch (ErrorCodeException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				break;
+			case VideoConstant.VIDEO_STOP://停止
+				try {
+					stop();
+				} catch (ErrorCodeException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				break;
+			case VideoConstant.PROGRESS_CHANGE:
+			    currentTime = intent.getExtras().getInt("progress");
+			    try {
+					play(currentTime);
+				} catch (ErrorCodeException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				break;
+			case VideoConstant.VIDEO_REWIND:
+				try {
+					rewind();
+				} catch (ErrorCodeException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				break;
+			case VideoConstant.VIDEO_FORWARD:
+				try {
+					forward();
+				} catch (ErrorCodeException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				break;
+			case VideoConstant.VIDEO_APPLY_SERVICE:
+				try {
+					applyService();
+				} catch (ErrorCodeException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				break;
+			case VideoConstant.PLAY:
+				Bundle bd=intent.getBundleExtra("info");
+				try {
+					playVedio(bd);
+				} catch (ErrorCodeException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}				
+			} 
+		}
+	}
+	
+	
+	private void playVedio(Bundle bd) throws ErrorCodeException{
+		// TODO Auto-generated method stub		
+		String type=bd.getString(KeyEnum.type.toString());
+		String offeringId=bd.getString(KeyEnum.offeringId.toString());
+		service.setOfferingId(offeringId);
+		
+		if(type==PlayerType.common.toString()){
+			
+			boolean isBookmark=bd.getBoolean(KeyEnum.bookmark.toString());
+			byte bm;
+			if(isBookmark){
+				bm=0;
+			}else{
+				bm=1;
+			}						
+			service.commPlay(offeringId, bm);
+		}
+		else if(type==PlayerType.my_mtv.toString()){
+//			String offeringId=bd.getString(KeyEnum.offeringId.toString());
+			String channelId=bd.getString(KeyEnum.channelId.toString());
+			String playMode=bd.getString(KeyEnum.play_mode.toString());
+			int playCount=bd.getInt(KeyEnum.play_count.toString());
+			service.myvodMtvPlay(Byte.decode(playMode), playCount, channelId, offeringId);			
+		}
+		else if(type==PlayerType.my_movie.toString()){
+			String channelId=bd.getString(KeyEnum.channelId.toString());
+//			String offeringId=bd.getString(KeyEnum.offeringId.toString());			
+			boolean isBookmark=bd.getBoolean(KeyEnum.bookmark.toString());
+			byte bm;
+			if(isBookmark){
+				bm=0;
+			}else{
+				bm=1;
+			}
+			service.myvodMoviePlay(channelId, offeringId, bm);
+		}
+		else{
+			
+		}
+	}
+
+	//登陆vod服务器申请服务
+	private void applyService() throws ErrorCodeException{
+		// TODO Auto-generated method stub
+		
+		SharedPreferences sp=this.getSharedPreferences("registerinfo", MODE_PRIVATE);
+		String username=sp.getString("username", "");
+		String password=sp.getString("password", "");
+		String isPassword=sp.getString("pwtype", "");
+		
+//		client.applyServcie(model);
+		service.appService(username, password, isPassword);
+		timer.postDelayed(loginTimeover, timeover);
+//		progressHandler.post(handlerThread);//test
+	}
+
+	private void stop() throws ErrorCodeException{
+		// TODO Auto-generated method stub
+		notificationMrg.cancel(R.id.app_notification_id);
+		service.stopPlay();
+		
+	}
+
+	private void play(int startTime) throws ErrorCodeException{
+		service.PlayControl((byte)VideoConstant.VIDEO_PLAY);		
+	}
+
+	private void pause() throws ErrorCodeException{
+		service.PlayControl((byte)VideoConstant.VIDEO_PAUSE);
+	}
+
+	private void rewind() throws ErrorCodeException{
+		// TODO Auto-generated method stub
+		service.PlayControl((byte)VideoConstant.VIDEO_REWIND);
+		
+	}
+
+	private void forward() throws ErrorCodeException{
+		service.PlayControl((byte)VideoConstant.VIDEO_FORWARD);
+	}
+
+	@Override
+	public void onDestroy() {		
+		super.onDestroy();
+		notificationMrg.cancel(R.id.app_notification_id);
+		
+	}
+	
+	private Runnable loginTimeover = new Runnable() {
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub					
+			timer.removeCallbacks(loginTimeover);
+		}
+	};
+
+		
+	private void sendBroadcastInfo(int beginStation, int duration) {
+		 Intent intent= new Intent();
+         intent.setAction(VideoConstant.VIDEO_CURRENT);
+         intent.putExtra("currentTime", beginStation);
+         intent.putExtra("duration", duration);
+		 sendBroadcast(intent);
+		
+	}
+	 
+    Handler progressHandler = new Handler()
+    {
+    	public void handleMessage(Message msg)
+    	{
+    		if(msg.arg1<=100){
+    			sendBroadcastInfo(msg.arg1,100);
+    			progressHandler.post(handlerThread);
+    		}
+    		
+    	}
+    };
+    
+    Runnable handlerThread = new Runnable()
+    {
+    	int i = currentTime;
+    	public void run()
+    	{
+    		System.out.println("开始线程");
+    		i = i + 10;
+    		/**
+    		 * 得到一个消息对象，Message类是由android操作系统提供
+    		 * obtainMessage方法用来得到Message对象
+    		 */
+    		Message msg = progressHandler.obtainMessage();
+    		/**
+    		 * Message中有个成员变量，即msg独享的arg1参数
+    		 * 将其值设置为i。用arg1或arg2这两个成员变量传递
+    		 * 消息，优点是系统性能消耗较少
+    		 */
+    		msg.arg1 = i;
+    		try {
+    			//当前线程休眠1秒
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			/**
+			 * 发送一个消息，用sendMessage是将msg加入到消息
+			 * 队列中。而post是将线程加入到线程队列中
+			 */
+    		progressHandler.sendMessage(msg);
+			if( i > 100)
+			{
+				/**
+				 * 如果i=100的时候，就将线程对象
+				 * 从handler当中移除
+				 */
+				progressHandler.removeCallbacks(handlerThread);
+//				bar.setVisibility(View.GONE);
+			}
+    	}
+    };
+    
+	protected void dialogSysinfo(String string) {
+		// TODO Auto-generated method stub
+		
+	}
+	public void cancleLoginDialog() {
+//		loginDialog.cancel();
+	}
+	
+
+}

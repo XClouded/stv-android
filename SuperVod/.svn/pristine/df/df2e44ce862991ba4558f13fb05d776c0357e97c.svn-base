@@ -1,0 +1,161 @@
+package com.stv.supervod.service;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Calendar;
+import java.util.List;
+
+import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Environment;
+
+import com.stv.supervod.utils.Constant;
+import com.stv.supervod.utils.ValidateUtil;
+
+/**
+ * Description:建立、删除图片及索引 Copyright (c) 永新视博 All Rights Reserved.
+ * 
+ * @version 1.0 2011-12-12 上午10:19:55 mustang created
+ */
+public class ImageServiceImpl implements Runnable {
+	private static Activity act = null;
+	private static List<String> list = null;
+
+	public ImageServiceImpl(Activity activity, List<String> urllist) {
+		act = activity;
+		list = urllist;
+	}
+
+	/**
+	 * Description: 保存文件
+	 * 
+	 * @Version1.0 2011-12-12 上午11:01:53 mustang created
+	 * @param bp
+	 * @param filename
+	 * @param act
+	 * @throws IOException
+	 */
+	public static void downloadImage(List<String> list, Activity act) throws IOException {
+		File dir = null;
+		// 外置存储卡需要配置权限
+		if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+			dir = Environment.getExternalStorageDirectory();
+		} else {
+			dir = act.getFilesDir();
+		}
+		String dpath = dir.getAbsolutePath();
+		for (String url : list) {
+			if (!ValidateUtil.isBlank(url)) {
+				URL imageurl = new URL(url);
+				HttpURLConnection conn = (HttpURLConnection) imageurl.openConnection();
+				conn.setDoInput(true);
+				conn.connect();
+				InputStream is = conn.getInputStream();
+				Bitmap bp = BitmapFactory.decodeStream(is);
+				is.close();
+				String[] names = url.split("/");
+				String filename = "";
+				if (names.length > 0) {
+					filename = names[names.length - 1];
+				}
+				if (bp != null && !ValidateUtil.isBlank(filename)) {
+					Uri uri = Uri.fromFile(new File(dpath, filename));
+					OutputStream os = act.getContentResolver().openOutputStream(uri);
+					bp.compress(Bitmap.CompressFormat.PNG, 100, os);
+					os.close();
+				}
+			}
+		}
+
+	}
+
+	/**
+	 * Description: 修改图片时间
+	 * 
+	 * @Version1.0 2011-12-12 上午11:34:53 mustang created
+	 * @param act
+	 */
+	public static void deleteTimeoutImage(Activity act) {
+		long now = Calendar.getInstance().getTimeInMillis();
+		File dir = null;
+		// 外置存储卡需要配置权限
+		if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+			dir = Environment.getExternalStorageDirectory();
+		} else {
+			dir = act.getFilesDir();
+		}
+		String[] filesname = dir.list();
+		for (int i = 0; i < filesname.length; i++) {
+			String name = filesname[i];
+			if (!ValidateUtil.isBlank(name)) {
+				File file = new File(dir.getAbsoluteFile(), name);
+				// 文件已经过期，需要删除
+				if (file!=null&&file.isFile()&&now - file.lastModified() > Constant.interval_day) {
+					file.delete();
+				} 
+			}
+		}
+	}
+
+	/**
+	 * Description: 根据文件名字取出本地文件，如果返回为null需要把文件的URL单独扔到一个list中，
+	 * 对list起一个单独下载的线程,刷新页面中没有海报的数据。
+	 * 
+	 * @Version1.0 2011-12-12 下午01:36:20 mustang created
+	 * @param imgName
+	 * @param act
+	 * @return
+	 */
+	public static Drawable getImageDrawable(String imgName, Activity act) {
+		File dir = null;
+		// 外置存储卡需要配置权限
+		if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+			dir = Environment.getExternalStorageDirectory();
+		} else {
+			dir = act.getFilesDir();
+		}
+		if (!ValidateUtil.isBlank(imgName)) {
+			Drawable da = Drawable.createFromPath(dir.getAbsolutePath() + "/" + imgName);
+			File file = new File(dir.getAbsoluteFile(), imgName);
+			if(file.isFile()&&da!=null){
+				//修改文件的最后访问时间
+				file.setLastModified(System.currentTimeMillis());
+				return da;
+			}
+		}
+		return null;
+	}
+
+	public static void test() {
+
+	}
+
+	/* (non-Javadoc)下载海报文件抛出线程处理
+	 * @see java.lang.Runnable#run()
+	 */
+	@Override
+	public void run() {
+		if (act != null && list != null && !list.isEmpty()) {
+			for (String url : list) {
+				if (!ValidateUtil.isBlank(url)) {
+					try {
+						downloadImage(list, act);
+						act = null;
+						list = null;
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+
+	}
+
+}

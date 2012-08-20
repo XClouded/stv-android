@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+    
+    
+    <LinearLayout
+        android:id="@+id/category_title"
+        android:layout_width="fill_parent"
+        android:layout_height="43dp"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/homepage_top" >
+
+        <TextView
+            android:id="@+id/category_name"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="分类列表" 
+            style="@style/Title" />
+    </LinearLayout>
+    
+    <FrameLayout 
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:paddingTop="60dp">
+	    <GridView
+	        android:id="@+id/gridview"
+			android:layout_height="fill_parent"
+	        android:layout_width="wrap_content"
+	        android:numColumns="2" 
+	        android:stackFromBottom="false" 
+	        android:gravity="center"
+			android:verticalSpacing="15dp"
+			android:listSelector="@drawable/channel_main_press" />
+    </FrameLayout>
+	
+</RelativeLayout>

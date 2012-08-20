@@ -1,0 +1,107 @@
+package com.stv.supervod.adapter;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.SimpleAdapter;
+
+import com.stv.supervod.activity.R;
+import com.stv.supervod.service.HttpDownloadImpl;
+import com.stv.supervod.utils.ValidateUtil;
+
+/**
+ * Description: 封装首页海报横向列表显示数据
+ * Copyright (c) 永新视博
+ * All Rights Reserved.
+ * @version 1.0  2011-12-5 上午11:30:52 mustang created
+ */
+public class PosterSimpleAdapter extends SimpleAdapter {
+
+	public static int POSTER_LENGTH = 6;
+	public PosterSimpleAdapter(Context context, List<? extends Map<String, ?>> data, int resource, String[] from, int[] to) {
+		super(context, data, resource, from, to);
+		if(data.size()>0){
+			POSTER_LENGTH = data.size();
+		}
+		list = data;
+	}
+
+	
+	public List<? extends Map<String, ?>> list = null;
+
+	@Override
+	public int getCount() {
+		return Integer.MAX_VALUE;
+	}
+
+	@Override
+	public View getView(int position, View convertView, ViewGroup parent) {
+
+		View view = super.getView(position % POSTER_LENGTH, convertView, parent);
+		if (list != null && !list.isEmpty()) {
+			Map<String, Object> map = (Map<String, Object>) list.get(position % POSTER_LENGTH);
+			Drawable bg = null;
+			String id = (String) map.get("id");
+			String imgurl = (String) map.get("imgurl");
+			
+			if(!ValidateUtil.isBlank(id)){
+				bg = (Drawable) HttpDownloadImpl.bigPoster.get(id);
+			}
+			if(bg!=null){
+				view.findViewById(R.id.posterlayout).setBackgroundDrawable(bg);
+				if(!ValidateUtil.isBlank(imgurl)){
+					map.put("imgurl", "");//标识图片已经下载完
+				}
+			}else{
+				//把最想要下载的海报放在队尾
+				view.findViewById(R.id.posterlayout).setBackgroundResource(R.drawable.homepage_init);
+				if(!ValidateUtil.isBlank(id)&&!ValidateUtil.isBlank(imgurl)){
+					Map<String,String> download = new HashMap<String,String>();
+					download.put(id, imgurl);
+					download.put("id", id);
+					download.put("imgurl", imgurl);
+					HttpDownloadImpl.addBigPosterList(download);
+				}
+			}
+		}
+		return view;
+	}
+
+	public static List<Map<String, Object>> getData() {
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+			Map<String, Object> map1 = new HashMap<String, Object>();
+			map1.put("name", "《失恋三十三天》热播1");
+			map1.put("imgbg", R.drawable.homepage_init);
+			list.add(map1);
+			Map<String, Object> map2 = new HashMap<String, Object>();
+			map2.put("name", "《失恋三十三天》热播2");
+			map2.put("imgbg",R.drawable.homepage_init);
+			list.add(map2);
+			Map<String, Object> map3 = new HashMap<String, Object>();
+			map3.put("name", "《失恋三十三天》热播3");
+			map3.put("imgbg", R.drawable.homepage_init);
+			list.add(map3);
+			Map<String, Object> map4 = new HashMap<String, Object>();
+			map4.put("name", "《失恋三十三天》热播4");
+			map4.put("imgbg", R.drawable.homepage_init);
+			list.add(map4);
+			Map<String, Object> map5 = new HashMap<String, Object>();
+			map5.put("name", "《失恋三十三天》热播5");
+			map5.put("imgbg", R.drawable.homepage_init);
+			list.add(map5);
+			Map<String, Object> map6 = new HashMap<String, Object>();
+			map6.put("name", "《失恋三十三天》热播6");
+			map6.put("imgbg", R.drawable.homepage_init );
+			list.add(map6);
+		return list;
+	}
+
+
+
+}

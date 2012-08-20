@@ -1,0 +1,19 @@
+package com.stv.supervod.activity;
+
+import android.app.Activity;
+import android.os.Bundle;
+
+/**
+ * @author      Administrator
+ * @description 我的频道，上一级菜单：更多
+ * @authority   激活用户
+ * @function    
+ */
+public class MyEPG extends Activity{
+	
+	@Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.myepg);
+    }
+}

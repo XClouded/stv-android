@@ -1,0 +1,21 @@
+package com.stv.supervod.activity;
+
+import android.app.Activity;
+import android.os.Bundle;
+
+/**
+ * @author      Administrator
+ * @description 书签，上一级菜单：更多
+ * @authority   激活用户
+ * @function    1、向服务器请求该用户书签数据并显示，加载本地或服务器图片
+ *              2、用户点击编辑按钮，允许用户删除影片，并给予确认提示
+ *              3、播放影片
+ */
+public class Bookmark extends Activity{
+
+	@Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.bookmark);
+    }
+}

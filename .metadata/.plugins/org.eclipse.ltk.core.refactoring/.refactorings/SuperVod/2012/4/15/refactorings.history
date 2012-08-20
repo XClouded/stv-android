@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename local variable &apos;is&apos; in &apos;com.stv.supervod.service.HttpDownloadImpl.downloadImageByUrl(...)&apos; to &apos;inputStream&apos;&#x0D;&#x0A;- Original project: &apos;SuperVod&apos;&#x0D;&#x0A;- Original element: &apos;com.stv.supervod.service.HttpDownloadImpl.downloadImageByUrl(String).is&apos;&#x0D;&#x0A;- Renamed element: &apos;is&apos;&#x0D;&#x0A;- Update references to refactored element" description="Rename local variable &apos;is&apos;" id="org.eclipse.jdt.ui.rename.local.variable" input="/src&lt;com.stv.supervod.service{HttpDownloadImpl.java[HttpDownloadImpl~downloadImageByUrl~QString;@is!34568!34589!34580!34581!QInputStream;" name="inputStream" references="true" stamp="1334195640843" version="1.0"/>
+</session>

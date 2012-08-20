@@ -1,0 +1,339 @@
+package com.stv.supervod.activity;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.stv.supervod.adapter.ListItemSimpleAdapter;
+import com.stv.supervod.service.ImageDownloader;
+import com.stv.supervod.service.HttpDownloadImpl.KeyEnum;
+import com.stv.supervod.service.HttpDownloadImpl.TypeEnum;
+import com.stv.supervod.utils.AlertUtils;
+import com.stv.supervod.utils.ValidateUtil;
+import com.stv.supervod.utils.Constant.MyVodStateEnum;
+import com.stv.supervod.widget_extended.ExListViewMyepg;
+
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.DialogInterface.OnClickListener;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.RatingBar;
+import android.widget.SimpleAdapter;
+import android.widget.TextView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Toast;
+
+/**
+ * @author      Administrator
+ * @description 书签，上一级菜单：更多
+ * @authority   激活用户
+ * @function    1、向服务器请求该用户书签数据并显示，加载本地或服务器图片
+ *              2、用户点击编辑按钮，允许用户删除影片，并给予确认提示
+ *              3、播放影片
+ */
+public class Bookmark extends BaseActivity{
+	private final String TAG = "Bookmark";
+		
+	private ListView mListView;
+	private ArrayList<HashMap<String, Object>> mListItem = new ArrayList<HashMap<String, Object>>();
+	private Button mBtnBack;
+	
+	// load more widget
+	private LinearLayout mLlLoaded;
+	private LinearLayout mLlLoading;
+	private View mVwMore = null;
+	
+	private final int mPageSize = 10;
+	private int mPageCount = 0;
+	private int mTotalNumber = 0;
+	private boolean mIsToEnd = false;
+	private int mLastCount = 0;
+	
+	private final int MsgPageFirstLoadFinish = 1;
+	private final int MsgPageLoadFinish = 2;
+	
+	private BookmarkItemAdapter  mItemListadapter = null;
+	
+	private enum LoadingState{
+		loading, finsh, over
+	};
+	
+	
+	@Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.bookmark);
+                
+        initGui();
+        
+        showLoading( LoadingState.loading );
+        
+		bindAction();
+    }
+		
+	private void initGui()
+	{
+        mListView = (ListView) findViewById(R.id.bookmark_list);
+        mBtnBack = (Button) findViewById(R.id.bookmark_btn_back);
+        
+		mVwMore = LayoutInflater.from(this).inflate(R.layout.bookmark_item_loadmore, null);
+		mLlLoaded = (LinearLayout) mVwMore.findViewById(R.id.loadbar_ll_loaded);
+		mLlLoading = (LinearLayout) mVwMore.findViewById(R.id.loadbar_ll_loading); 		
+		
+		mListView.addFooterView(mVwMore);
+		
+        mItemListadapter = new BookmarkItemAdapter(this);
+        mListView.setAdapter(mItemListadapter);
+	}
+	
+	private void bindAction()
+	{
+        mListView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int position,
+					long arg3) {
+				// TODO Auto-generated method stub
+				Toast.makeText(Bookmark.this, String.format("Will Play [%s]!!", 
+						mListItem.get(position).get(KeyEnum.title.toString()).toString()),
+						Toast.LENGTH_SHORT).show();
+			}
+		});
+        
+        mListView.setOnScrollListener(new OnScrollListener() {
+			
+			@Override
+			public void onScrollStateChanged(AbsListView arg0, int scrollState) {
+				// TODO Auto-generated method stub
+				Log.d(TAG, "mLastCount="+mLastCount+" mItemListadapter.getCount()="+mItemListadapter.getCount());
+				if( mLastCount >= mItemListadapter.getCount() && !mIsToEnd &&
+						scrollState == OnScrollListener.SCROLL_STATE_IDLE){
+					showLoading(LoadingState.loading);
+				}
+			}
+			
+			@Override
+			public void onScroll(AbsListView view, int firstVisibleItem,
+					int visibleItemCount, int totalItemCount) {
+				// TODO Auto-generated method stub
+				mLastCount = firstVisibleItem + visibleItemCount;
+//				Log.d(TAG, "mLastCount="+mLastCount+" mTotalNumber="+mTotalNumber);
+				if( mLastCount >= mTotalNumber && mIsToEnd ){
+					showLoading(LoadingState.over);
+				}
+			}
+		});
+        
+        //
+        mBtnBack.setOnClickListener(new Button.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Framework.switchActivityBack();
+			}
+		});
+        
+        // 
+        mLlLoaded.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				if(!mIsToEnd){
+					showLoading(LoadingState.loading);
+				}
+			}
+		});
+	}
+	
+	private void doLoadingData()
+	{		
+		new Thread() {
+			public void run() {
+				try {
+					// TODO 1、准备显示数据的
+			        
+					// get total count
+			        if( getItemsSizeFromServer() != 0 ){
+				        // get item per page
+			        	sleep(1500);
+				        getItemsFromServer();
+			        }
+					mHandle.sendEmptyMessage( MsgPageLoadFinish );
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}.start();	
+	}
+	
+    void showLoading( LoadingState state )
+    {
+    	switch (state) {
+		case loading:
+			mLlLoaded.setVisibility(View.GONE);
+			mLlLoading.setVisibility(View.VISIBLE);
+	        doLoadingData();
+			break;
+		case finsh:
+			mLlLoaded.setVisibility(View.VISIBLE);
+			mLlLoading.setVisibility(View.GONE);
+			break;
+		case over:
+			mListView.removeFooterView(mVwMore);
+		default:
+			break;
+		}
+    }
+	
+	private Handler mHandle = new Handler(){
+		
+		@Override
+		public void handleMessage(Message msg){
+			switch (msg.what) {
+			case MsgPageLoadFinish:
+				if( mIsToEnd ){
+					showLoading(LoadingState.over);
+				} else {
+					showLoading(LoadingState.finsh);
+				}
+				mItemListadapter.notifyDataSetChanged();
+				break;
+			default:
+				break;
+			}
+		}
+	};
+	
+	private int getItemsSizeFromServer()
+	{
+		// to get total count form server
+		int totalItems = 32;
+		
+		// ... 
+		mTotalNumber = totalItems;
+		//mtempItemCount = totalItems;
+		return mTotalNumber;
+	}
+	
+	private void getItemsFromServer()
+	{		
+		// get data from server
+		mPageCount++;
+		if( mPageCount * mPageSize >= mTotalNumber ){
+			mIsToEnd = true;
+		}
+		
+		int start = (mPageCount-1)*mPageSize;
+		int end ;
+		if( mPageCount*mPageSize >  mTotalNumber ){
+			end = mTotalNumber;
+		} else {
+			end = mPageCount*mPageSize;
+		}
+		
+		// get data form server
+		for (int i = start; i < end; i++) {
+			HashMap<String, Object> map = new HashMap<String, Object>();  
+			map.put(KeyEnum.title.toString(), String.format("bookmark-%d", i));
+			map.put(KeyEnum.offeringId.toString(), i);
+			map.put(KeyEnum.type.toString(), TypeEnum.KTV.toString());
+			map.put(KeyEnum.npt.toString(), i * 30);   
+			map.put(KeyEnum.runTime.toString(), i*40);
+			map.put(KeyEnum.bandwidth.toString(), "HD");
+			
+			mListItem.add(map);  
+		}
+	}
+	
+	private class BookmarkItemAdapter extends BaseAdapter{
+		private Context mCon;
+		
+		public BookmarkItemAdapter(Context c){
+			mCon = c;
+		}
+		
+		@Override
+		public int getCount() {
+			// TODO Auto-generated method stub
+			return mListItem.size();
+		}
+
+		@Override
+		public Object getItem(int arg0) {
+			// TODO Auto-generated method stub
+			return arg0;
+		}
+
+		@Override
+		public long getItemId(int arg0) {
+			// TODO Auto-generated method stub
+			return arg0;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			// TODO Auto-generated method stub
+			ViewHolder holder = null;
+			Map<String, Object> item = mListItem.get(position);
+			if( convertView == null ){
+				LayoutInflater mInflater = (LayoutInflater) mCon.getSystemService(
+						Context.LAYOUT_INFLATER_SERVICE);
+				convertView = mInflater.inflate(R.layout.bookmark_item_list, parent, false);
+				holder = new ViewHolder();
+				holder.itemName = (TextView) convertView.findViewById(R.id.item_name);
+				holder.itemType = (TextView) convertView.findViewById(R.id.item_type);
+				holder.itemTime = (TextView) convertView.findViewById(R.id.item_time);
+				convertView.setTag(holder);
+			} else {
+				holder = (ViewHolder)convertView.getTag();
+			}
+			holder.itemName.setText(item.get(KeyEnum.title.toString()).toString());
+			holder.itemType.setText(item.get(KeyEnum.type.toString()).toString());
+			
+			int time = Integer.parseInt(item.get(KeyEnum.npt.toString()).toString());
+			if( time < 60 ){
+				holder.itemTime.setText(mCon.getText(R.string.further_txt_lesstime));
+			} else {
+				holder.itemTime.setText(String.format(
+						mCon.getString(R.string.further_txt_moretime), time/60));
+			}
+			
+	        //隔行换色
+	        if( position%2 == 0) {
+	        	convertView.setBackgroundResource(R.drawable.list_bg);
+	        } else {
+	        	convertView.setBackgroundResource(R.drawable.list_bg_focus);
+			}
+	        
+	        return convertView;
+		}
+		
+		private class ViewHolder{
+	        TextView itemName;
+	        TextView itemType;
+	        TextView itemTime;
+		}
+		
+	}
+}

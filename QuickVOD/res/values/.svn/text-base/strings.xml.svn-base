@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hello">Hello World, QuickVODActivity!</string>
+    <string name="app_name">QuickVOD</string>
+    <string name="login">Login VOD</string>
+    <string name="quit_message">确定要退出QuickVOD系统吗？</string>
+    <string name="tip">提示信息</string>
+    <string name="confirm">确定</string>
+    <string name="cancel">取消</string>
+    <string name="loginfail">登陆失败，连接不上VOD服务器，请检查网络连接后重试！</string>
+    <string name="connetfail">网络连接断开！</string>
+    <string name="exit">退出登陆</string>
+    <string name="relogin">重新登陆</string>
+    <string name="optimeout">操作超时，退出应用程序</string>
+    <string name="reconnet">重新连接</string>
+    <string name="quit">退出应用</string>
+</resources>

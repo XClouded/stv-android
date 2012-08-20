@@ -1,0 +1,214 @@
+package com.test;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.WeakHashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class Test {
+	/**
+	 * Description: ��֤�����ʽ�Ƿ���ȷ
+	 * 
+	 * @Version1.0 2011-12-9 ����04:13:56 mustang created
+	 * @param email
+	 * @return
+	 */
+	public static boolean isEmail(String email) {
+		Pattern pattern = Pattern.compile("[\\w\\.\\-]+@([\\w\\-]+\\.)+[\\w\\-]+", Pattern.CASE_INSENSITIVE);
+		Matcher matcher = pattern.matcher(email);
+		return matcher.matches();
+	}
+
+	public static boolean isNumber(String num) {
+		Pattern pattern = Pattern.compile("^[0-9]*$", Pattern.CASE_INSENSITIVE);
+		Matcher matcher = pattern.matcher(num);
+		return matcher.matches();
+	}
+
+	public static void main(String[] a) {
+
+		test();
+	}
+
+	public static void test() {
+		/*
+		 * String str1 = "aaa/bbb/ccc"; String[] s = str1.split("/"); for(String
+		 * str :s){ System.out.println(s[s.length-1]); }
+		 */
+		// testlist();
+		// System.out.println("==================="+list.get(0).get("1"));
+		/*
+		 * List list = new ArrayList(); User u = new User();
+		 * u.setUserName("1111"); list.add(u); u.setUserName("2222"); User uu =
+		 * (User) list.get(0); System.out.print(uu.getUserName());
+		 */
+		/*
+		 * List<User> list = new ArrayList<User>();
+		 * 
+		 * User m = new User("2222"); User u1 = new User("1111"); list.add(m);
+		 * list.add(u1); Map<Object,Object> map = new HashMap<Object,Object>();
+		 * map.put(u1, "11111111"); map.put(m, "222222222");
+		 */
+
+		/*
+		 * Iterator lit = list.iterator(); while(lit.hasNext()){ User u =(User)
+		 * lit.next(); System.out.println("========="+u.getUserName()); }
+		 */
+
+		/*
+		 * Iterator it = map.keySet().iterator(); while(it.hasNext()){
+		 * System.out.println(map.keySet().size());
+		 * //System.out.println(it.next()); String a = (String)
+		 * map.get(it.next()); map.put(m, "3333333"); System.out.println(a);
+		 * //System.out.println((map.get(it.next()))); }
+		 */
+
+		/*
+		 * Object[] obj = map.keySet().toArray(); for(int i=0;i<obj.length;i++){
+		 * System.out.println(map.get(obj[i])); }
+		 */
+
+		// System.out.println(map.get(u1));
+		// System.out.println(map.get(m));
+
+		/*
+		 * map.put("1","10"); list.add(map); Map m1 =list.get(0); m1.put("1",
+		 * "11");
+		 */
+		/*
+		 * map2.put("1111", 1111+""); while(map2.containsKey("1111")){ try {
+		 * Thread.sleep(500); } catch (InterruptedException e) {
+		 * e.printStackTrace(); } System.out.println("=============");
+		 * System.gc(); //System.out.println("============="+map2.get("1111"));
+		 * }
+		 */
+		/*
+		 * int t = 0xFFFFFFF; int t1 = 07777777777; System.out.println(t);
+		 * System.out.println(t1);
+		 */
+		/*
+		 * int a= hash(100); int a1= hash(100); System.out.println(a);
+		 */
+		/*
+		 * int aaa = 1 << 30; System.out.println(aaa);
+		 */
+		/*
+		 * Map map = new HashMap(0,0.0002f); map.put("11", "22222"); String aa=
+		 * (String) map.put("11", "1111");
+		 */
+
+		/*
+		 * int MAX_VALUE = 0x7fffffff; System.out.println(MAX_VALUE);
+		 */
+		testChange(50101);
+
+	}
+
+	public static List<Map<String, String>> list = new ArrayList<Map<String, String>>();
+
+	public static void testlist() {
+		Map<String, String> map = new HashMap<String, String>();
+		Map<String, String> map1 = new LinkedHashMap<String, String>();
+		Map<String, String> map2 = new WeakHashMap<String, String>();
+
+		/*
+		 * map.put("1","10"); list.add(map); Map m1 =list.get(0); m1.put("1",
+		 * "11");
+		 */
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		System.out.println("=============" + map2.get("1111"));
+		System.gc();
+		System.out.println("=============" + map2.get("1111"));
+	}
+
+	public static class User {
+		public User(String name) {
+			userName = name;
+		}
+
+		private String userName;
+
+		public String getUserName() {
+			return userName;
+		}
+
+		public void setUserName(String userName) {
+			this.userName = userName;
+		}
+
+	}
+
+	static int hash(int h) {
+		// This function ensures that hashCodes that differ only by
+		// constant multiples at each bit position have a bounded
+		// number of collisions (approximately 8 at default load factor).
+		h ^= (h >>> 20) ^ (h >>> 12);
+		return h ^ (h >>> 7) ^ (h >>> 4);
+	}
+
+	@Override
+	public int hashCode() {
+		// TODO Auto-generated method stub
+		return super.hashCode();
+	}
+
+	public static void testChange(int value) {
+		Map<String, String> dangwei = new HashMap<String, String>();
+		dangwei.put("1", "");
+		dangwei.put("2", "拾");
+		dangwei.put("3", "百");
+		dangwei.put("4", "千");
+		dangwei.put("5", "万");
+		Map<String, String> daxie = new HashMap<String, String>();
+		daxie.put("0", "零");
+		daxie.put("1", "一");
+		daxie.put("2", "二");
+		daxie.put("3", "三");
+		daxie.put("4", "四");
+		daxie.put("5", "五");
+		daxie.put("6", "六");
+		daxie.put("7", "七");
+		daxie.put("8", "八");
+		daxie.put("9", "九");
+		String str = "";
+		int shang = 0;
+		int yushu = value;
+		int length = (yushu + "").length();
+		boolean  isZero = false;
+		while (length > 0) {
+			//if(length!=1){
+				shang = yushu / (int) Math.pow(10, length - 1);
+				yushu = yushu % (int) Math.pow(10, length - 1);
+			/*}else{
+				shang = yushu / (int) Math.pow(10, length - 1);
+				yushu = yushu % (int) Math.pow(10, length - 1);
+			}*/
+			
+			/*if(shang==0){
+				isZero =true;
+			}else{
+				isZero =false;
+				//str+="零";
+				
+			}*/
+			str += daxie.get(shang + "") + dangwei.get(length + "");
+			//length--;
+			if((yushu + "").length()>1){
+				length = (yushu + "").length();
+			}else{
+				length --;
+			}
+			
+		}
+		System.out.println(str);
+	}
+
+}

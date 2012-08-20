@@ -1,0 +1,126 @@
+package com.stv.supervod.activity;
+
+import java.io.File;
+
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
+import android.view.View;
+import android.widget.ProgressBar;
+
+import com.stv.supervod.service.ImageServiceImpl;
+import com.stv.supervod.utils.AlertUtils;
+import com.stv.supervod.utils.Constant;
+import com.stv.supervod.utils.ErrorCode;
+
+/**
+ * @author Administrator
+ * @description 欢迎页面
+ * @authority 所有用户
+ * @function 1、建立网络连接，选择服务器 2、用户份判断，记住登录信息用户自动登录到服务器
+ *           3、遍历存放图片文件夹，删除最后访问时间大于本地时间3天的图片，同步数据库
+ */
+public class Welcome extends Activity {
+
+	private Activity act = this;
+	private ProgressBar progressBar;
+	private boolean netstate = true;
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.welcome);
+
+		ErrorCode.openErrorCode(this);
+
+		File dir = null;
+		// 初始文件下载路径
+		if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+			dir = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + this.getPackageName() + "/files");
+			if (!dir.exists()) {
+				dir.mkdirs();
+			}
+		} else {
+			dir = this.getFilesDir();
+		}
+		Constant.download_dir = dir.getAbsolutePath();
+		progressBar = (ProgressBar) this.findViewById(R.id.progressBar);
+
+		// 暂时看看效果，以后会删掉
+		new Thread() {
+			public void run() {
+				try {
+					sleep(1500);
+					// TODO 这里需要选择网络，暂未实现
+					netstate = true;
+					// 删除过期图片
+					ImageServiceImpl.deleteTimeoutImage(act);
+					handler.sendEmptyMessage(0);
+				} catch (Exception e) {
+					e.printStackTrace();
+					Message msg = new Message();
+					msg.obj = ErrorCode.getCommonError(e);
+					handler.sendMessage(msg);
+				}
+			}
+		}.start();
+
+	}
+
+	/**
+	 * Description: 登录页
+	 * 
+	 * @Version1.0 2012-1-11 下午05:02:24 mustang created
+	 * @param cityname
+	 */
+	public void goLoginPage() {
+		Intent intent = new Intent();
+		intent.setClass(this, Login.class);
+		startActivity(intent);
+		finish();
+	}
+
+	/**
+	 * Description: 网络出错时提示对话框
+	 * 
+	 * @Version1.0 2011-12-7 上午11:16:33 mustang created
+	 */
+	public void showDialog() {
+		new AlertDialog.Builder(this).setIcon(R.drawable.alert_dialog_icon).setTitle("请求超时，请检查网络。")
+				.setPositiveButton("重试", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						// 再次调用检测网路的方法
+					}
+				}).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						act.finish();
+					}
+				}).create().show();
+	}
+
+	/**
+	 * 关闭滚动条,所有和视图相关的操作都要放在这里做，新启的线程是不能操作视图控件的。
+	 */
+	private Handler handler = new Handler() {
+		@Override
+		public void handleMessage(Message msg) {
+			if (msg.what == 0) {
+				if (netstate) {
+					progressBar.setVisibility(View.GONE);
+					goLoginPage();
+				} else {
+					showDialog();
+				}
+			} else {
+				AlertUtils.displayToast(act, (String) msg.obj);
+			}
+		}
+
+	};
+
+}

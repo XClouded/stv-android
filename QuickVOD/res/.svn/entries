@@ -1,0 +1,67 @@
+10
+
+dir
+4216
+https://192.168.7.128/svn/vodlite2/trunk/Android/QuickVOD/res
+https://192.168.7.128/svn/vodlite2
+
+
+
+2011-11-09T05:27:16.080084Z
+4213
+liujn
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+88c5f57e-828e-5648-8d4c-d478e01c3947
+
+layout-854x480
+dir
+
+values
+dir
+
+layout-432x240
+dir
+
+drawable-hdpi
+dir
+
+layout-480x320
+dir
+
+layout-800x480
+dir
+
+drawable-ldpi
+dir
+
+drawable-mdpi
+dir
+
+layout-640x480
+dir
+
+layout-960x540
+dir
+
+layout-400x240
+dir
+
+layout
+dir
+
+layout-320x240
+dir
+

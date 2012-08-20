@@ -1,0 +1,161 @@
+package cn.com.supertv.cmslite.web.cms;
+
+import java.util.List;
+
+import org.apache.struts2.convention.annotation.Namespace;
+import org.apache.struts2.convention.annotation.Result;
+import org.apache.struts2.convention.annotation.Results;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springside.modules.orm.Page;
+import org.springside.modules.orm.PropertyFilter;
+import org.springside.modules.utils.web.struts2.Struts2Utils;
+
+import cn.com.supertv.cmslite.entity.cms.Movie;
+import cn.com.supertv.cmslite.service.cms.MovieManager;
+import cn.com.supertv.cmslite.utils.CmsUtils;
+import cn.com.supertv.cmslite.web.CrudActionSupport;
+
+@Namespace("/cms")
+@Results({ @Result(name = CrudActionSupport.RELOAD, location = "movie.action", type = "redirect") })
+public class MovieAction extends CrudActionSupport<Movie> {
+	private static final long serialVersionUID = 1L;
+	private Long id;
+	private Movie movie;
+	private MovieManager movieManager;
+	//批量生成数目
+	private Integer number = CmsUtils.CREATE_NUMBER;
+	//开始号
+	private long beginMovieNum;
+	private Page<Movie> page = new Page<Movie>(CmsUtils.PAGE_COUNT);
+
+	@Override
+	public Movie getModel() {
+		return movie;
+	}
+
+	@Override
+	public String list() throws Exception {
+		List<PropertyFilter> filters = PropertyFilter.buildFromHttpRequest(Struts2Utils.getRequest());
+		//设置默认排序方式
+		if (!page.isOrderBySetted()) {
+			page.setOrderBy("id");
+			page.setOrder(Page.DESC);
+		}
+		page = movieManager.searchMovies(page, filters);
+		return SUCCESS;
+	}
+
+	@Override
+	public String input() throws Exception {
+		return INPUT;
+	}
+
+	@Override
+	public String save() throws Exception {
+		movieManager.saveMoviess((int)beginMovieNum, number, movie.getGenreTreeIndex(), movie.getRegionTreeIndex(), movie.getProviderId(),movie.getFtpId(),movie.getVideoFtpPath(),movie.getPosterFtpPath(),movie.getPreviewFtpPath(),movie.getRecommended(),movie.getProductId());
+		return RELOAD;
+	}
+
+	@Override
+	public String delete() throws Exception {
+		movieManager.deleteMovie(id);
+		return RELOAD;
+	}
+
+	@Override
+	protected void prepareModel() throws Exception {
+		if (id != null) {
+			movie = movieManager.getMovie(id);
+		} else {
+			movie = new Movie();
+		}
+		beginMovieNum = movieManager.getMovieBeginNum();
+	}
+
+	/**
+	 * Description: 批量提交审核
+	 * @Version1.0 2011-1-5 下午03:12:14 mustang created
+	 * @return
+	 */
+	public String updateToCensoring() {
+		if(movie==null){
+			movie = movieManager.getMovie(id);
+		}
+		movieManager.updateToCensoring(movie);
+		return RELOAD;
+	} 
+	/**
+	 * Description: 批量审核
+	 * @Version1.0 2011-1-5 下午02:59:57 mustang created
+	 * @param ids
+	 */
+	public String updateToIngestable() {
+		if(movie==null){
+			movie = movieManager.getMovie(id);
+		}
+		movieManager.updateToIngestable(movie);
+		return RELOAD;
+	}
+	/**
+	 * Description: 批量注入
+	 * @Version1.0 2011-1-5 下午02:59:57 mustang created
+	 * @param ids
+	 */
+	public String updateToIngested() {
+		if(movie==null){
+			movie = movieManager.getMovie(id);
+		}
+		movieManager.updateToIngested(movie);
+		return RELOAD;
+	}
+	/**
+	 * Description: 批量下线
+	 * @Version1.0 2011-1-5 下午02:59:57 mustang created
+	 * @param ids
+	 */
+	public String offline() {
+		if(movie==null){
+			movie = movieManager.getMovie(id);
+		}
+		movieManager.offline(movie);
+		return RELOAD;
+	}
+	
+	
+	public Page<Movie> getPage() {
+		return page;
+	}
+
+	@Autowired
+	public void setMovieManager(MovieManager movieManager) {
+		this.movieManager = movieManager;
+	}
+
+	public Movie getMovie() {
+		return movie;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Integer getNumber() {
+		return number;
+	}
+
+	public void setNumber(Integer number) {
+		this.number = number;
+	}
+
+	public long getBeginMovieNum() {
+		return beginMovieNum;
+	}
+	public void setBeginMovieNum(long beginMovieNum) {
+		this.beginMovieNum = beginMovieNum;
+	}
+
+}

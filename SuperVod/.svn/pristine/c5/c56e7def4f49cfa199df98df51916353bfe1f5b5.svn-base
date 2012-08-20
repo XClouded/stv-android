@@ -1,0 +1,39 @@
+package com.stv.supervod.utils;
+
+import android.util.Log;
+
+/**
+ * @author Administrator
+ * @description 公共方法基类
+ */
+public class BaseCommon {
+
+	protected static boolean OPEN_PRINTLOG = true;
+	
+	public BaseCommon() {
+	}
+	
+	public static void printLog(String tag, String log, LogLevel log_level) {
+		if (OPEN_PRINTLOG) {
+			switch (log_level) {
+			case DEBUG:
+				Log.d(tag, log);
+				break;
+			case INFO:
+				Log.i(tag, log);
+				break;
+			case WARING:
+				Log.w(tag, log);
+				break;
+			case ERROR:
+				Log.e(tag, log);
+				break;
+			case VERBOSE:
+				Log.v(tag, log);
+				break;
+			default:
+				break;
+			}
+		}
+	}
+}

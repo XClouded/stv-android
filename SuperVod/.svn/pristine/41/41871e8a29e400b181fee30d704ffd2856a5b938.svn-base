@@ -1,0 +1,197 @@
+package com.stv.supervod.activity;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
+import android.widget.Gallery;
+import android.widget.ListView;
+
+import com.stv.supervod.adapter.ListItemSimpleAdapter;
+import com.stv.supervod.adapter.PosterSimpleAdapter;
+import com.stv.supervod.service.RegisterServiceImpl;
+import com.stv.supervod.utils.AlertUtils;
+import com.stv.supervod.utils.DpPxUtil;
+import com.stv.supervod.utils.ListUtil;
+
+/**
+ * @author Administrator
+ * @description 首页
+ * @authority 所有用户
+ * @function 1、向服务器请求推荐影片（6部，实时更新），以及各个分类中的推荐影片（20部），并展示
+ *           2、用户点击推荐区、分类推荐区的影片后，进入到详细页面:Detail 3、用户点击会员按钮，进入用户登录页面：Login
+ */
+public class Homepage extends BaseActivity {
+
+	ProgressDialog dialog;
+
+	private Activity act = this;
+	private Gallery ge;
+	private ListView todaylist;
+	private boolean today_hit_flag = false;
+	Button regbutton;
+	private boolean online = false;
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.homepage);
+		dialog = (ProgressDialog) AlertUtils.createDialog(AlertUtils.NO_TITLE, this);
+		dialog.show();
+		new Thread() {
+			public void run() {
+				try {
+					// TODO 1、准备显示数据的
+					sleep(1500);
+					handler.sendEmptyMessage(0);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}.start();
+
+		// 如果用户选择过记住密码并自动登录，这里会员图片有区别
+		regbutton = (Button) this.findViewById(R.id.regbutton);
+		online = (Boolean) RegisterServiceImpl.getUserinfo(this).get("online");
+
+		Drawable img = null;
+		if (online) {
+			img = getResources().getDrawable(R.drawable.viplogo_login);
+		} else {
+			img = getResources().getDrawable(R.drawable.viplogo_logout);
+		}
+		img.setBounds(0, 0, img.getMinimumWidth(), img.getMinimumHeight());
+		regbutton.setCompoundDrawables(img, null, null, null);
+
+		PosterSimpleAdapter adp = new PosterSimpleAdapter(act, PosterSimpleAdapter.getData(), R.layout.homepage_poster, new String[] { "name" },
+				new int[] { R.id.name });
+		ge = (Gallery) act.findViewById(R.id.gallery);
+		ge.setAdapter(adp);
+		ge.setSelection(6000);
+	}
+
+	/**
+	 * Description: 根据ID显示（隐藏）不同不同列表
+	 * 
+	 * @Version1.0 2011-12-5 下午01:06:58 mustang created
+	 * @param view
+	 */
+	public void showtype(View view) {
+
+		Drawable shrink = getResources().getDrawable(R.drawable.homepage_group_button_shrink);
+		shrink.setBounds(0, 0, shrink.getMinimumWidth(), shrink.getMinimumHeight());
+		Drawable expand = getResources().getDrawable(R.drawable.homepage_group_button_expand);
+		expand.setBounds(0, 0, shrink.getMinimumWidth(), shrink.getMinimumHeight());
+		Button bt;
+		int vid = view.getId();
+		Integer titleheight = DpPxUtil.dp2px(this, 0);
+		switch (vid) {
+		case R.id.today: {
+			todaylist = (ListView) this.findViewById(R.id.today_hit);
+			bt = (Button) this.findViewById(R.id.today);
+
+			if (today_hit_flag == false) {
+				today_hit_flag = true;
+				todaylist.setVisibility(View.VISIBLE);
+				bt.setCompoundDrawables(null, null, shrink, null);
+				ListItemSimpleAdapter adapter = new ListItemSimpleAdapter(this, getData(), R.layout.homepage_list_item, new String[] { "name",
+						"type", "img", "ratingBar", "ratingScore1", "ratingScore2" }, new int[] { R.id.name, R.id.type, R.id.img, R.id.ratingBar,
+						R.id.ratingScore1, R.id.ratingScore2 });
+				todaylist.setAdapter(adapter);
+				ListUtil.setListViewHeightBasedOnChildren(todaylist, titleheight);
+				todaylist.setOnItemClickListener(new ItemClickListener());
+
+			} else {
+				today_hit_flag = false;
+				todaylist.setVisibility(View.GONE);
+				bt.setCompoundDrawables(null, null, expand, null);
+			}
+		}
+			break;
+		default:
+			break;
+		}
+
+	}
+
+	/**
+	 * Description: 列表显示假数据
+	 * 
+	 * @Version1.0 2011-12-5 下午12:58:10 mustang created
+	 * @return
+	 */
+	public List<Map<String, Object>> getData() {
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		for (int i = 0; i < 5; i++) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("id", i);
+			map.put("name", "影子写手");
+			map.put("type", "悬疑，惊悚，剧情");
+			map.put("img", R.drawable.video_cover_default);
+			map.put("ratingBar", 8.0f);
+			map.put("ratingScore1", "8.");
+			map.put("ratingScore2", "0");
+			list.add(map);
+		}
+		return list;
+	}
+
+	/**
+	 * Description: 显示登录页面
+	 * 
+	 * @Version1.0 2011-12-5 下午02:51:26 mustang created
+	 * @param view
+	 */
+	public void showLoginPage(View view) {
+		if (online) {
+			String username = (String) RegisterServiceImpl.getUserinfo(this).get("username");
+			Intent intent = new Intent();
+			intent.setClass(this, LoginSuccess.class);
+			Bundle bd = new Bundle();
+			bd.putString("username", username);
+			intent.putExtras(bd);
+			Framework.switchActivity("home2loginsucess", intent);
+		} else {
+			Intent intent = new Intent();
+			intent.setClass(this, Login.class);
+			Framework.switchActivity("homepage2login", intent);
+		}
+
+	}
+
+	/**
+	 * 关闭滚动条
+	 */
+	private Handler handler = new Handler() {
+		@Override
+		public void handleMessage(Message msg) {
+			dialog.dismiss();
+		}
+	};
+
+	class ItemClickListener implements OnItemClickListener {
+		public void onItemClick(AdapterView<?> arg0,// The AdapterView where the
+													// click happened
+				View arg1,// The view within the AdapterView that was clicked
+				int arg2,// The position of the view in the adapter
+				long arg3// The row id of the item that was clicked
+		) {
+			Intent intent = new Intent(Homepage.this, Detail.class);
+			intent.putExtra("EpisodeNumber", 30);
+			Framework.switchActivity("Homepage2Detail", intent);
+		}
+	}
+
+}

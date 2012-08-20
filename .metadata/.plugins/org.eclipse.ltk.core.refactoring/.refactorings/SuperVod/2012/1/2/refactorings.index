@@ -1,0 +1,6 @@
+1326274447553	Rename method 'getUserinfo'
+1326274831225	Rename method 'saveUserLoginInfo'
+1326335360000	Rename local variable 'vusername'
+1326335374968	Rename local variable 'vpassword'
+1326335548546	Rename field 'username'
+1326335557421	Rename field 'password'

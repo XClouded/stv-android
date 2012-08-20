@@ -1,0 +1,15 @@
+package com.test;
+
+public class Test6 {
+	private static int t1 = 0;
+
+	public static void main(String[] args) {
+		changeT(10);
+		System.out.println(t1);
+
+	}
+	public static void changeT(int t){
+		t1 = t;
+	}
+	
+}

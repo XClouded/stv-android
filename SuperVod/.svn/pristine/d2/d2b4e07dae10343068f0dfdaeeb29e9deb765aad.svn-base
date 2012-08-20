@@ -1,0 +1,20 @@
+package com.stv.supervod.activity;
+
+import android.app.Activity;
+import android.os.Bundle;
+
+/**
+ * @author      Administrator
+ * @description 注册
+ * @authority   所有用户
+ * @function    1、用户输入用户名、密码、邮箱，点击确定提交服务器
+ *              2、用户点击激活单选框，则出现需要输入的电话号、身份证号、CA卡号等信息，点击激活提交服务器
+ */
+public class Register extends Activity{
+	
+	@Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.register);
+    }
+}

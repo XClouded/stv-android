@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/background">
+
+    <LinearLayout
+        android:id="@+id/mymovie_ll_title"
+        android:layout_width="fill_parent"
+        android:layout_height="43dp"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/homepage_top"
+        android:gravity="left|center_horizontal" >
+
+        <Button
+            android:id="@+id/mymovie_btn_back"
+            android:layout_width="68dp"
+            android:layout_height="wrap_content"
+            android:text="@string/detail_btn_back" 
+            style="@style/Button_Return" 
+			android:layout_marginLeft="5dp"/>
+
+        <TextView
+            android:id="@+id/mymovie_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/mymovie_title"
+            android:textAppearance="?android:attr/textAppearanceLarge" 
+            android:layout_marginLeft="30dp" 
+            android:layout_gravity="center"/>
+        
+        <Button
+            android:id="@+id/mymovie_btn_edit"
+            style="@style/further_title_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/further_btn_edit" android:layout_marginLeft="60dp"/>
+        
+    </LinearLayout>
+        <com.stv.supervod.widget_extended.DraggableListView
+        android:id="@+id/mymovie_list" 
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/mymovie_ll_title"
+        android:drawSelectorOnTop="false" 
+        android:layout_alignParentBottom="true"
+        android:fastScrollEnabled="false" />    
+        
+</RelativeLayout>

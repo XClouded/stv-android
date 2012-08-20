@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+	android:id="@+id/widget62"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:background="@drawable/background"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	>
+<ImageView 
+	android:layout_height="wrap_content" 
+	android:layout_width="wrap_content" 
+	android:id="@+id/widget57" 
+	android:src="@drawable/bottom" 
+	android:layout_alignParentBottom="true"  
+	android:layout_centerHorizontal="true"/>
+<ImageView 
+	android:layout_height="wrap_content" 
+	android:src="@drawable/middle_back" 
+	android:layout_width="wrap_content" 
+	android:id="@+id/widget64" 
+	android:layout_above="@+id/widget57" 
+	android:layout_alignRight="@+id/key_right" 
+	android:layout_marginBottom="34dp" />
+<ImageView 
+	android:layout_height="wrap_content" 
+	android:layout_width="wrap_content" 
+	android:id="@+id/widget66" 
+	android:src="@drawable/middle" 
+	android:layout_alignTop="@+id/widget97" 
+	android:layout_marginTop="7dip" 
+	android:layout_centerHorizontal="true" />
+<ImageView 
+	android:layout_height="wrap_content" 
+	android:layout_width="wrap_content" 
+	android:id="@+id/widget97" 
+	android:src="@drawable/left_state"
+	android:layout_below="@+id/key_up"
+	android:layout_centerHorizontal="true"/>
+<ImageView 
+	android:layout_height="wrap_content" 
+	android:background="#00000000" 
+	android:layout_width="wrap_content" 
+	android:id="@+id/key_ok" 
+	android:src="@drawable/ok" 
+	android:layout_alignBottom="@+id/widget66" 
+	android:layout_centerHorizontal="true" 
+	android:layout_marginBottom="45dp" />
+<ImageView 
+	android:layout_height="wrap_content" 
+	android:background="#00000000" 
+	android:layout_width="wrap_content" 
+	android:id="@+id/key_left" 
+	android:src="@drawable/left" 
+	android:layout_alignBottom="@+id/widget66" 
+	android:layout_alignLeft="@+id/widget64" 
+	android:layout_marginBottom="30dp" />
+<ImageView 
+	android:layout_height="wrap_content" 
+	android:background="#00000000" 
+	android:layout_width="wrap_content" 
+	android:id="@+id/key_right" 
+	android:src="@drawable/right" 
+	android:layout_alignTop="@+id/key_left" 
+	android:layout_toRightOf="@+id/widget97" />
+<ImageView 
+	android:layout_height="wrap_content" 
+	android:background="#00000000" 
+	android:layout_width="wrap_content" 
+	android:id="@+id/key_up" 
+	android:src="@drawable/up"  
+	android:layout_alignTop="@+id/widget64"
+	android:layout_centerHorizontal="true"/>
+<ImageView 
+	android:src="@drawable/down" 
+	android:background="#00000000" 
+	android:id="@+id/key_down" 
+	android:layout_width="wrap_content" 
+	android:layout_height="wrap_content" 
+	android:layout_below="@+id/widget97"   
+	android:layout_centerHorizontal="true" />
+<TextView 
+	android:gravity="center" 
+	android:text="正在登陆系统,请稍后......" 
+	android:textStyle="bold" 
+	android:layout_height="30dip" 
+	android:id="@+id/loginfo" 
+	android:layout_width="320dip" 
+	android:textSize="20sp" 
+	android:layout_above="@+id/key_up" />
+<ImageView
+    android:id="@+id/flower"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:layout_centerHorizontal="true"
+    android:background="#00000000"
+    android:src="@drawable/flower" />
+<ImageView
+    android:id="@+id/key_return"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignLeft="@+id/key_down"
+    android:layout_alignTop="@+id/flower"
+    android:background="#00000000"
+    android:src="@drawable/revert" />
+</RelativeLayout>

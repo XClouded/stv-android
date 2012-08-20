@@ -1,0 +1,256 @@
+package com.stv.supervod.activity;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import com.stv.supervod.adapter.FurtherListViewAdapter;
+import com.stv.supervod.utils.TutorialDlgUtil;
+import com.stv.supervod.widget_extended.ExListViewMyepg;
+import com.stv.supervod.widget_extended.ExListViewMyepg.DeleteListener;
+
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+/**
+ * @author      Administrator
+ * @description 我的频道，上一级菜单：更多
+ * @authority   激活用户
+ * @function    
+ */
+public class MyEPG extends BaseActivity{
+	private final static String TAG = "MyEPG";
+	
+	
+	private ExListViewMyepg mListView;
+	private ArrayList<HashMap<String, Object>> mListItem = new ArrayList<HashMap<String, Object>>();
+	private TextView mTextViewInfo;
+	private Button mBtnBack;
+	private Button mBtnEdit;
+	private Button mBtnSubmitOrClear;
+	
+	
+	private boolean mIsEdit = false;
+	private FurtherListViewAdapter mItemListadapter = null;
+	private int mItemSelected = -1;
+	@Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.myepg);
+        
+        initGui();
+        
+        initData();
+        
+        showList();
+        
+        bindAction();
+    }
+	
+	private void showTutorial()
+	{
+		TutorialDlgUtil.ShowTutorial(this, TAG, R.layout.myepg_edit_tutorial);
+	}
+	
+	private void initGui()
+	{
+		mListView = (ExListViewMyepg) findViewById(R.id.myepg_list);
+        mTextViewInfo = (TextView) findViewById(R.id.myepg_tv_info);
+        mBtnBack = (Button) findViewById(R.id.myepg_btn_back);
+        mBtnSubmitOrClear = (Button) findViewById(R.id.myepg_btn_submit_clear);
+        mBtnEdit = (Button) findViewById(R.id.myepg_btn_edit);
+	}
+	
+	private void showList()
+	{
+		infoTextUpdate();
+		
+		if( mItemListadapter == null ){
+			mItemListadapter = new FurtherListViewAdapter(this, mListItem, mIsEdit);
+			mListView.setAdapter(mItemListadapter);
+		} else {
+			mItemListadapter.updateAdapter(mIsEdit);
+			
+			if( mIsEdit ){
+				mListView.setDropListener(mDropListener);
+				mListView.setDeleteListener(mDeleteListener);
+			} else {
+				mListView.setDropListener(null);
+				mListView.setDeleteListener(null);
+			}
+		}		
+	}	
+	
+	private ExListViewMyepg.DeleteListener mDeleteListener = 
+			new DeleteListener() {
+				
+				@Override
+				public void delete(int which) {
+					// TODO Auto-generated method stub
+					mItemSelected = which;
+					showDialog(false);
+				}
+			};
+	
+	private ExListViewMyepg.DropListener mDropListener =  
+	        new ExListViewMyepg.DropListener() {  
+	        public void drop(int from, int to) {  
+	        	HashMap<String, Object> item = mListItem.get(from);  
+	        	mListItem.remove(item);//.remove(from);  
+	        	mListItem.add(to, item);  
+	        	mItemListadapter.updateAdapter(mIsEdit);
+	        }  
+	    }; 
+	
+	private void infoTextUpdate()
+	{
+		mTextViewInfo.setText(String.format(getString(R.string.further_txt_myepginfo), 
+				mListItem.size()));	
+		if( mIsEdit ){
+			mTextViewInfo.setVisibility(View.GONE);
+		} else {
+			mTextViewInfo.setVisibility(View.VISIBLE);
+		}	
+	}
+	
+	private void bindAction()
+	{
+        // btn back
+        mBtnBack.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Framework.switchActivityBack();
+			}
+		});
+        
+        // btn edit
+        mBtnEdit.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				if( !mIsEdit && mListItem.isEmpty() ){
+					return;
+				}
+				
+				TutorialDlgUtil.ForceShowTutorial( MyEPG.this, TAG, R.layout.myepg_edit_tutorial);
+				
+				mIsEdit = !mIsEdit;
+				if( mIsEdit ){
+					mBtnEdit.setText(getString(R.string.further_btn_editok));
+					mBtnSubmitOrClear.setText(getString(R.string.further_btn_clear));
+				} else {
+					mBtnEdit.setText(getString(R.string.further_btn_edit));
+					mBtnSubmitOrClear.setText(getString(R.string.further_btn_submit));
+				}
+				showList();
+			}
+		});
+        
+        mBtnSubmitOrClear.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub				
+				if( mIsEdit ){ // clear
+					if( mListItem.size() == 0 ){
+						return;
+					}
+					
+					mItemSelected = -1;
+					showDialog(true);					
+				} else {  // submit
+					submitDataToServer();
+				}
+
+			}
+		});
+	}
+	
+	private void submitDataToServer()
+	{
+		Toast.makeText(this, "Submit", Toast.LENGTH_SHORT).show();
+	}
+	
+	private void showDialog( boolean isClear )
+	{
+		AlertDialog.Builder bd = new AlertDialog.Builder(MyEPG.this);
+		bd.setTitle(R.string.further_dlg_title);
+		
+		if( isClear ){
+			bd.setMessage(R.string.further_dlg_clear_content);
+			bd.setPositiveButton( getString(R.string.framework_dlg_btn_ok),
+					new OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface arg0, int arg1) {
+					// TODO Auto-generated method stub
+					doDeleteFunc();
+				}
+			});
+		} else {
+			bd.setMessage(R.string.further_dlg_delete_content);
+			bd.setPositiveButton( getString(R.string.framework_dlg_btn_ok)
+					, new OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface arg0, int arg1) {
+					// TODO Auto-generated method stub
+					doDeleteFunc();	
+				}
+			});
+		}
+		
+		bd.setNegativeButton(getString(R.string.framework_dlg_btn_cancel)
+				, new OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		
+		bd.setCancelable(false);
+		bd.show();
+	}
+	
+	private void doDeleteFunc()
+	{
+		if( mItemSelected == -1 ){
+			mListItem.clear();
+		} else {
+			mListItem.remove(mItemSelected);
+		}
+		mItemListadapter.updateAdapter(mIsEdit);
+		infoTextUpdate();
+	}
+	
+	private void initData()
+	{
+		for(int i=0;i<22;i++)  
+        {  
+			HashMap<String, Object> map = new HashMap<String, Object>();  
+			map.put("id", i);
+			map.put("name", String.format("myepg-%d", i));
+			map.put("type", "film");
+			map.put("img", R.drawable.video_cover_default);
+			map.put("ratingBar", 8.2f);
+			map.put("ratingScore1", "8.");
+			map.put("ratingScore2", "2");           
+			mListItem.add(map);  
+        }
+	}
+}

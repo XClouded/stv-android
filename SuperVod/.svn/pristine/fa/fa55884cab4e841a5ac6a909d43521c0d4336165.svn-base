@@ -1,0 +1,173 @@
+package com.stv.supervod.service;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.http.client.ClientProtocolException;
+
+import android.app.Activity;
+import android.content.SharedPreferences;
+
+import com.stv.supervod.utils.Constant;
+import com.stv.supervod.utils.ValidateUtil;
+
+public class RegisterServiceImpl {
+
+	/**
+	 * Description: 验证通过后保存用户名密码，以及是否自动登录等信息
+	 * 注意：需要指定为数据的共享模式，系统默认只能一个activity使用数据
+	 * 
+	 * @Version1.0 2011-12-6 上午10:14:10 mustang created
+	 * @param act
+	 * @param username
+	 * @param password
+	 * @param auto_login
+	 * @param remember_password
+	 * @throws IOException
+	 * @throws ClientProtocolException
+	 */
+	public static String saveUserLoginInfo(Activity act, String username, String password, boolean auto_login, boolean remember_password)
+			throws ClientProtocolException, IOException {
+		String loginResult = loginService(username, password);
+		if (loginResult=="") {
+			SharedPreferences sp = act.getSharedPreferences("registerinfo", Activity.MODE_PRIVATE);
+			SharedPreferences.Editor se = sp.edit();
+			se.putString("username", username);
+			se.putString("password", password);
+			se.putBoolean("auto_login", auto_login);
+			se.putBoolean("remember_password", remember_password);
+			// 因为有注销这个功能，所以要加这个标识
+			se.putBoolean("online", true);
+			se.commit();
+		}
+		return loginResult;
+
+	}
+
+	/**
+	 * Description: 获取用户信息
+	 * 
+	 * @Version1.0 2011-12-7 下午03:54:49 mustang created
+	 * @param act
+	 * @return
+	 */
+	public static Map<String, Object> getUserinfo(Activity act) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		SharedPreferences sp = act.getSharedPreferences("registerinfo", Activity.MODE_PRIVATE);
+		map.put("username", sp.getString("username", ""));
+		map.put("password", sp.getString("password", ""));
+		map.put("online", sp.getBoolean("online", false));
+		map.put("auto_login", sp.getBoolean("auto_login", false));
+		return map;
+	}
+
+	/**
+	 * Description: 执行自动登录功能
+	 * 
+	 * @Version1.0 2011-12-6 上午10:21:30 mustang created
+	 * @param act
+	 * @return
+	 * @throws IOException
+	 * @throws ClientProtocolException
+	 */
+	public static String loginAuto(Activity act) throws ClientProtocolException, IOException {
+		SharedPreferences sp = act.getSharedPreferences("registerinfo", Activity.MODE_PRIVATE);
+		boolean auto_login = sp.getBoolean("auto_login", false);
+		String loginResulg = "";
+		// 自动登录
+		if (auto_login) {
+			String username = sp.getString("username", "");
+			String password = sp.getString("password", "");
+			loginResulg = loginService(username, password);
+			// 如果登录成功要显示用户在线
+			if (loginResulg=="") {
+				sp.edit().putBoolean("online", true).commit();
+			}
+		}
+		// 这种情况说明用户客户端保留的密码与服务器不一致了，需要再次手动登录。
+		if (auto_login && loginResulg !="") {
+			return loginResulg;
+		}
+		return loginResulg;
+	}
+
+	/**
+	 * Description: 登录服务器
+	 * 
+	 * @Version1.0 2011-12-7 下午03:02:58 mustang created
+	 * @param username
+	 * @param password
+	 * @return
+	 * @throws IOException
+	 * @throws ClientProtocolException
+	 */
+	public static String loginService(String username, String password) throws ClientProtocolException, IOException {
+		StringBuilder loginInfo = new StringBuilder();
+		if (!ValidateUtil.isBlank(username) && !ValidateUtil.isBlank(password)) {
+			loginInfo.append("{");
+			loginInfo.append("\"user\"").append(":").append("\"").append(username).append("\",");
+			loginInfo.append("\"psd\"").append(":").append("\"").append(password).append("\"");
+			loginInfo.append("}");
+			StringBuilder sb = HttpRequestServiceImpl.requestByHttpClient(loginInfo.toString(), Constant.LOGIN_URL);
+		}
+		return loginInfo.toString();
+	}
+
+	/**
+	 * Description: 退出服务器
+	 * 
+	 * @Version1.0 2011-12-7 下午03:02:58 mustang created
+	 * @param username
+	 * @param password
+	 * @return
+	 */
+	public static boolean logoutService(Activity act) {
+		Map<String, Object> map = getUserinfo(act);
+		String username = (String) map.get("username");
+		String password = (String) map.get("username");
+		// 注销的同时标识为下线
+		SharedPreferences sp = act.getSharedPreferences("registerinfo", Activity.MODE_PRIVATE);
+		if (sp != null) {
+			sp.edit().putBoolean("online", false).commit();
+		}
+		if (!ValidateUtil.isBlank(username) && !ValidateUtil.isBlank(password)) {
+			// TODO 据说注销这里暂时是不需要发请求的，服务器自己会把流推完。
+		}
+		return true;
+	}
+
+	/**
+	 * Description: 添加相关信息，去服务器端验证有效性
+	 * 
+	 * @Version1.0 2011-12-6 下午02:43:29 mustang created
+	 * @param username
+	 * @param password
+	 * @param email
+	 * @param phone
+	 * @param id_number
+	 * @param smartcard
+	 * @param service_password
+	 * @throws IOException
+	 * @throws ClientProtocolException
+	 */
+	public static boolean saveRegisterInfo(String username, String password, String phone, String id_number, String smartcard, String service_password)
+			throws ClientProtocolException, IOException {
+		// String json1 = "{"+ "\"query\": \"Pizza\", "+
+		// "\"locations\": [ 94043, 90210 ] "+ "}";
+
+		StringBuilder sj = new StringBuilder();
+		sj.append("{");
+		sj.append("\"username\"").append(":").append("\"").append(username).append("\",");
+		sj.append("\"password\"").append(":").append("\"").append(password).append("\",");
+		sj.append("\"phone\"").append(":").append("\"").append(phone).append("\",");
+		sj.append("\"id_number\"").append(":").append("\"").append(id_number).append("\",");
+		sj.append("\"smartcard\"").append(":").append("\"").append(smartcard).append("\"");
+		sj.append("}");
+		StringBuilder sb = HttpRequestServiceImpl.requestByHttpClient(sj.toString(), Constant.REGISTER_URL);
+		// TODO 对SB返回来的JSON串进行解析，如果正确返回true,否则返回false;
+		return true;
+
+	}
+
+}

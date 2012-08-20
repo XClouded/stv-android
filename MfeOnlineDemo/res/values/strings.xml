@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hello">Hello World, SPL!</string>
+    <string name="app_name">语音搜索</string>
+    <string name="recording">Recording</string>
+    <string name="text_logo">中科信利 语音搜索</string>
+    <string name="text_start">请开始说话</string>
+    <string name="text_run">正在听您说话</string>
+    <string name="text_nospeach">没听到语音</string>
+    <string name="text_tooloudly">声音太大了,请说小声一点</string>
+    <string name="text_noisy">周围太吵了，没有听清楚</string>
+    <string name="text_noisy_tooloudly">太吵了，声音太大了</string>    
+    <string name="text_end">正在处理</string>
+    <string name="text_wrong_connect">连接问题</string>
+    <string name="button_stop">取消</string>    
+    <string name="button_retry">重试</string>
+
+    <string name="menu_set">设置</string>
+    <string name="menu_about">帮助</string>
+    <string name="menu_clear">清除日志</string>
+    <string name="menu_processtrace">查看日志</string> 
+
+    <string name="about_text">	　欢迎您使用中科信利语音搜索软件！
+	     \n</string>
+    <string name="title_set">语音搜索设置</string>
+    <string name="title_set_httpconnect">网络设置</string>
+    <string name="title_edittext_ip">服务端IP</string>
+    <string name="summary_edittext_ip">语音识别服务端的IP地址</string>
+    <string name="dialog_title_ip">服务端IP设置</string>
+    <string name="title_edittext_username">用户名</string>
+    <string name="summary_edittext_username">连接服务端时使用的用户名</string>
+    <string name="dialog_title_username">用户名</string>
+    <string name="title_edittext_oncepostlen">数据包的最大长度</string>
+    <string name="summary_edittext_oncepostlen">向服务端发送的单个数据包的最大长度</string>
+    <string name="dialog_title_oncepostlen">数据包的最大长度（字节）</string>
+    <string name="title_edittext_timeout">网络延时</string>
+    <string name="summary_edittext_timeout">网络连接的延时</string>
+    <string name="dialog_title_timeout">网络延时（毫秒）</string>
+    <string name="title_set_debug">测试设置</string>
+    <string name="title_check_datakeep">保存数据</string>
+    <string name="summary_check_datakeep">将录音及网络传输数据保存到/sdcard/.MfeOnline/目录下</string>
+    <string name="title_check_processtrace">开启日志</string>
+    <string name="summary_check_processtrace">从开始录音到获得识别结果整个过程的时间统计</string>
+
+    <string name="log_send_first">第一个包发送开始</string>
+    <string name="log_send_first_over">第一个包发送</string>
+    <string name="log_get_response">获得识别结果</string>   
+    <string name="log_record_start">开始录音</string>
+    <string name="log_start_point">从开始录音到语音起点</string>
+    <string name="log_end_point">从开始录音到语音尾点</string>
+
+    <color name="all_white">#FFFFFFFF</color>
+    <color name="all_gray">#272727</color>
+</resources>

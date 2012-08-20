@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout 	
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:background="@color/all_white">
+	
+		<RelativeLayout 	
+			xmlns:android="http://schemas.android.com/apk/res/android"
+			android:id="@+id/LayoutTitle"
+			android:orientation="horizontal"
+			android:layout_width="fill_parent"
+			android:layout_height="60dip"
+			android:background="@drawable/title_back">
+			
+			<ImageButton android:id="@+id/ImageButtonVoice"
+				android:layout_height="wrap_content"
+				android:layout_width="wrap_content"
+				android:layout_alignParentTop="true"
+				android:layout_alignParentRight="true"
+				android:layout_marginTop="5dip"
+				android:src="@drawable/ic_btn_speak_now">    
+		    </ImageButton>
+			
+			<ImageButton android:id="@+id/ImageButtonSearch"
+				android:layout_toLeftOf="@id/ImageButtonVoice" 
+				android:layout_height="wrap_content"
+				android:layout_width="wrap_content"
+				android:layout_alignParentTop="true"
+				android:layout_marginTop="5dip"
+				android:src="@drawable/ic_btn_search">    
+		    </ImageButton>	
+		    
+		    <ProgressBar android:id="@+id/ProgressBarSearch"
+		    	style="?android:attr/progressBarStyleSmall"		    		    
+	    		android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignTop="@id/ImageButtonSearch"
+				android:layout_alignBottom="@id/ImageButtonSearch"
+				android:layout_alignRight="@id/ImageButtonSearch"
+				android:layout_alignLeft="@id/ImageButtonSearch"
+				android:layout_marginTop="5dip"
+				android:layout_marginBottom="5dip"
+				android:layout_marginRight="5dip"
+				android:layout_marginLeft="5dip">
+			</ProgressBar>	
+				
+			<EditText android:id="@+id/EditTextSearch" 
+				android:layout_toLeftOf="@id/ImageButtonSearch" 
+				android:layout_width="fill_parent"
+				android:layout_height="50dip"
+				android:layout_alignParentTop="true"
+				android:layout_alignParentLeft="true"
+				android:layout_marginTop="5dip"	
+				android:layout_marginRight="2dip"	
+				android:layout_marginLeft="2dip"
+				android:textStyle="bold">
+			</EditText>			
+		</RelativeLayout>
+
+		<WebView  android:id="@+id/WebViewResult"
+			android:layout_below="@id/LayoutTitle"
+			android:layout_height="fill_parent"
+			android:layout_width="fill_parent">
+		</WebView>
+
+		
+		<ImageView android:id="@+id/ImageViewLogo"
+			android:layout_below="@id/LayoutTitle"
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:layout_alignParentTop="true"
+			android:layout_alignParentRight="true"
+			android:layout_marginTop="5dip"
+			android:src="@drawable/logo">
+		</ImageView>
+	
+</RelativeLayout>

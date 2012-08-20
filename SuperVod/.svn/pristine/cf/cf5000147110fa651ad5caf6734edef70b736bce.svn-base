@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="43dp"
+        android:background="@drawable/homepage_top"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/logo_top" >
+        </ImageView>
+
+        <TextView
+            style="@style/Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="90dp"
+            android:text="首页" />
+        <!--
+        <Button
+            android:id="@+id/regbutton"
+            style="@style/Button"
+            android:layout_width="68dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="60dp"
+            android:onClick="showLoginPage"
+            android:text="@string/vod_register" />
+        -->
+    </LinearLayout>
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <ExpandableListView
+            android:id="@+id/homeListView"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:cacheColorHint="#00000000"
+            android:scrollbars="none" >
+        </ExpandableListView>
+    </LinearLayout>
+
+</LinearLayout>

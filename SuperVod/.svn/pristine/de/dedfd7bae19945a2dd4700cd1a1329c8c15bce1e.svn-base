@@ -1,0 +1,91 @@
+package com.stv.supervod.utils;
+
+/**
+ * Description: 各种常量 Copyright (c) 永新视博 All Rights Reserved.
+ * 
+ * @version 1.0 2011-12-12 下午04:11:08 mustang created
+ */
+/**
+ * Description: Copyright (c) 永新视博 All Rights Reserved.
+ * 
+ * @version 1.0 2011-12-21 下午03:32:41 mustang created
+ */
+public class Constant {
+
+	/**
+	 * 用户登录ID
+	 */
+	public  static String http_session_id;
+	/**
+	 * 文件下载保存路径
+	 */
+	public  static String download_dir = "";
+	/**
+	 * 图片过期时间 【3天】
+	 */
+	public static long interval_day = 3 * 24 * 60 * 60 * 1000;
+	/**
+	 * 各种URL常量
+	 */
+	public static final String PUB_URL = "http://supervod.com/rs";
+	/**
+	 * 登录
+	 */
+	public static final String login_url = PUB_URL + "/login.json";
+	/**
+	 * 退出(注销)
+	 */
+	public static final String logout_url = PUB_URL + "/logout.json";
+
+	/**
+	 * 用户信息注册
+	 */
+	public static final String register_url = PUB_URL + "/account/register.json";
+
+	/**
+	 * 首页不同分类列表的URL
+	 */
+	public static final String homepage_data_url = PUB_URL + "/home";
+	//public static final String HOMEPAGE_DATA_URL = "http://192.168.7.145/data/home";
+	public static final String HOMEPAGE_DATA_URL = "http://192.168.0.133/data/home";
+	// public static final String HOMEPAGE_DATA_URL =
+	// "http://192.168.0.133/data/home";
+	
+	/**
+	 * 获得电影详细页信息
+	 */
+	public static final String movie_detail_url = PUB_URL + "/asset/film/";
+
+	/**
+	 * 获得电视剧详细页信息
+	 */
+	public static final String tv_detail_url = PUB_URL + "/asset/tv/";
+	
+	/**
+	 * 获取歌手列表
+	 */
+	public static final String supervod_singer_url = PUB_URL + "/singer";
+	
+	/**
+	 * 回看频道URL
+	 */
+	//public static final String supervod_channel_url = PUB_URL + "/channel";
+	public static final String supervod_channel_url = "http://192.168.0.133/data/getchannels";
+	
+	/*
+	 * 回看节目URL
+	 */
+//	public static final String supervod_tvback_epg_url = PUB_URL + "/program";
+	public static final String supervod_tvback_epg_url = "http://192.168.0.133/data/getprograms";
+		
+	/*
+	 * 推荐分值比例
+	 */
+	public static final float    RECOMMEND_RANK_SCALE	= 0.1f;
+		
+	/**
+	 * 启动TvBackEpg的Intent的数据Buddle的key定义
+	 */
+	public static final String TVBACKEPG_EXTRAS_KEY_TITLE = "title";
+	public static final String TVBACKEPG_EXTRAS_KEY_OFFID = "offid";
+}

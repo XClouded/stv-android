@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<item value="501" key="RevertDialog.location.x"/>
+	<item value="135" key="RevertDialog.location.y"/>
+	<item value="65" key="HistoryTableProvider.revisions.修订"/>
+	<item value="130" key="HistoryTableProvider.revisionsBlock.作者"/>
+	<item value="163" key="HistoryTableProvider.revisions.日期"/>
+	<item value="66" key="HistoryTableProvider.MergeWizardUnblockRevisionsPage.修订"/>
+	<item value="370" key="HistoryTableProvider.SVNHistoryPage.注释"/>
+	<item value="186" key="HistoryTableProvider.SVNHistoryPage.日期"/>
+	<item value="65" key="HistoryTableProvider.revisionsBlock.修订"/>
+	<item value="130" key="HistoryTableProvider.MergeWizardUnblockRevisionsPage.作者"/>
+	<item value="438" key="RevertDialog.size.x"/>
+	<item value="414" key="RevertDialog.size.y"/>
+	<item value="476" key="ChooseUrlDialog.location.x"/>
+	<item value="104" key="ChooseUrlDialog.location.y"/>
+	<item value="163" key="HistoryTableProvider.revisionsBlock.日期"/>
+	<item value="500" key="CommitDialog.weights.0"/>
+	<item value="324" key="HistoryTableProvider.revisionsBlock.注释"/>
+	<item value="500" key="CommitDialog.weights.1"/>
+	<item value="488" key="ChooseUrlDialog.size.x"/>
+	<item value="352" key="ChooseUrlDialog.size.y"/>
+	<item value="75" key="HistoryTableProvider.SVNHistoryPage.修订"/>
+	<item value="164" key="HistoryTableProvider.MergeWizardUnblockRevisionsPage.日期"/>
+	<item value="148" key="HistoryTableProvider.SVNHistoryPage.作者"/>
+	<item value="326" key="HistoryTableProvider.MergeWizardUnblockRevisionsPage.注释"/>
+	<item value="114" key="CommitDialog.location.y"/>
+	<item value="176" key="CommitDialog.location.x"/>
+	<item value="130" key="HistoryTableProvider.revisions.作者"/>
+	<item value="1089" key="CommitDialog.size.x"/>
+	<item value="446" key="CommitDialog.size.y"/>
+	<item value="324" key="HistoryTableProvider.revisions.注释"/>
+	<section name="CommitWizard">
+		<item value="false" key="ShowCompare"/>
+		<item value="500" key="VWeight2"/>
+		<item value="500" key="VWeight1"/>
+	</section>
+</section>

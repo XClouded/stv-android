@@ -1,0 +1,240 @@
+package com.stv.supervod.activity;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import com.stv.supervod.adapter.FurtherListViewAdapter;
+
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.RatingBar;
+import android.widget.SimpleAdapter;
+import android.widget.TextView;
+
+
+/**
+ * @author      Administrator
+ * @description 收藏，上一级菜单：更多
+ * @authority   激活用户
+ * @function    1、向服务器请求收藏的影片（20），并展示
+ *              2、用户点击编辑按钮，允许用户删除影片，并给予确认提示
+ *              3、用户点击某一部影片，向服务器请求该影片数据，进入影片详细页：Detail
+ *              4、收藏和书签共用一套页面
+ */
+/**
+ * Description: 
+ * Copyright (c) 永新视博
+ * All Rights Reserved.
+ * @version 1.0  2011-12-6 上午10:39:41 zhaojunfeng created
+ */
+public class Interest extends BaseActivity{
+	private final static String TAG = "Interest";
+	
+	
+	private ListView mListView;
+	private ArrayList<HashMap<String, Object>> mListItem = new ArrayList<HashMap<String, Object>>();
+	private TextView mTextViewInfo;
+	private Button mBtnBack;
+	private Button mBtnEdit;
+	private Button mBtnClear;
+	
+	
+	private boolean mIsEdit = false;
+	private FurtherListViewAdapter mItemListadapter = null;
+	private int mItemSelected = -1;
+	
+	@Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.interest);
+                
+        initGui();
+        
+        initData();
+        
+        showList();
+        
+        bindAction();
+    }
+	
+	private void initGui()
+	{
+        mListView = (ListView) findViewById(R.id.interest_list);
+        mTextViewInfo = (TextView) findViewById(R.id.interest_tv_info);
+        mBtnBack = (Button) findViewById(R.id.interest_btn_back);
+        mBtnClear = (Button) findViewById(R.id.interest_btn_clear);
+        mBtnEdit = (Button) findViewById(R.id.interest_btn_edit);
+	}
+	
+	private void bindAction()
+	{
+        // listview click
+        mListView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int position,
+					long arg3) {
+				// TODO Auto-generated method stub
+				mItemSelected = position;
+				if( mIsEdit ){
+					//doDeleteFunc(position);
+					showDialog( false );
+				} else {
+					Intent intent = new Intent();
+					intent.setClass(Interest.this, Detail.class);
+					Framework.switchActivity("Detail", intent);
+				}
+			}
+		});
+        
+        // btn back
+        mBtnBack.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Framework.switchActivityBack();
+			}
+		});
+        
+        // btn edit
+        mBtnEdit.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				if( mListItem.size() == 0 ){
+					return;
+				}
+				
+				mIsEdit = !mIsEdit;
+				if( mIsEdit ){
+					mBtnEdit.setText(getString(R.string.further_btn_editok));
+				} else {
+					mBtnEdit.setText(getString(R.string.further_btn_edit));
+				}
+				showList();
+			}
+		});
+        
+        mBtnClear.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				if( mListItem.size() == 0 ){
+					return;
+				}
+				
+				mItemSelected = -1;
+				showDialog(true);
+			}
+		});
+	}
+	
+	private void showDialog( boolean isClear )
+	{
+		AlertDialog.Builder bd = new AlertDialog.Builder(Interest.this);
+		bd.setTitle(R.string.further_dlg_title);
+		
+		if( isClear ){
+			bd.setMessage(R.string.further_dlg_clear_content);
+			bd.setPositiveButton( getString(R.string.framework_dlg_btn_ok),
+					new OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface arg0, int arg1) {
+					// TODO Auto-generated method stub
+					doDeleteFunc();
+				}
+			});
+		} else {
+			bd.setMessage(R.string.further_dlg_delete_content);
+			bd.setPositiveButton( getString(R.string.framework_dlg_btn_ok)
+					, new OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface arg0, int arg1) {
+					// TODO Auto-generated method stub
+					doDeleteFunc();	
+				}
+			});
+		}
+		
+		bd.setNegativeButton(getString(R.string.framework_dlg_btn_cancel)
+				, new OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		
+		bd.setCancelable(false);
+		bd.show();
+	}
+	
+	private void doDeleteFunc()
+	{
+		if( mItemSelected == -1 ){
+			mListItem.clear();
+		} else {
+			mListItem.remove(mItemSelected);
+		}
+		mItemListadapter.updateAdapter(mListItem, mIsEdit);
+		infoTextUpdate();
+	}
+	
+	private void showList()
+	{
+		infoTextUpdate();
+		
+		if( mItemListadapter == null ){
+			mItemListadapter = new FurtherListViewAdapter(this, mListItem, mIsEdit);
+			mListView.setAdapter(mItemListadapter);
+		} else {
+			mItemListadapter.updateAdapter(mListItem, mIsEdit);
+		}		
+	}
+	
+	/**
+	 * Description: update infoText show the number of records;
+	 * @Version1.0 2011-12-6 上午10:39:48 zhaojunfeng created
+	 */
+	private void infoTextUpdate()
+	{
+		mTextViewInfo.setText(String.format(getString(R.string.further_txt_favinfo), 
+				mListItem.size()));	
+		if( mIsEdit ){
+			mTextViewInfo.setVisibility(View.GONE);
+		} else {
+			mTextViewInfo.setVisibility(View.VISIBLE);
+		}	
+	}
+	
+	private void initData()
+	{
+		for(int i=0;i<22;i++)  
+        {  
+          HashMap<String, Object> map = new HashMap<String, Object>();  
+          map.put("ItemName", String.format("Name%d", i));
+          map.put("ItemType", "film");
+          //map.put("ItemPoint", "8");
+          map.put("ItemImage", R.drawable.video_cover_default);
+          mListItem.add(map);  
+        }
+	}
+}

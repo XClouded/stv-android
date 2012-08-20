@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget62"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/background" >
+
+    <ImageView
+        android:id="@+id/widget57"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/bottom" />
+
+    <ImageView
+        android:id="@+id/widget64"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/flower"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/middle_back" />
+
+    <ImageView
+        android:id="@+id/widget66"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/widget97"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="7dip"
+        android:src="@drawable/middle" />
+
+    <ImageView
+        android:id="@+id/widget97"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/key_up"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/left_state" />
+
+    <ImageView
+        android:id="@+id/key_ok"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/widget66"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="45dp"
+        android:background="#00000000"
+        android:src="@drawable/ok" />
+
+    <ImageView
+        android:id="@+id/key_down"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/widget64"
+        android:layout_alignRight="@+id/key_ok"
+        android:background="#00000000"
+        android:src="@drawable/down" />
+
+    <ImageView
+        android:id="@+id/key_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/widget66"
+        android:layout_alignLeft="@+id/widget64"
+        android:layout_marginBottom="30dp"
+        android:background="#00000000"
+        android:src="@drawable/left" />
+
+    <ImageView
+        android:id="@+id/key_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/key_left"
+        android:layout_toRightOf="@+id/widget97"
+        android:background="#00000000"
+        android:src="@drawable/right" />
+
+    <ImageView
+        android:id="@+id/key_up"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/widget64"
+        android:layout_centerHorizontal="true"
+        android:background="#00000000"
+        android:src="@drawable/up" />
+
+    <TextView
+        android:id="@+id/loginfo"
+        android:layout_width="320dip"
+        android:layout_height="40dip"
+        android:layout_above="@+id/key_up"
+        android:gravity="center"
+        android:text="正在登陆系统,请稍后......"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:id="@+id/flower"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="#00000000"
+        android:src="@drawable/flower" />
+
+    <ImageView
+        android:id="@+id/key_return"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/key_down"
+        android:layout_alignTop="@+id/flower"
+        android:background="#00000000"
+        android:src="@drawable/revert" />
+
+</RelativeLayout>

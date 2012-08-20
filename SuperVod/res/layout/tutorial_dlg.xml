@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/light_gray"
+    android:padding="0.0dip" >
+
+    <ImageView
+        android:id="@+id/tutorial_iv_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/btn_history_delete_bg_normal" />
+
+    <FrameLayout
+        android:id="@+id/tutorial_fl_view"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/imageView1" >
+    </FrameLayout>
+
+</RelativeLayout>

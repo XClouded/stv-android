@@ -1,0 +1,22 @@
+package com.stv.supervod.activity;
+
+import android.app.Activity;
+import android.os.Bundle;
+
+/**
+ * @author      Administrator
+ * @description 首页
+ * @authority   所有用户
+ * @function    1、向服务器请求推荐影片（6部，实时更新），以及各个分类中的推荐影片（20部），并展示
+ *              2、用户点击推荐区、分类推荐区的影片后，进入到详细页面:Detail
+ *              3、用户点击会员按钮，进入用户登录页面：Login
+ */
+public class Homepage extends Activity{
+	
+	@Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.homepage);
+    }
+
+}

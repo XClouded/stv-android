@@ -1,0 +1,19 @@
+/**
+ * 
+ */
+package com.stv.supervod.foundation;
+
+/**
+ * @author Administrator
+ *
+ */
+public class TCP_Protocol {
+
+	/**
+	 * 
+	 */
+	public TCP_Protocol() {
+		// TODO Auto-generated constructor stub
+	}
+
+}

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">Hello World, VODClientActivity!</string>
+    <string name="app_name">SuperVod</string>
+
+      
+    <!-- 详细节目信息页面 -->    
+    <string name="detail_prg_name">节目名称: </string>
+    <string name="detail_prg_desc">节目简介: \n</string>
+    
+    <string name="detail_btn_back">返回</string>
+    <string name="detail_btn_point">我要评分</string>
+    
+    <string name="detail_btn_play">播放</string>
+    <string name="detail_btn_fav">收藏</string>
+    <string name="detail_btn_add">加入我的频道</string>
+    
+    <string name="detail_btn_sort">正序</string>
+    <string name="detail_btn_rsort">反序</string>
+    <string name="detail_btn_expand">展开</string>
+    <string name="detail_btn_unexpand">收起</string>
+    <string name="detail_txt_episode_number">剧集列表 共%d集</string>
+    
+    <string name="detail_txt_type">类型:</string>
+    <string name="detail_txt_director">导演:</string>
+    <string name="detail_txt_actor">主演:</string>
+    <string name="detail_txt_desc">剧情简介:</string>        
+        
+    <!-- framework add by zhaojunfeng -->    
+    <string name="framework_tab_home">首页</string>  
+    <string name="framework_tab_channel">分类</string> 
+    <string name="framework_tab_search">搜索</string> 
+    <string name="framework_tab_myfav">历史</string> 
+    <string name="framework_tab_more">更多</string>
+    
+    <string name="framework_dlg_title">提示</string>
+    <string name="framework_dlg_content">确定退出QuickVod客户端?</string>
+    <string name="framework_dlg_btn_ok">确定</string>
+    <string name="framework_dlg_btn_cancel">取消</string>
+    
+	<!-- add by mustang -->
+   <string name="vod_register">会员</string>
+   <string name="vod_regist">注册</string>           
+   <string name="vod_login">登录</string>
+   <string name="vod_logout">注销</string>
+   <string name="vod_commit">提交</string>
+   
+   <string name="vod_username">用户名:</string>
+   <string name="vod_password">密     码:</string>
+   <string name="vod_email">邮     箱:</string> 
+   <string name="vod_smartcard">CA卡号: </string>
+   <string name="vod_phone">手机号:</string>
+   
+    <string name="welcome_city_qingzhou">山东青州</string>
+   <string name="welcome_city_zhangzhou">福建漳州</string>    
+   <string name="vod_id_number">身份证号:</string>
+   <string name="vod_remember_password">记住密码</string>
+   <string name="vod_service_password">业务密码:</string>
+   <string name="vod_confirm_password">确认密码:</string>
+   <string name="vod_register_login">会员登录</string>
+   <string name="vod_register_info">会员资料</string>
+   <string name="vod_register_reg">会员注册</string>
+   <string name="vod_auto_login">自动登录</string>
+   
+    <!-- further add by zhaojunfeng -->
+    <string name="further_channel_title">更多</string>   
+    <string name="further_interest_title">收藏</string>    
+    <string name="further_bookmark_title">书签</string>
+    <string name="further_myepg_title">我的频道</string>
+    <string name="further_tvback_title">电视回看</string> 
+
+	<string name="further_btn_back">返回</string>
+    <string name="further_btn_edit">编辑</string>  
+    <string name="further_btn_editok">完成</string> 
+    <string name="further_btn_clear">清空</string>  
+    <string name="further_txt_favinfo">共收藏了%d条记录</string> 
+    <string name="further_dlg_title">提示</string> 
+    <string name="further_dlg_delete_content">确定要删除这条记录吗？</string> 
+    <string name="further_dlg_clear_content">确定要删除全部记录吗？</string> 
+    
+    <string name="further_txt_bookmarkinfo">共有%d条书签</string> 
+    <string name="further_txt_getmore">查看更多</string>
+    <string name="further_txt_loadingmore">正在加载...</string>
+    
+	<!-- search add by ljn_alex -->
+	<string name="search_btn_ok">搜索</string>
+        
+</resources>

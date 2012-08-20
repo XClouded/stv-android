@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <LinearLayout
+        android:id="@+id/category_title"
+        android:layout_width="fill_parent"
+        android:layout_height="43dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/channel_detail_title" >
+
+        <TextView
+            android:id="@+id/category_name"
+            android:layout_width="82dp"
+            android:layout_height="wrap_content"
+            android:text="" 
+            style="@style/Title"/>
+
+        <Button 
+            android:id="@+id/btn_category"
+            android:text="分类"
+            android:layout_width="68dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="75dp"
+            style="@style/Button"
+            android:drawableLeft="@drawable/channel_second_sort_image" />
+        <Button 
+            android:id="@+id/btn_sort"
+            android:text="排序"
+            android:layout_width="68dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="9dp"
+            style="@style/Button"
+            android:drawableLeft="@drawable/channel_second_sort_image1"/>
+    </LinearLayout>
+    <ListView 
+        android:id="@+id/category_list" 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/category_title"/>
+</RelativeLayout>

@@ -1,0 +1,19 @@
+/**
+ * 
+ */
+package com.stv.supervod.foundation;
+
+/**
+ * @author Administrator
+ *
+ */
+public class DownloadPoster {
+
+	/**
+	 * 
+	 */
+	public DownloadPoster() {
+		// TODO Auto-generated constructor stub
+	}
+
+}
